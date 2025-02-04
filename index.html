@@ -19,19 +19,38 @@
             transition: background-color 0.3s, color 0.3s;
         }
         
+        .container {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            width: calc(100% - 15px);
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 5;
+        }
+
         #inputContainer {
             position: fixed;
             bottom: -100px;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
             background: var(--tg-theme-bg-color, #ffffff);
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            padding: 10px;
+            padding: 10px 0;
             display: flex;
             gap: 5px;
             transition: bottom 0.3s ease-in-out;
-            z-index: 5;
             padding-bottom: calc(10px + env(safe-area-inset-bottom));
+        }
+        
+        #inputContainer .wrapper {
+            width: calc(100% - 15px);
+            margin: 0 auto;
+            display: flex;
+            gap: 5px;
         }
         
         #inputContainer input {
@@ -55,11 +74,7 @@
         }
         
         #mainButton {
-            position: fixed;
-            bottom: 15px;
-            left: 50%;
-            width: calc(100% - 15px);
-            max-width: 100%;
+            width: 100%;
             padding: 15px;
             font-size: 16px;
             cursor: pointer;
@@ -67,9 +82,7 @@
             background-color: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
             transition: background-color 0.3s;
-            z-index: 10;
             border-radius: 5px;
-            transform: translateX(-50%);
             margin-bottom: env(safe-area-inset-bottom);
         }
     </style>
@@ -77,10 +90,14 @@
 <body>
     <h1 id="title">Привет, Mini App!</h1>
     <div id="inputContainer">
-        <input type="text" placeholder="Введите запрос" id="searchInput" />
-        <button id="searchButton">Поиск</button>
+        <div class="wrapper">
+            <input type="text" placeholder="Введите запрос" id="searchInput" />
+            <button id="searchButton">Поиск</button>
+        </div>
     </div>
-    <button id="mainButton">Нажми меня</button>
+    <div class="container">
+        <button id="mainButton">Нажми меня</button>
+    </div>
 
     <script>
         try {
