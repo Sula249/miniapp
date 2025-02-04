@@ -18,22 +18,6 @@
             color: var(--tg-theme-text-color, #000000);
             transition: background-color 0.3s, color 0.3s;
         }
-        #mainButton {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 15px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            background-color: var(--tg-theme-button-color, #0088cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            transition: background-color 0.3s;
-        }
-        #mainButton:hover {
-            background-color: var(--tg-theme-button-hover-color, #0077bb);
-        }
         #inputContainer {
             position: fixed;
             bottom: -100px;
@@ -44,6 +28,7 @@
             display: flex;
             gap: 5px;
             transition: bottom 0.3s ease-in-out;
+            z-index: 10;
         }
         #inputContainer input {
             flex: 1;
@@ -60,6 +45,23 @@
             background-color: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
             border-radius: 5px;
+        }
+        #mainButton {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            transition: background-color 0.3s;
+            z-index: 5;
+        }
+        #mainButton:hover {
+            background-color: var(--tg-theme-button-hover-color, #0077bb);
         }
     </style>
 </head>
@@ -92,12 +94,12 @@
                 const searchButton = document.getElementById('searchButton');
 
                 mainButton.addEventListener('click', () => {
-                    inputContainer.style.bottom = inputContainer.style.bottom === '0px' ? '-100px' : '0px';
+                    inputContainer.style.bottom = inputContainer.style.bottom === '50px' ? '-100px' : '50px';
                 });
 
                 searchButton.addEventListener('click', () => {
                     const query = document.getElementById('searchInput').value;
-                    tg.sendData(query); // Отправляем данные в Telegram
+                    tg.sendData(query);
                 });
 
             } else {
