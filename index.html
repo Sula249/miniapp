@@ -1,113 +1,18 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram MiniApp</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- ... (остальное без изменений) ... -->
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: var(--tg-font-family, Arial, sans-serif);
-            background: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            transition: background-color 0.3s, color 0.3s;
-        }
+        /* ... (предыдущие стили без изменений) ... */
         
-        .container {
-            position: fixed;
-            bottom: 15px;
-            left: 50%;
-            width: calc(100% - 15px);
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 5;
-        }
-
         #inputContainer {
-            position: fixed;
-            /* Изменено начальное положение, чтобы оно было за кнопкой */
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            background: var(--tg-theme-bg-color, #ffffff);
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            padding: 10px 0;
-            display: flex;
-            gap: 5px;
-            transition: bottom 0.3s ease-in-out;
-            padding-bottom: calc(10px + env(safe-area-inset-bottom));
-            /* Начально скрыт за mainButton */
-            opacity: 0;
-            pointer-events: none;
-            transition: bottom 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        
-        #inputContainer.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
-        #inputContainer .wrapper {
-            width: calc(100% - 15px);
-            margin: 0 auto;
-            display: flex;
-            gap: 5px;
-        }
-        
-        #inputContainer input {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid var(--tg-theme-hint-color, #ccc);
-            border-radius: 5px;
-            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
-            color: var(--tg-theme-text-color, #000000);
-        }
-        
-        #inputContainer button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            background-color: var(--tg-theme-button-color, #0088cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            border-radius: 5px;
-        }
-        
-        #mainButton {
-            width: 100%;
-            padding: 15px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            background-color: var(--tg-theme-button-color, #0088cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            transition: background-color 0.3s;
-            border-radius: 5px;
-            margin-bottom: env(safe-area-inset-bottom);
+            z-index: 10; /* Добавлено */
+            /* Остальные стили без изменений */
         }
     </style>
 </head>
 <body>
-    <h1 id="title">Привет, Mini App!</h1>
-    <div id="inputContainer">
-        <div class="wrapper">
-            <input type="text" placeholder="Введите запрос" id="searchInput" />
-            <button id="searchButton">Поиск</button>
-        </div>
-    </div>
-    <div class="container">
-        <button id="mainButton">Нажми меня</button>
-    </div>
+    <!-- ... (остальное без изменений) ... -->
 
     <script>
         try {
@@ -115,52 +20,49 @@
                 const tg = Telegram.WebApp;
                 tg.expand();
 
-                if (tg.themeParams) {
-                    document.body.style.setProperty('background-color', tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor);
-                    document.body.style.setProperty('color', tg.themeParams.text_color || getComputedStyle(document.body).color);
-                }
+                // Инициализация темы
+                const updateTheme = () => {
+                    document.body.style.backgroundColor = tg.themeParams.bg_color || '#ffffff';
+                    document.body.style.color = tg.themeParams.text_color || '#000000';
+                };
+                updateTheme();
+                tg.onEvent('themeChanged', updateTheme);
 
-                tg.onEvent('themeChanged', () => {
-                    document.body.style.setProperty('background-color', tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor);
-                    document.body.style.setProperty('color', tg.themeParams.text_color || getComputedStyle(document.body).color);
+                // Элементы управления
+                const elements = {
+                    mainButton: document.getElementById('mainButton'),
+                    inputContainer: document.getElementById('inputContainer'),
+                    searchInput: document.getElementById('searchInput'),
+                    searchButton: document.getElementById('searchButton')
+                };
+
+                // Обработка ввода
+                const processInput = () => {
+                    const query = elements.searchInput.value.trim();
+                    if (!query) return;
+                    tg.sendData(encodeURIComponent(query));
+                    elements.searchInput.value = '';
+                };
+
+                // Обработчики событий
+                elements.searchInput.addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter') processInput();
                 });
 
-                const mainButton = document.getElementById('mainButton');
-                const inputContainer = document.getElementById('inputContainer');
-                const searchInput = document.getElementById('searchInput');
-                const searchButton = document.getElementById('searchButton');
-
-                searchInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        const query = searchInput.value;
-                        tg.sendData(query);
-                    }
+                elements.mainButton.addEventListener('click', () => {
+                    const isVisible = elements.inputContainer.classList.toggle('visible');
+                    tg.BackButton[isVisible ? 'show' : 'hide']();
+                    elements.inputContainer.style.bottom = isVisible ? '80px' : '15px';
+                    if (isVisible) setTimeout(() => elements.searchInput.focus(), 150);
                 });
 
-                mainButton.addEventListener('click', () => {
-                    const isVisible = inputContainer.classList.contains('visible');
-                    if (isVisible) {
-                        inputContainer.classList.remove('visible');
-                        inputContainer.style.bottom = '15px';
-                    } else {
-                        inputContainer.classList.add('visible');
-                        inputContainer.style.bottom = '80px';
-                        setTimeout(() => searchInput.focus(), 300);
-                    }
-                });
+                elements.searchButton.addEventListener('click', processInput);
 
-                searchButton.addEventListener('click', () => {
-                    const query = searchInput.value;
-                    tg.sendData(query);
-                });
-
+                // Обработка BackButton
                 tg.BackButton.onClick(() => {
-                    if (inputContainer.classList.contains('visible')) {
-                        inputContainer.classList.remove('visible');
-                        inputContainer.style.bottom = '15px';
-                        return true;
-                    }
-                    return false;
+                    elements.inputContainer.classList.remove('visible');
+                    elements.inputContainer.style.bottom = '15px';
+                    tg.BackButton.hide();
                 });
 
             } else {
