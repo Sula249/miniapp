@@ -33,20 +33,21 @@
 
         #inputContainer {
             position: fixed;
+            /* Изменено начальное положение, чтобы оно было за кнопкой */
             bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            background: var(--tg-theme-bg-color, #ffffff);
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             padding: 10px 0;
             display: flex;
             gap: 5px;
             transition: bottom 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+            /* Начально скрыт за mainButton */
             opacity: 0;
             pointer-events: none;
-            z-index: 10;
         }
         
         #inputContainer.visible {
@@ -67,12 +68,11 @@
             font-size: 16px;
             border: 1px solid var(--tg-theme-hint-color, #ccc);
             border-radius: 5px;
-            background: var(--tg-theme-bg-color, #ffffff);
+            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
             color: var(--tg-theme-text-color, #000000);
         }
         
-        #inputContainer button,
-        #mainButton {
+        #inputContainer button {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -80,7 +80,19 @@
             background-color: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
             border-radius: 5px;
+        }
+        
+        #mainButton {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
             transition: background-color 0.3s;
+            border-radius: 5px;
+            margin-bottom: env(safe-area-inset-bottom, 0px);
         }
     </style>
 </head>
@@ -98,82 +110,63 @@
 
     <script>
         try {
-            if (window.Telegram?.WebApp) {
+            if (window.Telegram && window.Telegram.WebApp) {
                 const tg = Telegram.WebApp;
                 tg.expand();
-                
-                // Инициализация темы
-                const updateTheme = () => {
-                    const themeParams = tg.themeParams || {};
-                    document.documentElement.style.setProperty(
-                        '--tg-theme-bg-color', 
-                        themeParams.bg_color || '#ffffff'
-                    );
-                    document.documentElement.style.setProperty(
-                        '--tg-theme-text-color', 
-                        themeParams.text_color || '#000000'
-                    );
-                    document.documentElement.style.setProperty(
-                        '--tg-theme-secondary-bg-color', 
-                        themeParams.secondary_bg_color || '#f0f0f0'
-                    );
-                    document.documentElement.style.setProperty(
-                        '--tg-theme-button-color', 
-                        themeParams.button_color || '#0088cc'
-                    );
-                    document.documentElement.style.setProperty(
-                        '--tg-theme-button-text-color', 
-                        themeParams.button_text_color || '#ffffff'
-                    );
-                };
-                
-                updateTheme();
-                tg.onEvent('themeChanged', updateTheme);
 
-                // Элементы управления
-                const elements = {
-                    mainButton: document.getElementById('mainButton'),
-                    inputContainer: document.getElementById('inputContainer'),
-                    searchInput: document.getElementById('searchInput'),
-                    searchButton: document.getElementById('searchButton')
-                };
+                if (tg.themeParams) {
+                    document.body.style.setProperty('background-color', tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor);
+                    document.body.style.setProperty('color', tg.themeParams.text_color || getComputedStyle(document.body).color);
+                }
 
-                // Обработка ввода
-                const processInput = () => {
-                    const query = elements.searchInput.value.trim();
-                    if (!query) return;
-                    tg.sendData(query);
-                    elements.searchInput.value = '';
-                };
-
-                // Обработчики событий
-                elements.searchInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') processInput();
+                tg.onEvent('themeChanged', () => {
+                    document.body.style.setProperty('background-color', tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor);
+                    document.body.style.setProperty('color', tg.themeParams.text_color || getComputedStyle(document.body).color);
                 });
 
-                elements.mainButton.addEventListener('click', () => {
-                    const isVisible = elements.inputContainer.classList.toggle('visible');
-                    tg.BackButton[isVisible ? 'show' : 'hide']();
-                    if (isVisible) {
-                        setTimeout(() => elements.searchInput.focus(), 150);
+                const mainButton = document.getElementById('mainButton');
+                const inputContainer = document.getElementById('inputContainer');
+                const searchInput = document.getElementById('searchInput');
+                const searchButton = document.getElementById('searchButton');
+
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        const query = searchInput.value;
+                        tg.sendData(query);
                     }
                 });
 
-                elements.searchButton.addEventListener('click', processInput);
+                mainButton.addEventListener('click', () => {
+                    const isVisible = inputContainer.classList.contains('visible');
+                    if (isVisible) {
+                        inputContainer.classList.remove('visible');
+                        inputContainer.style.bottom = '15px';
+                    } else {
+                        inputContainer.classList.add('visible');
+                        inputContainer.style.bottom = '80px';
+                        searchInput.focus();
+                    }
+                });
 
-                // Обработка BackButton
+                searchButton.addEventListener('click', () => {
+                    const query = searchInput.value;
+                    tg.sendData(query);
+                });
+
                 tg.BackButton.onClick(() => {
-                    elements.inputContainer.classList.remove('visible');
-                    tg.BackButton.hide();
+                    if (inputContainer.classList.contains('visible')) {
+                        inputContainer.classList.remove('visible');
+                        inputContainer.style.bottom = '15px';
+                        return true;  // Возвращаем true, чтобы предотвратить стандартное поведение
+                    }
+                    return false;
                 });
 
             } else {
                 console.warn("Telegram WebApp API недоступен!");
-                document.body.innerHTML = '<p>Запускайте в Telegram MiniApp!</p>';
             }
         } catch (error) {
-            console.error("Ошибка инициализации:", error);
-            document.body.innerHTML = `<p>Ошибка: ${error.message}</p>`;
+            console.error("Ошибка инициализации Telegram WebApp:", error);
         }
     </script>
 </body>
