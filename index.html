@@ -48,10 +48,10 @@
         }
         #mainButton {
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 24px;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
             font-size: 16px;
             cursor: pointer;
             border: none;
@@ -59,8 +59,6 @@
             color: var(--tg-theme-button-text-color, #ffffff);
             transition: background-color 0.3s;
             z-index: 10;
-            border-radius: 24px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         }
         #mainButton:hover {
             background-color: var(--tg-theme-button-hover-color, #0077bb);
@@ -73,7 +71,7 @@
         <input type="text" placeholder="Введите запрос" id="searchInput" />
         <button id="searchButton">Поиск</button>
     </div>
-    <button id="mainButton">Старт</button>
+    <button id="mainButton">Нажми меня</button>
 
     <script>
         try {
