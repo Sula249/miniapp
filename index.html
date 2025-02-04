@@ -33,7 +33,8 @@
 
         #inputContainer {
             position: fixed;
-            bottom: -100px;
+            /* Изменено начальное положение, чтобы оно было за кнопкой */
+            bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
@@ -44,6 +45,15 @@
             gap: 5px;
             transition: bottom 0.3s ease-in-out;
             padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            /* Начально скрыт за mainButton */
+            opacity: 0;
+            pointer-events: none;
+            transition: bottom 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        
+        #inputContainer.visible {
+            opacity: 1;
+            pointer-events: auto;
         }
         
         #inputContainer .wrapper {
@@ -128,9 +138,13 @@
                 });
 
                 mainButton.addEventListener('click', () => {
-                    const isVisible = inputContainer.style.bottom === '60px';
-                    inputContainer.style.bottom = isVisible ? '-100px' : '60px';
-                    if (!isVisible) {
+                    const isVisible = inputContainer.classList.contains('visible');
+                    if (isVisible) {
+                        inputContainer.classList.remove('visible');
+                        inputContainer.style.bottom = '15px';
+                    } else {
+                        inputContainer.classList.add('visible');
+                        inputContainer.style.bottom = '80px';
                         setTimeout(() => searchInput.focus(), 300);
                     }
                 });
@@ -141,8 +155,9 @@
                 });
 
                 tg.BackButton.onClick(() => {
-                    if (inputContainer.style.bottom === '60px') {
-                        inputContainer.style.bottom = '-100px';
+                    if (inputContainer.classList.contains('visible')) {
+                        inputContainer.classList.remove('visible');
+                        inputContainer.style.bottom = '15px';
                         return true;
                     }
                     return false;
