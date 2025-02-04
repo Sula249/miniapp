@@ -4,119 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Telegram MiniApp</title>
+    <link rel="stylesheet" href="https://telegram.org/css/telegram-web-app.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* Базовые стили */
+        :root {
+            --tg-theme-bg-color: #ffffff;
+            --tg-theme-text-color: #000000;
+            --tg-theme-secondary-bg-color: #f4f4f5;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000);
-            transition: background-color 0.3s, color 0.3s;
+            font-family: var(--tg-font, sans-serif);
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         #app {
-            width: 100%;
-            max-width: 600px;
-            padding: 20px;
             text-align: center;
+            font-size: 18px;
+        }
+
+        /* Защита от мерцания при загрузке */
+        body.hidden {
+            visibility: hidden;
         }
     </style>
 </head>
-<body>
-    <div id="app">
-        <h1>Telegram MiniApp</h1>
-        <div id="content"></div>
-    </div>
+<body class="hidden">
+    <div id="app">Добро пожаловать в Telegram MiniApp</div>
 
+    <!-- Подключение Telegram Web App API -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        const WebApp = {
-            init() {
-                const tg = window.Telegram.WebApp;
-                
-                // Базовая инициализация
-                tg.ready();
-                tg.expand();
+        (function () {
+            const tg = window.Telegram.WebApp;
 
-                // Обновление темы
-                this.updateTheme(tg);
+            // Инициализация приложения
+            function initApp() {
+                tg.ready(); // Сообщаем Telegram, что приложение готово
+                tg.expand(); // Расширяем приложение на весь экран
 
-                // Обработчики событий
-                tg.onEvent('themeChanged', () => this.updateTheme(tg));
+                // Обновляем тему
+                updateTheme();
 
-                // Настройка главной кнопки
-                tg.MainButton.text = 'Начать';
-                tg.MainButton.disable();
+                // Убираем класс "hidden" после загрузки
+                document.body.classList.remove('hidden');
 
-                // Колбэк для закрытия приложения
-                tg.onEvent('mainButtonClicked', this.handleMainButton);
+                // Подписываемся на события изменения темы
+                tg.onEvent('themeChanged', updateTheme);
 
-                // Опциональная поддержка BackButton
-                tg.BackButton.hide();
-
-                return tg;
-            },
-
-            updateTheme(tg) {
-                const params = tg.themeParams;
-                document.body.style.setProperty('--tg-theme-bg-color', params.bg_color || '#ffffff');
-                document.body.style.setProperty('--tg-theme-text-color', params.text_color || '#000');
-                
-                // Логирование параметров темы
-                console.log('Текущая тема:', tg.colorScheme);
-            },
-
-            handleMainButton() {
-                // Пользовательская логика главной кнопки
-                console.log('Главная кнопка нажата');
-            },
-
-            // Метод для добавления динамического контента
-            updateContent(html) {
-                document.getElementById('content').innerHTML = html;
-            },
-
-            // Метод для включения/выключения главной кнопки
-            toggleMainButton(enable = true, text = 'Начать') {
-                const tg = window.Telegram.WebApp;
-                if (enable) {
-                    tg.MainButton.show();
-                    tg.MainButton.enable();
-                    tg.MainButton.text = text;
-                } else {
-                    tg.MainButton.hide();
-                    tg.MainButton.disable();
-                }
-            },
-
-            // Отправка данных в основное приложение
-            sendData(data) {
-                const tg = window.Telegram.WebApp;
-                tg.sendData(JSON.stringify(data));
-            },
-
-            // Закрытие MiniApp
-            close() {
-                window.Telegram.WebApp.close();
+                // Логирование для отладки
+                console.log('Telegram Web App готово:', {
+                    platform: tg.platform,
+                    themeParams: tg.themeParams,
+                    colorScheme: tg.colorScheme,
+                });
             }
-        };
 
-        // Инициализация при загрузке
-        document.addEventListener('DOMContentLoaded', () => {
-            const tg = WebApp.init();
-            
-            // Пример расширения функционала
-            console.log('Платформа:', tg.platform);
-            console.log('Версия WebApp:', tg.version);
-        });
+            // Функция обновления темы
+            function updateTheme() {
+                const theme = tg.themeParams;
+
+                document.documentElement.style.setProperty('--tg-theme-bg-color', theme.bg_color || '#ffffff');
+                document.documentElement.style.setProperty('--tg-theme-text-color', theme.text_color || '#000000');
+                document.documentElement.style.setProperty('--tg-theme-secondary-bg-color', theme.secondary_bg_color || theme.bg_color || '#f4f4f5');
+            }
+
+            // Запуск приложения после загрузки DOM
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initApp);
+            } else {
+                initApp();
+            }
+        })();
     </script>
 </body>
 </html>
