@@ -1,37 +1,122 @@
-// Инициализация Telegram WebApp API
-const tg = window.Telegram.WebApp;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Telegram MiniApp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-tg.ready(); // Подтверждаем готовность
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000);
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-// Автоматически расширяем окно для лучшего отображения контента
-tg.expand();
+        #app {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Telegram MiniApp</h1>
+        <div id="content"></div>
+    </div>
 
-// Обновление темы оформления
-function updateTheme() {
-    const themeParams = tg.themeParams;
-    document.body.style.backgroundColor = themeParams.bg_color || "#ffffff";
-    document.body.style.color = themeParams.text_color || "#000000";
-    
-    document.documentElement.dataset.theme = tg.colorScheme === "dark" ? "dark" : "light";
-}
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        const WebApp = {
+            init() {
+                const tg = window.Telegram.WebApp;
+                
+                // Базовая инициализация
+                tg.ready();
+                tg.expand();
 
-// Применяем тему при загрузке и при изменении
-updateTheme();
-tg.onEvent("themeChanged", updateTheme);
+                // Обновление темы
+                this.updateTheme(tg);
 
-// Обновляем размер окна при изменении контента
-tg.onEvent("viewportChanged", () => {
-    tg.expand();
-});
+                // Обработчики событий
+                tg.onEvent('themeChanged', () => this.updateTheme(tg));
 
-// Обработчик закрытия WebApp
-function closeApp() {
-    tg.close();
-}
+                // Настройка главной кнопки
+                tg.MainButton.text = 'Начать';
+                tg.MainButton.disable();
 
-// Добавляем кнопку закрытия в Telegram WebApp
-if (tg.isExpanded) {
-    tg.MainButton.setText("Закрыть").show().onClick(closeApp);
-}
+                // Колбэк для закрытия приложения
+                tg.onEvent('mainButtonClicked', this.handleMainButton);
 
-console.log("Telegram MiniApp инициализирована");
+                // Опциональная поддержка BackButton
+                tg.BackButton.hide();
+
+                return tg;
+            },
+
+            updateTheme(tg) {
+                const params = tg.themeParams;
+                document.body.style.setProperty('--tg-theme-bg-color', params.bg_color || '#ffffff');
+                document.body.style.setProperty('--tg-theme-text-color', params.text_color || '#000');
+                
+                // Логирование параметров темы
+                console.log('Текущая тема:', tg.colorScheme);
+            },
+
+            handleMainButton() {
+                // Пользовательская логика главной кнопки
+                console.log('Главная кнопка нажата');
+            },
+
+            // Метод для добавления динамического контента
+            updateContent(html) {
+                document.getElementById('content').innerHTML = html;
+            },
+
+            // Метод для включения/выключения главной кнопки
+            toggleMainButton(enable = true, text = 'Начать') {
+                const tg = window.Telegram.WebApp;
+                if (enable) {
+                    tg.MainButton.show();
+                    tg.MainButton.enable();
+                    tg.MainButton.text = text;
+                } else {
+                    tg.MainButton.hide();
+                    tg.MainButton.disable();
+                }
+            },
+
+            // Отправка данных в основное приложение
+            sendData(data) {
+                const tg = window.Telegram.WebApp;
+                tg.sendData(JSON.stringify(data));
+            },
+
+            // Закрытие MiniApp
+            close() {
+                window.Telegram.WebApp.close();
+            }
+        };
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            const tg = WebApp.init();
+            
+            // Пример расширения функционала
+            console.log('Платформа:', tg.platform);
+            console.log('Версия WebApp:', tg.version);
+        });
+    </script>
+</body>
+</html>
