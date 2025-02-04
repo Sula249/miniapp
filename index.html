@@ -15,6 +15,7 @@
             font-family: var(--tg-font-family, Arial, sans-serif);
             background: var(--tg-theme-bg-color, #ffffff);
             color: var(--tg-theme-text-color, #000000);
+            transition: background-color 0.3s, color 0.3s;
         }
     </style>
 </head>
@@ -22,12 +23,22 @@
     <h1 id="title">Привет, Mini App!</h1>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand(); // Разворачиваем приложение на весь экран
+        if (window.Telegram && window.Telegram.WebApp) {
+            const tg = Telegram.WebApp;
+            tg.expand(); // Разворачиваем приложение на весь экран
 
-        // Автоматически применяем стили Telegram
-        document.body.style.backgroundColor = tg.themeParams.bg_color || "#ffffff";
-        document.body.style.color = tg.themeParams.text_color || "#000000";
+            // Автоматически применяем тему Telegram
+            document.body.style.backgroundColor = tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor;
+            document.body.style.color = tg.themeParams.text_color || getComputedStyle(document.body).color;
+
+            // Обрабатываем смену темы в реальном времени
+            tg.onEvent('themeChanged', () => {
+                document.body.style.backgroundColor = tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor;
+                document.body.style.color = tg.themeParams.text_color || getComputedStyle(document.body).color;
+            });
+        } else {
+            console.warn("Telegram WebApp API недоступен!");
+        }
     </script>
 </body>
 </html>
