@@ -18,8 +18,26 @@
             color: var(--tg-theme-text-color, #000000);
             transition: background-color 0.3s, color 0.3s;
         }
-        button {
-            margin-top: 20px;
+        #inputContainer {
+            position: fixed;
+            bottom: -100px;
+            left: 0;
+            width: 100%;
+            background: var(--tg-theme-bg-color, #ffffff);
+            padding: 10px;
+            display: flex;
+            gap: 5px;
+            transition: bottom 0.3s ease-in-out;
+            z-index: 5;
+        }
+        #inputContainer input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #inputContainer button {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -27,39 +45,66 @@
             background-color: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
             border-radius: 5px;
-            transition: background-color 0.3s;
         }
-        button:hover {
+        #mainButton {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            transition: background-color 0.3s;
+            z-index: 10;
+        }
+        #mainButton:hover {
             background-color: var(--tg-theme-button-hover-color, #0077bb);
         }
     </style>
 </head>
 <body>
     <h1 id="title">Привет, Mini App!</h1>
+    <div id="inputContainer">
+        <input type="text" placeholder="Введите запрос" id="searchInput" />
+        <button id="searchButton">Поиск</button>
+    </div>
     <button id="mainButton">Нажми меня</button>
 
     <script>
         try {
             if (window.Telegram && window.Telegram.WebApp) {
                 const tg = Telegram.WebApp;
-                tg.expand(); // Разворачиваем приложение
+                tg.expand();
 
-                // Проверяем, есть ли themeParams и применяем цвета
                 if (tg.themeParams) {
                     document.body.style.setProperty('background-color', tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor);
                     document.body.style.setProperty('color', tg.themeParams.text_color || getComputedStyle(document.body).color);
                 }
 
-                // Обрабатываем смену темы в реальном времени
                 tg.onEvent('themeChanged', () => {
                     document.body.style.setProperty('background-color', tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor);
                     document.body.style.setProperty('color', tg.themeParams.text_color || getComputedStyle(document.body).color);
                 });
 
-                // Добавляем обработку нажатия кнопки
-                const button = document.getElementById('mainButton');
-                button.addEventListener('click', () => {
-                    tg.MainButton.setText("Вы нажали!").show();
+                const mainButton = document.getElementById('mainButton');
+                const inputContainer = document.getElementById('inputContainer');
+                const searchInput = document.getElementById('searchInput');
+                const searchButton = document.getElementById('searchButton');
+
+                mainButton.addEventListener('click', () => {
+                    const isVisible = inputContainer.style.bottom === '60px';
+                    inputContainer.style.bottom = isVisible ? '-100px' : '60px';
+                    if (!isVisible) {
+                        setTimeout(() => searchInput.focus(), 300);
+                    }
+                });
+
+                searchButton.addEventListener('click', () => {
+                    const query = searchInput.value;
+                    tg.sendData(query);
                 });
 
             } else {
