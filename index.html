@@ -1,30 +1,132 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- ... (остальное без изменений) ... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram MiniApp</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* ... (предыдущие стили без изменений) ... */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: var(--tg-font-family, Arial, sans-serif);
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            transition: background-color 0.3s, color 0.3s;
+        }
         
+        .container {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            width: calc(100% - 15px);
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 5;
+        }
+
         #inputContainer {
-            z-index: 10; /* Добавлено */
-            /* Остальные стили без изменений */
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            display: flex;
+            gap: 5px;
+            transition: bottom 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        #inputContainer.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        #inputContainer .wrapper {
+            width: calc(100% - 15px);
+            margin: 0 auto;
+            display: flex;
+            gap: 5px;
+        }
+        
+        #inputContainer input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid var(--tg-theme-hint-color, #ccc);
+            border-radius: 5px;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+        }
+        
+        #inputContainer button,
+        #mainButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border-radius: 5px;
+            transition: background-color 0.3s;
         }
     </style>
 </head>
 <body>
-    <!-- ... (остальное без изменений) ... -->
+    <h1 id="title">Привет, Mini App!</h1>
+    <div id="inputContainer">
+        <div class="wrapper">
+            <input type="text" placeholder="Введите запрос" id="searchInput" />
+            <button id="searchButton">Поиск</button>
+        </div>
+    </div>
+    <div class="container">
+        <button id="mainButton">Нажми меня</button>
+    </div>
 
     <script>
         try {
-            if (window.Telegram && window.Telegram.WebApp) {
+            if (window.Telegram?.WebApp) {
                 const tg = Telegram.WebApp;
                 tg.expand();
-
+                
                 // Инициализация темы
                 const updateTheme = () => {
-                    document.body.style.backgroundColor = tg.themeParams.bg_color || '#ffffff';
-                    document.body.style.color = tg.themeParams.text_color || '#000000';
+                    const themeParams = tg.themeParams || {};
+                    document.documentElement.style.setProperty(
+                        '--tg-theme-bg-color', 
+                        themeParams.bg_color || '#ffffff'
+                    );
+                    document.documentElement.style.setProperty(
+                        '--tg-theme-text-color', 
+                        themeParams.text_color || '#000000'
+                    );
+                    document.documentElement.style.setProperty(
+                        '--tg-theme-secondary-bg-color', 
+                        themeParams.secondary_bg_color || '#f0f0f0'
+                    );
+                    document.documentElement.style.setProperty(
+                        '--tg-theme-button-color', 
+                        themeParams.button_color || '#0088cc'
+                    );
+                    document.documentElement.style.setProperty(
+                        '--tg-theme-button-text-color', 
+                        themeParams.button_text_color || '#ffffff'
+                    );
                 };
+                
                 updateTheme();
                 tg.onEvent('themeChanged', updateTheme);
 
@@ -40,20 +142,21 @@
                 const processInput = () => {
                     const query = elements.searchInput.value.trim();
                     if (!query) return;
-                    tg.sendData(encodeURIComponent(query));
+                    tg.sendData(query);
                     elements.searchInput.value = '';
                 };
 
                 // Обработчики событий
-                elements.searchInput.addEventListener('keyup', (e) => {
+                elements.searchInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') processInput();
                 });
 
                 elements.mainButton.addEventListener('click', () => {
                     const isVisible = elements.inputContainer.classList.toggle('visible');
                     tg.BackButton[isVisible ? 'show' : 'hide']();
-                    elements.inputContainer.style.bottom = isVisible ? '80px' : '15px';
-                    if (isVisible) setTimeout(() => elements.searchInput.focus(), 150);
+                    if (isVisible) {
+                        setTimeout(() => elements.searchInput.focus(), 150);
+                    }
                 });
 
                 elements.searchButton.addEventListener('click', processInput);
@@ -61,15 +164,16 @@
                 // Обработка BackButton
                 tg.BackButton.onClick(() => {
                     elements.inputContainer.classList.remove('visible');
-                    elements.inputContainer.style.bottom = '15px';
                     tg.BackButton.hide();
                 });
 
             } else {
                 console.warn("Telegram WebApp API недоступен!");
+                document.body.innerHTML = '<p>Запускайте в Telegram MiniApp!</p>';
             }
         } catch (error) {
-            console.error("Ошибка инициализации Telegram WebApp:", error);
+            console.error("Ошибка инициализации:", error);
+            document.body.innerHTML = `<p>Ошибка: ${error.message}</p>`;
         }
     </script>
 </body>
