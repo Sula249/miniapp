@@ -1,71 +1,37 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Telegram MiniApp</title>
-    <style>
-        /* Сброс стилей и базовые настройки */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+// Инициализация Telegram WebApp API
+const tg = window.Telegram.WebApp;
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: var(--tg-font, sans-serif);
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+tg.ready(); // Подтверждаем готовность
 
-        #app {
-            font-size: 24px;
-        }
-    </style>
-</head>
-<body>
-    <div id="app">Добро пожаловать в Telegram MiniApp</div>
+// Автоматически расширяем окно для лучшего отображения контента
+tg.expand();
 
-    <!-- Подключение Telegram Web App API -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
-        (function() {
-            const tg = window.Telegram.WebApp;
+// Обновление темы оформления
+function updateTheme() {
+    const themeParams = tg.themeParams;
+    document.body.style.backgroundColor = themeParams.bg_color || "#ffffff";
+    document.body.style.color = themeParams.text_color || "#000000";
+    
+    document.documentElement.dataset.theme = tg.colorScheme === "dark" ? "dark" : "light";
+}
 
-            // Функция для обновления темы
-            function updateTheme() {
-                const themeParams = tg.themeParams;
+// Применяем тему при загрузке и при изменении
+updateTheme();
+tg.onEvent("themeChanged", updateTheme);
 
-                // Установка цветов из параметров темы
-                document.body.style.backgroundColor = themeParams.bg_color || '#ffffff';
-                document.body.style.color = themeParams.text_color || '#000000';
+// Обновляем размер окна при изменении контента
+tg.onEvent("viewportChanged", () => {
+    tg.expand();
+});
 
-                // Логирование для отладки
-                console.log('Параметры темы:', themeParams);
-            }
+// Обработчик закрытия WebApp
+function closeApp() {
+    tg.close();
+}
 
-            // Инициализация приложения
-            tg.ready(() => {
-                console.log('Telegram Web App готово');
+// Добавляем кнопку закрытия в Telegram WebApp
+if (tg.isExpanded) {
+    tg.MainButton.setText("Закрыть").show().onClick(closeApp);
+}
 
-                // Первоначальная настройка темы
-                updateTheme();
-
-                // Обработка изменения темы
-                tg.onEvent('themeChanged', () => {
-                    console.log('Тема изменена');
-                    updateTheme();
-                });
-
-                // Расширение приложения (опционально)
-                tg.expand();
-            });
-        })();
-    </script>
-</body>
-</html>
+console.log("Telegram MiniApp инициализирована");
