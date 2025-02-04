@@ -33,27 +33,35 @@
 
         #inputContainer {
             position: fixed;
-            /* Изменено начальное положение, чтобы оно было за кнопкой */
             bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
             width: 100%;
             background: var(--tg-theme-bg-color, #ffffff);
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            padding: 10px 0;
             display: flex;
             gap: 5px;
-            transition: bottom 0.3s ease-in-out;
-            padding-bottom: calc(10px + env(safe-area-inset-bottom));
-            /* Начально скрыт за mainButton */
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
             opacity: 0;
             pointer-events: none;
-            transition: bottom 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform: translateY(0);
+            padding-top: 10px;
+        }
+        
+        #inputContainer::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: inherit;
+            z-index: -1;
         }
         
         #inputContainer.visible {
             opacity: 1;
             pointer-events: auto;
+            transform: translateY(-65px);
         }
         
         #inputContainer .wrapper {
@@ -61,6 +69,7 @@
             margin: 0 auto;
             display: flex;
             gap: 5px;
+            margin-bottom: calc(env(safe-area-inset-bottom) + 15px);
         }
         
         #inputContainer input {
@@ -139,12 +148,8 @@
 
                 mainButton.addEventListener('click', () => {
                     const isVisible = inputContainer.classList.contains('visible');
-                    if (isVisible) {
-                        inputContainer.classList.remove('visible');
-                        inputContainer.style.bottom = '15px';
-                    } else {
-                        inputContainer.classList.add('visible');
-                        inputContainer.style.bottom = '80px';
+                    inputContainer.classList.toggle('visible');
+                    if (!isVisible) {
                         setTimeout(() => searchInput.focus(), 300);
                     }
                 });
@@ -157,7 +162,6 @@
                 tg.BackButton.onClick(() => {
                     if (inputContainer.classList.contains('visible')) {
                         inputContainer.classList.remove('visible');
-                        inputContainer.style.bottom = '15px';
                         return true;
                     }
                     return false;
