@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram MiniApp</title>
-    <!-- ✓ Правильное подключение Telegram Web App API -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* ✓ Хорошее использование CSS-переменных Telegram */
         body {
             display: flex;
             flex-direction: column;
@@ -21,38 +19,32 @@
             transition: background-color 0.3s, color 0.3s;
         }
         
-        /* Рекомендуемые улучшения для inputContainer */
         #inputContainer {
             position: fixed;
             bottom: -100px;
             left: 0;
             width: 100%;
             background: var(--tg-theme-bg-color, #ffffff);
-            /* Добавить box-shadow для лучшего визуального разделения */
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             padding: 10px;
             display: flex;
             gap: 5px;
             transition: bottom 0.3s ease-in-out;
             z-index: 5;
-            /* Добавить безопасную зону для iOS */
             padding-bottom: calc(10px + env(safe-area-inset-bottom));
         }
         
-        /* Улучшения для input */
         #inputContainer input {
             flex: 1;
             padding: 10px;
             font-size: 16px;
             border: 1px solid var(--tg-theme-hint-color, #ccc);
             border-radius: 5px;
-            /* Добавить цвет фона и текста из темы */
             background: var(--tg-theme-secondary-bg-color, #f0f0f0);
             color: var(--tg-theme-text-color, #000000);
         }
         
-        /* Улучшения для кнопок */
-        #inputContainer button, #mainButton {
+        #inputContainer button {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -60,25 +52,24 @@
             background-color: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
             border-radius: 5px;
-            /* Добавить эффект нажатия */
-            transition: transform 0.1s;
         }
         
-        #inputContainer button:active, #mainButton:active {
-            transform: scale(0.98);
-        }
-        
-        /* Улучшения для главной кнопки */
         #mainButton {
             position: fixed;
             bottom: 15px;
             left: 50%;
-            width: calc(100% - 30px); /* Увеличен отступ */
+            width: calc(100% - 15px);
             max-width: 100%;
             padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            transition: background-color 0.3s;
             z-index: 10;
+            border-radius: 5px;
             transform: translateX(-50%);
-            /* Добавить безопасную зону для iOS */
             margin-bottom: env(safe-area-inset-bottom);
         }
     </style>
@@ -97,13 +88,11 @@
                 const tg = Telegram.WebApp;
                 tg.expand();
 
-                // ✓ Правильная обработка темы
                 if (tg.themeParams) {
                     document.body.style.setProperty('background-color', tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor);
                     document.body.style.setProperty('color', tg.themeParams.text_color || getComputedStyle(document.body).color);
                 }
 
-                // ✓ Обработка изменения темы
                 tg.onEvent('themeChanged', () => {
                     document.body.style.setProperty('background-color', tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor);
                     document.body.style.setProperty('color', tg.themeParams.text_color || getComputedStyle(document.body).color);
@@ -114,7 +103,6 @@
                 const searchInput = document.getElementById('searchInput');
                 const searchButton = document.getElementById('searchButton');
 
-                // Добавить обработку клавиши Enter
                 searchInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
                         const query = searchInput.value;
@@ -135,7 +123,6 @@
                     tg.sendData(query);
                 });
 
-                // Добавить обработку BackButton
                 tg.BackButton.onClick(() => {
                     if (inputContainer.style.bottom === '60px') {
                         inputContainer.style.bottom = '-100px';
