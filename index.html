@@ -20,7 +20,7 @@
         }
         #inputContainer {
             position: fixed;
-            bottom: -100px;
+            bottom: 60px;
             left: 0;
             width: 100%;
             background: var(--tg-theme-bg-color, #ffffff);
@@ -107,7 +107,7 @@
 
                 searchButton.addEventListener('click', () => {
                     const query = searchInput.value;
-                    tg.sendData(query);
+                    tg.sendData(query); // Логика для обработки запроса
                 });
 
             } else {
