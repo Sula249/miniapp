@@ -29,22 +29,31 @@
             gap: 5px;
             transition: bottom 0.3s ease-in-out;
             z-index: 5;
+            border-top: 1px solid var(--tg-theme-hint-color, #d3d3d3);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
         }
         #inputContainer input {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 1px solid var(--tg-theme-hint-color, #d3d3d3);
+            border-radius: 8px;
+            background: var(--tg-theme-secondary-bg-color, #f9f9f9);
+            color: var(--tg-theme-text-color, #000000);
+            outline: none;
         }
         #inputContainer button {
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-size: 16px;
             cursor: pointer;
             border: none;
             background-color: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
-            border-radius: 5px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        #inputContainer button:hover {
+            background-color: var(--tg-theme-button-hover-color, #0077bb);
         }
         #mainButton {
             position: fixed;
@@ -59,6 +68,8 @@
             color: var(--tg-theme-button-text-color, #ffffff);
             transition: background-color 0.3s;
             z-index: 10;
+            font-weight: bold;
+            border-radius: 0;
         }
         #mainButton:hover {
             background-color: var(--tg-theme-button-hover-color, #0077bb);
