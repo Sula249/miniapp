@@ -1,128 +1,70 @@
 <!DOCTYPE html>
-<html lang="ru" style="background: transparent">
+<html lang="ru">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Telegram MiniApp</title>
-    <link rel="stylesheet" href="https://telegram.org/css/telegram-web-app.css">
     <style>
-        :root {
-            color-scheme: light dark;
-            background: var(--tg-theme-bg-color, transparent);
-        }
-        
-        body {
+        /* Сброс стилей и базовые настройки */
+        * {
             margin: 0;
-            padding: 16px;
-            min-height: 100vh;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-family: var(--tg-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
-            background: var(--tg-theme-secondary-bg-color, var(--tg-theme-bg-color));
-            color: var(--tg-theme-text-color, #000);
-            transition: 
-                background-color 0.3s cubic-bezier(0.33, 0.11, 0.02, 0.99),
-                color 0.3s cubic-bezier(0.33, 0.11, 0.02, 0.99);
+            align-items: center;
+            height: 100vh;
+            font-family: var(--tg-font, sans-serif);
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Светлая тема по умолчанию */
-        :root[data-theme="light"] {
-            --tg-theme-bg-color: #ffffff;
-            --tg-theme-secondary-bg-color: #f4f4f5;
-            --tg-theme-text-color: #000000;
-        }
-
-        /* Тёмная тема по умолчанию */
-        :root[data-theme="dark"] {
-            --tg-theme-bg-color: #18222d;
-            --tg-theme-secondary-bg-color: #1e2733;
-            --tg-theme-text-color: #ffffff;
-        }
-
-        /* Защита от мерцания при загрузке */
-        .theme-loading {
-            opacity: 0;
+        #app {
+            font-size: 24px;
         }
     </style>
 </head>
-<body class="theme-loading">
-    <div id="app">Telegram Mini App</div>
+<body>
+    <div id="app">Добро пожаловать в Telegram MiniApp</div>
 
+    <!-- Подключение Telegram Web App API -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         (function() {
-            // Основной объект приложения
             const tg = window.Telegram.WebApp;
-            
-            // Функция обновления темы
+
+            // Функция для обновления темы
             function updateTheme() {
-                const root = document.documentElement;
-                const params = tg.themeParams;
+                const themeParams = tg.themeParams;
 
-                // Установка темы
-                root.dataset.theme = tg.colorScheme || 'light';
+                // Установка цветов из параметров темы
+                document.body.style.backgroundColor = themeParams.bg_color || '#ffffff';
+                document.body.style.color = themeParams.text_color || '#000000';
 
-                // Установка цветов через CSS переменные
-                root.style.setProperty('--tg-theme-bg-color', 
-                    params.bg_color || (tg.colorScheme === 'dark' ? '#18222d' : '#ffffff'));
-                    
-                root.style.setProperty('--tg-theme-secondary-bg-color', 
-                    params.secondary_bg_color || params.bg_color || 
-                    (tg.colorScheme === 'dark' ? '#1e2733' : '#f4f4f5'));
-                    
-                root.style.setProperty('--tg-theme-text-color', 
-                    params.text_color || (tg.colorScheme === 'dark' ? '#ffffff' : '#000000'));
-
-                // Специфичные фиксы для iOS
-                if (tg.platform === 'ios') {
-                    root.style.setProperty('--tg-theme-secondary-bg-color', 
-                        'var(--tg-theme-bg-color)');
-                }
+                // Логирование для отладки
+                console.log('Параметры темы:', themeParams);
             }
 
             // Инициализация приложения
-            function initApp() {
-                try {
-                    // Базовая настройка
-                    tg.ready();
-                    tg.expand();
-                    
-                    // Первичное обновление темы
+            tg.ready(() => {
+                console.log('Telegram Web App готово');
+
+                // Первоначальная настройка темы
+                updateTheme();
+
+                // Обработка изменения темы
+                tg.onEvent('themeChanged', () => {
+                    console.log('Тема изменена');
                     updateTheme();
-                    
-                    // Показываем контент после инициализации
-                    document.body.classList.remove('theme-loading');
-                    
-                    // Обработчики событий
-                    tg.onEvent('themeChanged', updateTheme);
-                    tg.onEvent('viewportChanged', updateTheme);
+                });
 
-                    // Включаем подтверждение закрытия, если нужно
-                    // tg.enableClosingConfirmation();
-
-                    if (process.env.NODE_ENV === 'development') {
-                        console.log('Debug Info:', {
-                            platform: tg.platform,
-                            colorScheme: tg.colorScheme,
-                            themeParams: tg.themeParams,
-                            viewportHeight: tg.viewportHeight,
-                            headerColor: tg.headerColor
-                        });
-                    }
-                } catch (error) {
-                    console.error('Initialization error:', error);
-                    // Показываем контент даже при ошибке
-                    document.body.classList.remove('theme-loading');
-                }
-            }
-
-            // Запуск приложения
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initApp);
-            } else {
-                initApp();
-            }
+                // Расширение приложения (опционально)
+                tg.expand();
+            });
         })();
     </script>
 </body>
