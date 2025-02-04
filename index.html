@@ -28,7 +28,7 @@
             display: flex;
             gap: 5px;
             transition: bottom 0.3s ease-in-out;
-            z-index: 10;
+            z-index: 5;
         }
         #inputContainer input {
             flex: 1;
@@ -58,7 +58,7 @@
             background-color: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
             transition: background-color 0.3s;
-            z-index: 5;
+            z-index: 10;
         }
         #mainButton:hover {
             background-color: var(--tg-theme-button-hover-color, #0077bb);
@@ -91,14 +91,19 @@
 
                 const mainButton = document.getElementById('mainButton');
                 const inputContainer = document.getElementById('inputContainer');
+                const searchInput = document.getElementById('searchInput');
                 const searchButton = document.getElementById('searchButton');
 
                 mainButton.addEventListener('click', () => {
-                    inputContainer.style.bottom = inputContainer.style.bottom === '50px' ? '-100px' : '50px';
+                    const isVisible = inputContainer.style.bottom === '60px';
+                    inputContainer.style.bottom = isVisible ? '-100px' : '60px';
+                    if (!isVisible) {
+                        setTimeout(() => searchInput.focus(), 300);
+                    }
                 });
 
                 searchButton.addEventListener('click', () => {
-                    const query = document.getElementById('searchInput').value;
+                    const query = searchInput.value;
                     tg.sendData(query);
                 });
 
