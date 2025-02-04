@@ -18,48 +18,95 @@
             color: var(--tg-theme-text-color, #000000);
             transition: background-color 0.3s, color 0.3s;
         }
-        button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
+        .main-button {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
             background-color: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
-            border-radius: 5px;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
             transition: background-color 0.3s;
         }
-        button:hover {
+        .main-button:hover {
             background-color: var(--tg-theme-button-hover-color, #0077bb);
+        }
+        .search-container {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100%);
+            display: flex;
+            width: 90%;
+            max-width: 500px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+        }
+        .search-container.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        .search-input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            font-size: 16px;
+        }
+        .search-button {
+            padding: 10px;
+            background-color: var(--tg-theme-button-color, #0088cc);
+            color: white;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1 id="title">Привет, Mini App</h1>
-    <button id="mainButton">Нажми меня</button>
+    <h1 id="title">Привет, Mini App!</h1>
+
+    <div class="search-container" id="searchContainer">
+        <input type="text" id="searchInput" class="search-input" placeholder="Введите запрос...">
+        <button id="searchButton" class="search-button">Поиск</button>
+    </div>
+
+    <button class="main-button" id="mainButton">Нажми меня</button>
 
     <script>
         try {
             if (window.Telegram && window.Telegram.WebApp) {
                 const tg = Telegram.WebApp;
-                tg.expand(); // Разворачиваем приложение
+                tg.expand();
 
-                // Проверяем, есть ли themeParams и применяем цвета
                 if (tg.themeParams) {
                     document.body.style.setProperty('background-color', tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor);
                     document.body.style.setProperty('color', tg.themeParams.text_color || getComputedStyle(document.body).color);
                 }
 
-                // Обрабатываем смену темы в реальном времени
                 tg.onEvent('themeChanged', () => {
                     document.body.style.setProperty('background-color', tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor);
                     document.body.style.setProperty('color', tg.themeParams.text_color || getComputedStyle(document.body).color);
                 });
 
-                // Добавляем обработку нажатия кнопки
                 const button = document.getElementById('mainButton');
+                const searchContainer = document.getElementById('searchContainer');
+                const searchInput = document.getElementById('searchInput');
+
                 button.addEventListener('click', () => {
-                    tg.MainButton.setText("Вы нажали!").show();
+                    searchContainer.classList.toggle('show');
+                    if (searchContainer.classList.contains('show')) {
+                        searchInput.focus();
+                    }
+                });
+
+                const searchButton = document.getElementById('searchButton');
+                searchButton.addEventListener('click', () => {
+                    alert(`Поиск по запросу: ${searchInput.value}`);
                 });
 
             } else {
