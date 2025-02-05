@@ -43,11 +43,12 @@
             padding: 10px 0;
             display: flex;
             gap: 5px;
-            transition: bottom 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+            transition: bottom 0.3s ease-in-out;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom));
             /* Начально скрыт за mainButton */
             opacity: 0;
             pointer-events: none;
+            transition: bottom 0.3s ease-in-out, opacity 0.3s ease-in-out;
         }
         
         #inputContainer.visible {
@@ -92,7 +93,7 @@
             color: var(--tg-theme-button-text-color, #ffffff);
             transition: background-color 0.3s;
             border-radius: 5px;
-            margin-bottom: env(safe-area-inset-bottom, 0px);
+            margin-bottom: env(safe-area-inset-bottom);
         }
     </style>
 </head>
@@ -144,7 +145,7 @@
                     } else {
                         inputContainer.classList.add('visible');
                         inputContainer.style.bottom = '80px';
-                        searchInput.focus();
+                        setTimeout(() => searchInput.focus(), 300);
                     }
                 });
 
@@ -157,7 +158,7 @@
                     if (inputContainer.classList.contains('visible')) {
                         inputContainer.classList.remove('visible');
                         inputContainer.style.bottom = '15px';
-                        return true;  // Возвращаем true, чтобы предотвратить стандартное поведение
+                        return true;
                     }
                     return false;
                 });
