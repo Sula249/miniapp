@@ -281,23 +281,44 @@
                     });
                 }
 
-                mainButton.addEventListener("click", showSearch);
-                toggleSearchButton.addEventListener("click", showQuestion);
-                overlay.addEventListener("click", hideAll);
+                function searchChannels(query) {
+                    const sheetId = 'Channels'; // Лист с каналами
+                    const range = sheetId + '!A:B'; // Диапазон данных для поиска
+                    gapi.client.sheets.spreadsheets.values.get({
+                        spreadsheetId: '1KpEYbZnmyIsyJ4ETXsLx0O7llr6kfaUjNf4_9A1Ba8Y',
+                        range: range
+                    }).then((response) => {
+                        const data = response.result.values;
+                        if (data) {
+                            const result = data.filter(row => row[0].toLowerCase().includes(query.toLowerCase()));
+                            if (result.length > 0) {
+                                alert('Найдено: ' + result.map(row => row[0]).join(', '));
+                            } else {
+                                alert('По запросу ничего не найдено');
+                            }
+                        } else {
+                            alert('Ошибка поиска');
+                        }
+                    });
+                }
 
                 searchButton.addEventListener("click", () => {
-                    if (searchInput.value.trim()) {
-                        logSearch(searchInput.value.trim());
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        logSearch(query); // Логирование запроса
+                        searchChannels(query); // Поиск в Google Sheets
                     }
-                    searchInput.value = '';
                 });
 
                 questionButton.addEventListener("click", () => {
                     if (questionInput.value.trim()) {
-                        logQuestion(questionInput.value.trim());
+                        logQuestion(questionInput.value.trim()); // Логирование вопроса
                     }
-                    questionInput.value = '';
+                    questionInput.value = ''; 
                 });
+
+                mainButton.addEventListener("click", showSearch);
+                toggleSearchButton.addEventListener("click", showQuestion);
             }
         });
     </script>
