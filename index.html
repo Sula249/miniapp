@@ -53,26 +53,31 @@
             position: fixed;
             bottom: 15px;
             left: 50%;
-            transform: translateX(-50%) translateY(100%);
             width: calc(100% - 20px);
             max-width: 500px;
             background: var(--tg-theme-bg-color, #ffffff);
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             padding: 8px;
             border-radius: 12px;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: bottom center;
+            transform: translateX(-50%) scaleY(0);
+            opacity: 0;
             box-sizing: border-box;
             z-index: 10;
         }
         
         #inputContainer.visible {
-            transform: translateX(-50%) translateY(-75px);
+            transform: translateX(-50%) scaleY(1);
+            opacity: 1;
+            bottom: 90px;
         }
 
         #inputContainer .wrapper {
             display: flex;
             gap: 8px;
             width: 100%;
+            transform-origin: bottom center;
         }
 
         #inputContainer input {
@@ -118,11 +123,18 @@
             transition: transform 0.2s ease, opacity 0.3s ease;
             border-radius: 12px;
             margin-bottom: env(safe-area-inset-bottom, 0px);
+            position: relative;
+            z-index: 15;
         }
 
         #mainButton:active {
             transform: scale(0.98);
             opacity: 0.9;
+        }
+
+        #mainButton.search-active {
+            opacity: 0;
+            transform: translateY(20px);
         }
     </style>
 </head>
@@ -160,12 +172,16 @@
                 const overlay = document.querySelector('.overlay');
 
                 const showSearch = () => {
+                    mainButton.classList.add('search-active');
                     inputContainer.classList.add('visible');
                     overlay.classList.add('visible');
-                    searchInput.focus();
+                    setTimeout(() => {
+                        searchInput.focus();
+                    }, 300);
                 };
 
                 const hideSearch = () => {
+                    mainButton.classList.remove('search-active');
                     inputContainer.classList.remove('visible');
                     overlay.classList.remove('visible');
                     searchInput.blur();
