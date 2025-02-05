@@ -344,6 +344,7 @@
                         if (mutation.addedNodes.length) {
                             document.querySelectorAll('#results a').forEach(link => {
                                 link.target = '_blank';
+                                link.rel = 'noopener noreferrer'; // добавляем для безопасности
                             });
                             
                             if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
