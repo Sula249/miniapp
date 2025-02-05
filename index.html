@@ -220,7 +220,6 @@
 
             tg.expand();
 
-            // Инициализация элементов
             const mainButton = document.getElementById("mainButton");
             const toggleSearchButton = document.getElementById("toggleSearchButton");
             const searchContainer = document.getElementById("searchContainer");
@@ -232,7 +231,6 @@
             const overlay = document.querySelector(".overlay");
             const loader = document.querySelector('.loader');
 
-            // Инициализация темы
             const updateTheme = () => {
                 document.body.style.backgroundColor = tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor;
                 document.body.style.color = tg.themeParams.text_color || getComputedStyle(document.body).color;
@@ -284,7 +282,7 @@
             overlay.addEventListener("click", hideAll);
 
             async function logQueryToGoogleSheets(query) {
-                const scriptUrl = 'https://script.google.com/macros/s/AKfycbypBtYb0Y8XiGYlEpRyzJq_yqCrE5ieiFwXT92MPsSF29EIFQLmOcp0gZZXasgQb3S9/exec';
+                const scriptUrl = 'https://script.google.com/macros/s/AKfycbypBtYb0Y8XiGYlEpRyzJq_yqCrE5ieiFwXT92MPSSF29EIFQLmOcp0gZZXasgQb3S9/exec';
                 try {
                     const response = await fetch(scriptUrl, {
                         method: 'POST',
@@ -315,6 +313,7 @@
                     if (searchElement && searchButton) {
                         searchElement.value = query;
                         searchButton.click();
+                        queryInput.value = ''; // Очищаем поле ввода после отправки
                     } else {
                         throw new Error('Элементы поиска не найдены');
                     }
@@ -323,7 +322,6 @@
                     alert('Произошла ошибка при выполнении поиска');
                 } finally {
                     setTimeout(() => loader.classList.remove('visible'), 1000);
-                    hideAll();
                 }
             });
 
@@ -331,6 +329,7 @@
                 const question = questionInput.value.trim();
                 if (question) {
                     alert(`Вопрос: ${question}`);
+                    questionInput.value = ''; // Очищаем поле ввода после отправки
                 } else {
                     alert("Введите вопрос.");
                 }
@@ -341,6 +340,7 @@
                     if (mutation.addedNodes.length) {
                         document.querySelectorAll('#results a').forEach(link => {
                             link.target = '_blank';
+                            link.rel = 'noopener noreferrer';
                         });
                         
                         if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
