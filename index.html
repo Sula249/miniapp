@@ -18,7 +18,6 @@
             color: var(--tg-theme-text-color, #000000);
             transition: background-color 0.3s, color 0.3s;
         }
-
         .overlay {
             position: fixed;
             top: 0;
@@ -30,12 +29,10 @@
             pointer-events: none;
             z-index: 1;
         }
-
         .overlay.visible {
             background: rgba(0, 0, 0, 0.5);
             pointer-events: auto;
         }
-
         .container {
             position: fixed;
             bottom: 15px;
@@ -48,7 +45,6 @@
             gap: 10px;
             z-index: 15;
         }
-
         #inputContainer {
             position: fixed;
             bottom: 15px;
@@ -57,24 +53,20 @@
             width: calc(100% - 20px);
             max-width: 500px;
             background: var(--tg-theme-bg-color, #ffffff);
-            
             padding: 5px;
             border-radius: 8px;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-sizing: border-box;
             z-index: 10;
         }
-        
         #inputContainer.visible {
             transform: translateX(-50%) translateY(-68px);
         }
-
         #inputContainer .wrapper {
             display: flex;
             gap: 5px;
             width: 100%;
         }
-
         #inputContainer input {
             flex: 1;
             padding: 12px 16px;
@@ -86,12 +78,10 @@
             box-sizing: border-box;
             transition: border-color 0.3s ease;
         }
-
         #inputContainer input:focus {
             outline: none;
             border-color: var(--tg-theme-button-color, #0088cc);
         }
-
         #inputContainer button {
             padding: 12px 20px;
             font-size: 16px;
@@ -102,11 +92,9 @@
             border-radius: 6px;
             transition: opacity 0.3s ease;
         }
-
         #inputContainer button:active {
             opacity: 0.8;
         }
-
         #mainButton {
             width: 100%;
             padding: 15px;
@@ -119,7 +107,6 @@
             border-radius: 8px;
             margin-bottom: env(safe-area-inset-bottom, 0px);
         }
-
         #mainButton:active {
             transform: scale(0.98);
             opacity: 0.9;
@@ -140,71 +127,68 @@
     </div>
 
     <script>
-        try {
+        document.addEventListener("DOMContentLoaded", () => {
             if (window.Telegram && window.Telegram.WebApp) {
                 const tg = Telegram.WebApp;
                 tg.expand();
 
                 const updateTheme = () => {
-                    document.body.style.backgroundColor = tg.themeParams?.bg_color ?? getComputedStyle(document.body).backgroundColor;
-                    document.body.style.color = tg.themeParams?.text_color ?? getComputedStyle(document.body).color;
+                    document.body.style.backgroundColor = tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor;
+                    document.body.style.color = tg.themeParams.text_color || getComputedStyle(document.body).color;
                 };
 
                 updateTheme();
-                tg.onEvent('themeChanged', updateTheme);
+                tg.onEvent("themeChanged", updateTheme);
 
-                const mainButton = document.getElementById('mainButton');
-                const inputContainer = document.getElementById('inputContainer');
-                const searchInput = document.getElementById('searchInput');
-                const searchButton = document.getElementById('searchButton');
-                const overlay = document.querySelector('.overlay');
+                const mainButton = document.getElementById("mainButton");
+                const inputContainer = document.getElementById("inputContainer");
+                const searchInput = document.getElementById("searchInput");
+                const searchButton = document.getElementById("searchButton");
+                const overlay = document.querySelector(".overlay");
 
                 const showSearch = () => {
-                    inputContainer.classList.add('visible');
-                    overlay.classList.add('visible');
+                    inputContainer.classList.add("visible");
+                    overlay.classList.add("visible");
                     searchInput.focus();
                 };
 
                 const hideSearch = () => {
-                    inputContainer.classList.remove('visible');
-                    overlay.classList.remove('visible');
+                    inputContainer.classList.remove("visible");
+                    overlay.classList.remove("visible");
                     searchInput.blur();
                 };
 
-                searchInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
+                searchInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
                         e.preventDefault();
-                        const query = searchInput.value.trim();
-                        if (!query) return;
-                        tg.sendData(query);
-                        hideSearch();
+                        sendQuery();
                     }
                 });
 
-                mainButton.addEventListener('click', (e) => {
+                searchButton.addEventListener("click", sendQuery);
+
+                function sendQuery() {
+                    const query = searchInput.value.trim();
+                    if (!query) return;
+                    if (tg.initDataUnsafe && tg.sendData) {
+                        tg.sendData(query);
+                    } else {
+                        console.warn("sendData не поддерживается");
+                    }
+                    hideSearch();
+                }
+
+                mainButton.addEventListener("click", (e) => {
                     e.stopPropagation();
                     showSearch();
                 });
 
-                searchButton.addEventListener('click', () => {
-                    const query = searchInput.value.trim();
-                    if (!query) return;
-                    tg.sendData(query);
-                    hideSearch();
-                });
-
-                overlay.addEventListener('click', hideSearch);
-
-                inputContainer.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-
+                overlay.addEventListener("click", hideSearch);
+                inputContainer.addEventListener("click", (e) => e.stopPropagation());
             } else {
                 console.warn("Telegram WebApp API недоступен!");
             }
-        } catch (error) {
-            console.error("Ошибка инициализации Telegram WebApp:", error);
-        }
+        });
     </script>
 </body>
 </html>
