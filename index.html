@@ -6,6 +6,7 @@
     <title>Telegram MiniApp</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* Твой CSS стиль */
         body {
             display: flex;
             flex-direction: column;
@@ -201,11 +202,13 @@
                 const questionButton = document.getElementById("questionButton");
                 const overlay = document.querySelector(".overlay");
 
+                // Функция переключения кнопок
                 function toggleButtons() {
                     mainButton.classList.toggle("hidden");
                     toggleSearchButton.classList.toggle("hidden");
                 }
 
+                // Функция отображения контейнера поиска
                 function showSearch() {
                     searchContainer.classList.add("visible");
                     questionContainer.classList.remove("visible");
@@ -220,6 +223,7 @@
                     }, 600); 
                 }
 
+                // Функция отображения контейнера вопроса
                 function showQuestion() {
                     questionContainer.classList.add("visible");
                     searchContainer.classList.remove("visible");
@@ -234,27 +238,34 @@
                     }, 600); 
                 }
 
+                // Функция скрытия всех элементов
                 function hideAll() {
                     searchContainer.classList.remove("visible");
                     questionContainer.classList.remove("visible");
                     overlay.classList.remove("visible");
                 }
 
+                // Обработчики событий для кнопок
                 mainButton.addEventListener("click", showSearch);
                 toggleSearchButton.addEventListener("click", showQuestion);
                 overlay.addEventListener("click", hideAll);
 
+                // Поиск
                 searchButton.addEventListener("click", () => {
-                    if (searchInput.value.trim()) {
-                        alert(`Поиск: ${searchInput.value}`);
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        // Здесь подключаем поисковую логику, например, отправку запроса на сервер
+                        alert(`Поиск: ${query}`);
                     } else {
                         alert("Введите запрос для поиска.");
                     }
                 });
 
+                // Обработчик для вопросов
                 questionButton.addEventListener("click", () => {
-                    if (questionInput.value.trim()) {
-                        alert(`Вопрос: ${questionInput.value}`);
+                    const question = questionInput.value.trim();
+                    if (question) {
+                        alert(`Вопрос: ${question}`);
                     } else {
                         alert("Введите вопрос.");
                     }
