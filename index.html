@@ -281,14 +281,20 @@
             toggleSearchButton.addEventListener("click", showQuestion);
             overlay.addEventListener("click", hideAll);
 
+
+
+
+
             async function logQueryToGoogleSheets(query) {
-                const scriptUrl = 'https://script.google.com/macros/s/AKfycbypBtYb0Y8XiGYlEpRyzJq_yqCrE5ieiFwXT92MPSSF29EIFQLmOcp0gZZXasgQb3S9/exec';
+                const scriptUrl = 'https://script.google.com/macros/s/AKfycbypBtYb0Y8XiGYlEpRyzJq_yqCrE5ieiFwXT92MPsSF29EIFQLmOcp0gZZXasgQb3S9/exec';
                 try {
+                    const formData = new FormData();
+                    formData.append('query', query);
+                    
                     const response = await fetch(scriptUrl, {
                         method: 'POST',
                         mode: 'no-cors',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ query })
+                        body: formData
                     });
                     return response;
                 } catch (error) {
@@ -296,6 +302,9 @@
                     throw error;
                 }
             }
+
+
+
 
             searchForm.addEventListener("submit", async function(event) {
                 event.preventDefault();
@@ -338,10 +347,14 @@
             const observer = new MutationObserver(mutations => {
                 mutations.forEach(mutation => {
                     if (mutation.addedNodes.length) {
-                        document.querySelectorAll('#results a').forEach(link => {
-                            link.target = '_blank';
-                            link.rel = 'noopener noreferrer';
-                        });
+                        // Находим все ссылки в результатах поиска
+                        const searchResults = document.querySelector('.gsc-results-wrapper-overlay') || document.getElementById('results');
+                        if (searchResults) {
+                            searchResults.querySelectorAll('a').forEach(link => {
+                                link.target = '_blank';
+                                link.rel = 'noopener noreferrer';
+                            });
+                        }
                         
                         if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                             loader.classList.remove('visible');
@@ -349,12 +362,16 @@
                     }
                 });
             });
-            
-            observer.observe(document.getElementById('results'), { 
-                childList: true, 
-                subtree: true 
+
+            // Следим за всем документом для отлова динамически добавляемых результатов
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
             });
         });
     </script>
 </body>
 </html>
+
+
+
