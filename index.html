@@ -19,21 +19,6 @@
             color: var(--tg-theme-text-color, #000000);
             transition: background-color 0.3s, color 0.3s;
         }
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0);
-            transition: background-color 0.3s ease;
-            pointer-events: none;
-            z-index: 1;
-        }
-        .overlay.visible {
-            background: rgba(0, 0, 0, 0.5);
-            pointer-events: auto;
-        }
         .container {
             position: fixed;
             bottom: 15px;
@@ -65,12 +50,10 @@
 </head>
 <body>
     <h1 id="title">Поисковая система</h1>
-    <div class="overlay"></div>
     <div class="container">
         <button id="mainButton" class="toggleButton">🔎 Начать поиск</button>
         <button id="toggleSearchButton" class="toggleButton hidden">💭 Задать вопрос</button>
     </div>
-    <div class="gcse-searchresults-only" id="results"></div>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             if (!window.Telegram || !window.Telegram.WebApp) {
@@ -94,16 +77,6 @@
             }
             mainButton.addEventListener("click", toggleButtons);
             toggleSearchButton.addEventListener("click", toggleButtons);
-            const observer = new MutationObserver(mutations => {
-                mutations.forEach(mutation => {
-                    if (mutation.addedNodes.length) {
-                        document.querySelectorAll('#results a').forEach(link => {
-                            link.target = '_blank';
-                        });
-                    }
-                });
-            });
-            observer.observe(document.getElementById('results'), { childList: true, subtree: true });
         });
     </script>
 </body>
