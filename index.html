@@ -111,6 +111,7 @@
             border-radius: 8px;
             margin-bottom: env(safe-area-inset-bottom, 0px);
             transform-origin: center;
+            backface-visibility: hidden;
         }
         .toggleButton:active {
             transform: scale(0.98);
@@ -121,7 +122,7 @@
         }
 
         /* Анимация переворота */
-        .toggleButton.flip {
+        .flip {
             animation: flip 0.6s ease forwards;
         }
 
@@ -134,6 +135,22 @@
             }
             100% {
                 transform: rotateY(180deg);
+            }
+        }
+
+        .toggleButton.flipBack {
+            animation: flipBack 0.6s ease forwards;
+        }
+
+        @keyframes flipBack {
+            0% {
+                transform: rotateY(180deg);
+            }
+            50% {
+                transform: rotateY(90deg);
+            }
+            100% {
+                transform: rotateY(0deg);
             }
         }
     </style>
@@ -197,7 +214,11 @@
                     searchInput.focus();
                     toggleButtons();
                     mainButton.classList.add("flip");
-                    setTimeout(() => mainButton.classList.remove("flip"), 600); // Убираем анимацию после завершения
+                    toggleSearchButton.classList.add("flipBack");
+                    setTimeout(() => {
+                        mainButton.classList.remove("flip");
+                        toggleSearchButton.classList.remove("flipBack");
+                    }, 600); // Убираем анимацию после завершения
                 }
 
                 function showQuestion() {
@@ -207,7 +228,11 @@
                     questionInput.focus();
                     toggleButtons();
                     toggleSearchButton.classList.add("flip");
-                    setTimeout(() => toggleSearchButton.classList.remove("flip"), 600); // Убираем анимацию после завершения
+                    mainButton.classList.add("flipBack");
+                    setTimeout(() => {
+                        toggleSearchButton.classList.remove("flip");
+                        mainButton.classList.remove("flipBack");
+                    }, 600); // Убираем анимацию после завершения
                 }
 
                 function hideAll() {
