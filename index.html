@@ -18,7 +18,7 @@
             color: var(--tg-theme-text-color, #000000);
             transition: background-color 0.3s, color 0.3s;
         }
-        
+
         .container {
             position: fixed;
             bottom: 15px;
@@ -33,7 +33,6 @@
 
         #inputContainer {
             position: fixed;
-            /* Изменено начальное положение, чтобы оно было за кнопкой */
             bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
@@ -43,25 +42,26 @@
             padding: 10px 0;
             display: flex;
             gap: 5px;
-            transition: bottom 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
             padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-            /* Начально скрыт за mainButton */
             opacity: 0;
             pointer-events: none;
+            transform: translateY(100%);
         }
         
         #inputContainer.visible {
             opacity: 1;
             pointer-events: auto;
+            transform: translateY(0);
         }
-        
+
         #inputContainer .wrapper {
             width: calc(100% - 15px);
             margin: 0 auto;
             display: flex;
             gap: 5px;
         }
-        
+
         #inputContainer input {
             flex: 1;
             padding: 10px;
@@ -71,7 +71,7 @@
             background: var(--tg-theme-secondary-bg-color, #f0f0f0);
             color: var(--tg-theme-text-color, #000000);
         }
-        
+
         #inputContainer button {
             padding: 10px 20px;
             font-size: 16px;
@@ -81,7 +81,7 @@
             color: var(--tg-theme-button-text-color, #ffffff);
             border-radius: 5px;
         }
-        
+
         #mainButton {
             width: 100%;
             padding: 15px;
@@ -114,15 +114,14 @@
                 const tg = Telegram.WebApp;
                 tg.expand();
 
-                if (tg.themeParams) {
-                    document.body.style.setProperty('background-color', tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor);
-                    document.body.style.setProperty('color', tg.themeParams.text_color || getComputedStyle(document.body).color);
-                }
+                // Обновление темы
+                const updateTheme = () => {
+                    document.body.style.backgroundColor = tg.themeParams?.bg_color ?? getComputedStyle(document.body).backgroundColor;
+                    document.body.style.color = tg.themeParams?.text_color ?? getComputedStyle(document.body).color;
+                };
 
-                tg.onEvent('themeChanged', () => {
-                    document.body.style.setProperty('background-color', tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor);
-                    document.body.style.setProperty('color', tg.themeParams.text_color || getComputedStyle(document.body).color);
-                });
+                updateTheme();
+                tg.onEvent('themeChanged', updateTheme);
 
                 const mainButton = document.getElementById('mainButton');
                 const inputContainer = document.getElementById('inputContainer');
@@ -131,36 +130,36 @@
 
                 searchInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
-                        const query = searchInput.value;
+                        e.preventDefault();
+                        const query = searchInput.value.trim();
+                        if (!query) return;
                         tg.sendData(query);
                     }
                 });
 
                 mainButton.addEventListener('click', () => {
-                    const isVisible = inputContainer.classList.contains('visible');
-                    if (isVisible) {
-                        inputContainer.classList.remove('visible');
-                        inputContainer.style.bottom = '15px';
-                    } else {
-                        inputContainer.classList.add('visible');
-                        inputContainer.style.bottom = '80px';
+                    inputContainer.classList.toggle('visible');
+                    if (inputContainer.classList.contains('visible')) {
                         searchInput.focus();
                     }
                 });
 
                 searchButton.addEventListener('click', () => {
-                    const query = searchInput.value;
+                    const query = searchInput.value.trim();
+                    if (!query) return;
                     tg.sendData(query);
                 });
 
-                tg.BackButton.onClick(() => {
-                    if (inputContainer.classList.contains('visible')) {
-                        inputContainer.classList.remove('visible');
-                        inputContainer.style.bottom = '15px';
-                        return true;  // Возвращаем true, чтобы предотвратить стандартное поведение
-                    }
-                    return false;
-                });
+                if (tg.BackButton) {
+                    tg.BackButton.show();
+                    tg.BackButton.onClick(() => {
+                        if (inputContainer.classList.contains('visible')) {
+                            inputContainer.classList.remove('visible');
+                            return true;
+                        }
+                        return false;
+                    });
+                }
 
             } else {
                 console.warn("Telegram WebApp API недоступен!");
