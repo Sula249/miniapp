@@ -118,6 +118,15 @@
         .hidden {
             display: none;
         }
+        /* Анимация переворота */
+        .flipIn {
+            transform: rotateY(180deg);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .flipOut {
+            transform: rotateY(0deg);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
     </style>
 </head>
 <body>
@@ -140,7 +149,7 @@
 
     <div class="container">
         <button id="mainButton" class="toggleButton">Начать поиск</button>
-        <button id="toggleSearchButton" class="toggleButton hidden">Задать вопрос</button> <!-- Изменил ID -->
+        <button id="toggleSearchButton" class="toggleButton hidden">Задать вопрос</button>
     </div>
 
     <script>
@@ -170,6 +179,8 @@
                 function toggleButtons() {
                     mainButton.classList.toggle("hidden");
                     toggleSearchButton.classList.toggle("hidden");
+                    mainButton.classList.toggle("flipOut");
+                    toggleSearchButton.classList.toggle("flipIn");
                 }
 
                 function showSearch() {
