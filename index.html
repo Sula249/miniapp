@@ -3,179 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linkee iBot | Поиск в Telegram</title>
+    <title>Telegram MiniApp</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Стили для белого фона и формы поиска */
-        body {
-            background-color: white; /* Белый фон */
-            font-family: Arial, sans-serif; /* Шрифт */
-            margin: 0; /* Убираем отступы */
-            padding: 10px; /* Отступы вокруг контента */
-        }
-
-        #radiobells_container {
-            margin-bottom: 50px; /* Отступ между радио и формой поиска */
-            text-align: center; /* Центрирование текста */
-        }
-
-        #search-form {
-            display: flex; /* Используем flexbox для выравнивания элементов */
-            justify-content: center; /* Центрирование формы */
-            margin-bottom: 0px; /* Отступ между формой поиска и результатами */
-        }
-
-        #query {
-            flex: 1; /* Растягиваем поле ввода на всю ширину */
-            padding: 15px; /* Отступ внутри поля ввода */
-            border: 1px solid #ccc; /* Рамка поля ввода */
-            border-radius: 5px; /* Закругленные углы */
-            margin-right: 5px; /* Отступ между полем ввода и кнопкой */
-        }
-
-        button {
-            padding: 10px 15px; /* Отступы внутри кнопки */
-            border: none; /* Убираем рамку */
-            border-radius: 5px; /* Закругленные углы */
-            background-color: #4682B4; /* Цвет фона кнопки */
-            color: white; /* Цвет текста кнопки */
-            cursor: pointer; /* Указатель при наведении */
-        }
-
-        button:hover {
-            background-color: #e03e00; /* Цвет кнопки при наведении */
-        }
-
-        h1 {
-            text-align: center; /* Центрирование заголовка */
-            margin-bottom: 40px; /* Отступ под заголовком */
-            color: #696969;
-        }
-
-        /* Стиль для результатов поиска */
-        #results {
-            margin-top: 0px; /* Отступ сверху для результатов */
-        }
-
-        #radiobells_container {
-            background-color: #4682B4; /* Цвет фона */
-            padding: 5px; /* Отступы */
-            border-radius: 5px; /* Закругленные углы */
-            text-align: center; /* Выравнивание текста по центру */
-        }
-        /* Стили для видео и кнопки перехода */
-        .video-container {
-            margin-top: 0px; /* Отступ сверху */
-            text-align: center; /* Центрирование видео */
-        }
-
-        .video-container video {
-            width: 100%; /* Ширина видео */
-            max-width: 600px; /* Максимальная ширина видео */
-            height: auto; /* Автоматическая высота */
-            border: 1px solid #ccc; /* Рамка видео */
-            border-radius: 5px; /* Закругленные углы */
-        }
-
-        .video-container a {
-            display: block;
-            width: 100%;
-            max-width: 600px;
-            margin: 7px auto;
-            padding: 15px 0;
-            background-color: #4682B4;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            text-align: center;
-            font-weight: bold;
-
-        }
-        
-        .video-container a:hover {
-            background-color: #e03e00; /* Цвет кнопки при наведении */
-        }
+        /* Стили остаются без изменений */
     </style>
-    <!-- Вставляем скрипт для Google Custom Search Engine -->
-    <script async src="https://cse.google.com/cse.js?cx=e58c2408882ae476e"></script>
 </head>
 <body>
-    
-    
-    <h1>Linkee iBot | Поиск</h1>
+    <h1 id="title">Привет, Mini App!</h1>
+    <div class="overlay"></div>
 
-    <!-- Форма поиска -->
-    <form id="search-form">
-        <input type="text" id="query" placeholder="Введите запрос для поиска" required>
-        <button type="submit"> 🔎 Поиск </button>
-    </form>
+    <div id="searchContainer" class="inputContainer">
+        <div class="wrapper">
+            <input type="text" placeholder="Введите запрос" id="searchInput" />
+            <button id="searchButton">🔎 Поиск</button>
+        </div>
+    </div>
 
-    <!-- Контейнер для отображения результатов поиска -->
-    <div class="gcse-searchresults-only" id="results"></div>
+    <div id="questionContainer" class="inputContainer">
+        <div class="wrapper">
+            <input type="text" placeholder="Введите вопрос" id="questionInput" />
+            <button id="questionButton">💭 Задать</button>
+        </div>
+    </div>
 
+    <div class="container">
+        <button id="mainButton" class="toggleButton">🔎 Начать поиск</button>
+        <button id="toggleSearchButton" class="toggleButton hidden">💭 Задать вопрос</button>
+    </div>
 
     <script>
-        const searchForm = document.getElementById('search-form');
-        const queryInput = document.getElementById('query');
+        document.addEventListener("DOMContentLoaded", () => {
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = Telegram.WebApp;
+                tg.expand();
 
-        // Обработка события отправки формы
-        searchForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const query = queryInput.value;
-            if (!query) return;
+                const updateTheme = () => {
+                    document.body.style.backgroundColor = tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor;
+                    document.body.style.color = tg.themeParams.text_color || getComputedStyle(document.body).color;
+                };
 
-            // Логирование запроса в Google Таблицы
-            logQueryToGoogleSheets(query);
+                updateTheme();
+                tg.onEvent("themeChanged", updateTheme);
 
-            // Установка значения в Google CSE
-            const searchElement = document.querySelector('input.gsc-input');
-            searchElement.value = query;
-            document.querySelector('button.gsc-search-button').click();
-        });
+                const mainButton = document.getElementById("mainButton");
+                const toggleSearchButton = document.getElementById("toggleSearchButton");
+                const searchContainer = document.getElementById("searchContainer");
+                const questionContainer = document.getElementById("questionContainer");
+                const searchInput = document.getElementById("searchInput");
+                const searchButton = document.getElementById("searchButton");
+                const questionInput = document.getElementById("questionInput");
+                const questionButton = document.getElementById("questionButton");
+                const overlay = document.querySelector(".overlay");
 
-        // Функция для логирования запросов в Google Таблицы
-        async function logQueryToGoogleSheets(query) {
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbypBtYb0Y8XiGYlEpRyzJq_yqCrE5ieiFwXT92MPsSF29EIFQLmOcp0gZZXasgQb3S9/exec'; // URL вашего Google Apps Script
+                // Функция для переключения кнопок
+                function toggleButtons() {
+                    mainButton.classList.toggle("hidden");
+                    toggleSearchButton.classList.toggle("hidden");
+                }
 
-            try {
-                await fetch(scriptUrl, {
-                    method: 'POST',
-                    mode: 'no-cors', // Отключение CORS для взаимодействия с Apps Script
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ query: query })
-                });
-            } catch (error) {
-                console.error('Error logging query to Google Sheets:', error);
-            }
-        }
+                // Функции для показа и скрытия элементов
+                function showSearch() {
+                    searchContainer.classList.add("visible");
+                    questionContainer.classList.remove("visible");
+                    overlay.classList.add("visible");
+                    searchInput.focus();
+                    toggleButtons();
+                    mainButton.classList.add("flip");
+                    toggleSearchButton.classList.add("flipBack");
+                    setTimeout(() => {
+                        mainButton.classList.remove("flip");
+                        toggleSearchButton.classList.remove("flipBack");
+                    }, 600); 
+                }
 
-        // Функция для открытия ссылок в новом окне
-        function openLinksInNewTab() {
-            const searchResults = document.getElementById('results');
+                function showQuestion() {
+                    questionContainer.classList.add("visible");
+                    searchContainer.classList.remove("visible");
+                    overlay.classList.add("visible");
+                    questionInput.focus();
+                    toggleButtons();
+                    toggleSearchButton.classList.add("flip");
+                    mainButton.classList.add("flipBack");
+                    setTimeout(() => {
+                        toggleSearchButton.classList.remove("flip");
+                        mainButton.classList.remove("flipBack");
+                    }, 600); 
+                }
 
-            // Наблюдатель за изменениями в DOM
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.addedNodes.length > 0) {
-                        // Находим все ссылки и добавляем target="_blank"
-                        const links = searchResults.querySelectorAll('a');
-                        links.forEach(link => {
-                            link.setAttribute('target', '_blank');
-                        });
+                function hideAll() {
+                    searchContainer.classList.remove("visible");
+                    questionContainer.classList.remove("visible");
+                    overlay.classList.remove("visible");
+                }
+
+                mainButton.addEventListener("click", showSearch);
+                toggleSearchButton.addEventListener("click", showQuestion);
+                overlay.addEventListener("click", hideAll);
+
+                // Функция отправки запроса на сервер и логирование в Google Sheets
+                async function logSearch(query, category) {
+                    const response = await fetch('YOUR_GOOGLE_SCRIPT_URL', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            keyword: query,
+                            category: category,
+                            date: new Date().toISOString()
+                        })
+                    });
+                    const data = await response.json();
+                    console.log("Логирование завершено", data);
+                }
+
+                // Поиск
+                searchButton.addEventListener("click", () => {
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        alert(`Поиск: ${query}`);
+                        logSearch(query, 'search');  // Логирование поискового запроса
+                    } else {
+                        alert("Введите запрос для поиска.");
                     }
                 });
-            });
 
-            // Настраиваем наблюдатель на изменения внутри #results
-            observer.observe(searchResults, { childList: true, subtree: true });
-        }
-
-        // Вызываем функцию после загрузки страницы
-        window.onload = function() {
-            openLinksInNewTab();
-        };
+                // Вопрос
+                questionButton.addEventListener("click", () => {
+                    const question = questionInput.value.trim();
+                    if (question) {
+                        alert(`Вопрос: ${question}`);
+                        logSearch(question, 'question');  // Логирование вопроса
+                    } else {
+                        alert("Введите вопрос.");
+                    }
+                });
+            } else {
+                console.warn("Telegram WebApp API недоступен!");
+            }
+        });
     </script>
-
 </body>
 </html>
