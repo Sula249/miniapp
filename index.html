@@ -21,80 +21,26 @@
         }
         .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0); transition: background-color 0.3s ease; pointer-events: none; z-index: 1; }
         .overlay.visible { background: rgba(0, 0, 0, 0.5); pointer-events: auto; }
-        .container { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: calc(100% - 20px); max-width: 500px; display: flex; flex-direction: column; gap: 10px; z-index: 15; }
-        .inputContainer { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%) translateY(3px); width: calc(100% - 20px); max-width: 500px; background: var(--tg-theme-bg-color, #ffffff); padding: 5px; border-radius: 8px; transition: transform 0.3s, opacity 0.3s ease; box-sizing: border-box; z-index: 10; opacity: 0; pointer-events: none; }
-        .inputContainer.visible { transform: translateX(-50%) translateY(-68px); opacity: 1; pointer-events: auto; }
     </style>
 </head>
 <body>
     <h1 id="title">Поисковая система</h1>
     <div class="overlay"></div>
-    <div class="loader"></div>
-    <div id="searchContainer" class="inputContainer">
-        <form id="searchForm" class="wrapper">
-            <input type="text" placeholder="Введите запрос" id="query" required autocomplete="off">
-            <button type="submit" id="searchButton">🔎 Поиск</button>
-        </form>
-    </div>
-    <div class="gcse-searchresults-only" id="results"></div>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             if (window.Telegram && window.Telegram.WebApp) {
                 const tg = Telegram.WebApp;
                 tg.expand();
-
                 const updateTheme = () => {
                     document.body.style.backgroundColor = tg.themeParams.bg_color || "#ffffff";
                     document.body.style.color = tg.themeParams.text_color || "#000000";
                 };
                 updateTheme();
                 tg.onEvent("themeChanged", updateTheme);
-
-                const searchForm = document.getElementById("searchForm");
-                const queryInput = document.getElementById("query");
-                const loader = document.querySelector(".loader");
-
-                searchForm.addEventListener("submit", async function(event) {
-                    event.preventDefault();
-                    const query = queryInput.value.trim();
-                    if (!query) return;
-                    loader.classList.add("visible");
-                    try {
-                        await logQueryToGoogleSheets(query);
-                        setTimeout(() => {
-                            const searchElement = document.querySelector("input.gsc-input");
-                            const searchButton = document.querySelector("button.gsc-search-button");
-                            if (searchElement && searchButton) {
-                                searchElement.value = query;
-                                searchButton.click();
-                            }
-                        }, 500);
-                    } catch (error) {
-                        console.error("Ошибка поиска:", error);
-                    } finally {
-                        setTimeout(() => loader.classList.remove("visible"), 1000);
-                    }
-                });
             } else {
                 console.warn("Telegram WebApp API недоступен!");
             }
         });
-
-        async function logQueryToGoogleSheets(query) {
-            const scriptUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
-            try {
-                const response = await fetch(scriptUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query })
-                });
-                if (!response.ok) {
-                    console.error("Ошибка логирования:", response.statusText);
-                }
-            } catch (error) {
-                console.error("Ошибка логирования:", error);
-            }
-        }
     </script>
 </body>
 </html>
