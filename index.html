@@ -121,7 +121,6 @@
             display: none;
         }
 
-        /* Анимация переворота */
         .flip {
             animation: flip 0.3s ease forwards;
         }
@@ -218,7 +217,7 @@
                     setTimeout(() => {
                         mainButton.classList.remove("flip");
                         toggleSearchButton.classList.remove("flipBack");
-                    }, 600); // Убираем анимацию после завершения
+                    }, 600); 
                 }
 
                 function showQuestion() {
@@ -232,7 +231,7 @@
                     setTimeout(() => {
                         toggleSearchButton.classList.remove("flip");
                         mainButton.classList.remove("flipBack");
-                    }, 600); // Убираем анимацию после завершения
+                    }, 600); 
                 }
 
                 function hideAll() {
