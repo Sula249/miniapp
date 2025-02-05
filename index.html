@@ -19,27 +19,77 @@
             color: var(--tg-theme-text-color, #000000);
             transition: background-color 0.3s, color 0.3s;
         }
-        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0); transition: background-color 0.3s ease; pointer-events: none; z-index: 1; }
-        .overlay.visible { background: rgba(0, 0, 0, 0.5); pointer-events: auto; }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            transition: background-color 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .overlay.visible {
+            background: rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+        }
+        .container {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 20px);
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 15;
+        }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
     <h1 id="title">Поисковая система</h1>
     <div class="overlay"></div>
+    <div class="container">
+        <button id="mainButton" class="toggleButton">🔎 Начать поиск</button>
+        <button id="toggleSearchButton" class="toggleButton hidden">💭 Задать вопрос</button>
+    </div>
+    <div class="gcse-searchresults-only" id="results"></div>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tg = Telegram.WebApp;
-                tg.expand();
-                const updateTheme = () => {
-                    document.body.style.backgroundColor = tg.themeParams.bg_color || "#ffffff";
-                    document.body.style.color = tg.themeParams.text_color || "#000000";
-                };
-                updateTheme();
-                tg.onEvent("themeChanged", updateTheme);
-            } else {
-                console.warn("Telegram WebApp API недоступен!");
+            if (!window.Telegram || !window.Telegram.WebApp) {
+                document.body.innerHTML = "<h1>Ошибка: Telegram WebApp API недоступен</h1>";
+                return;
             }
+            const tg = Telegram.WebApp;
+            tg.expand();
+            const updateTheme = () => {
+                const theme = tg.themeParams || {};
+                document.body.style.backgroundColor = theme.bg_color || "#ffffff";
+                document.body.style.color = theme.text_color || "#000000";
+            };
+            updateTheme();
+            tg.onEvent("themeChanged", updateTheme);
+            const mainButton = document.getElementById("mainButton");
+            const toggleSearchButton = document.getElementById("toggleSearchButton");
+            function toggleButtons() {
+                mainButton.classList.toggle("hidden");
+                toggleSearchButton.classList.toggle("hidden");
+            }
+            mainButton.addEventListener("click", toggleButtons);
+            toggleSearchButton.addEventListener("click", toggleButtons);
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    if (mutation.addedNodes.length) {
+                        document.querySelectorAll('#results a').forEach(link => {
+                            link.target = '_blank';
+                        });
+                    }
+                });
+            });
+            observer.observe(document.getElementById('results'), { childList: true, subtree: true });
         });
     </script>
 </body>
