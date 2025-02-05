@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linkee iBot | Поиск в Telegram</title>
     <style>
+        /* Ваши стили для белого фона и формы поиска */
         body {
             background-color: white;
             font-family: Arial, sans-serif;
@@ -40,47 +41,50 @@
         }
 
         #results {
-            margin-top: 20px;
+            margin-top: 0;
         }
 
         .gcse-searchresults-only {
-            margin-top: 20px;
+            margin-top: 10px;
         }
+
     </style>
     <script async src="https://cse.google.com/cse.js?cx=e58c2408882ae476e"></script>
 </head>
 <body>
+
     <h1>Linkee iBot | Поиск</h1>
-    
-    <!-- Форма поиска -->
-    <form id="search-form" onsubmit="submitSearch(event)">
+
+    <!-- Форма поиска с запросом -->
+    <form id="search-form">
         <input type="text" id="query" placeholder="Введите запрос для поиска" required>
-        <button type="submit"> 🔎 Поиск </button>
+        <button type="submit">🔎 Поиск</button>
     </form>
 
-    <!-- Контейнер для результатов поиска -->
+    <!-- Контейнер для отображения результатов поиска -->
     <div class="gcse-searchresults-only" id="results"></div>
 
     <script>
-        // Обработчик формы
-        function submitSearch(event) {
-            event.preventDefault();
-            const query = document.getElementById('query').value;
+        const searchForm = document.getElementById('search-form');
+        const queryInput = document.getElementById('query');
 
+        searchForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const query = queryInput.value;
             if (!query) return;
 
-            // Логируем запрос в Google Sheets
+            // Логирование запроса в Google Sheets
             logQueryToGoogleSheets(query);
 
-            // Используем Google CSE для выполнения поиска
+            // Установка значения в Google CSE и выполнение поиска
             const searchElement = document.querySelector('input.gsc-input');
             searchElement.value = query;
             document.querySelector('button.gsc-search-button').click();
-        }
+        });
 
-        // Логирование запроса в Google Sheets
         async function logQueryToGoogleSheets(query) {
             const scriptUrl = 'https://script.google.com/macros/s/AKfycbypBtYb0Y8XiGYlEpRyzJq_yqCrE5ieiFwXT92MPsSF29EIFQLmOcp0gZZXasgQb3S9/exec';
+            
             try {
                 await fetch(scriptUrl, {
                     method: 'POST',
@@ -91,9 +95,31 @@
                     body: JSON.stringify({ query: query })
                 });
             } catch (error) {
-                console.error('Ошибка логирования запроса:', error);
+                console.error('Error logging query to Google Sheets:', error);
             }
         }
+
+        // Открытие ссылок в новом окне
+        function openLinksInNewTab() {
+            const searchResults = document.getElementById('results');
+
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length > 0) {
+                        const links = searchResults.querySelectorAll('a');
+                        links.forEach(link => {
+                            link.setAttribute('target', '_blank');
+                        });
+                    }
+                });
+            });
+
+            observer.observe(searchResults, { childList: true, subtree: true });
+        }
+
+        window.onload = function() {
+            openLinksInNewTab();
+        };
     </script>
 
 </body>
