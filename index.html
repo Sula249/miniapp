@@ -118,15 +118,6 @@
         .hidden {
             display: none;
         }
-        /* Анимация переворота */
-        .flipIn {
-            transform: rotateY(180deg);
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .flipOut {
-            transform: rotateY(0deg);
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
     </style>
 </head>
 <body>
@@ -179,8 +170,6 @@
                 function toggleButtons() {
                     mainButton.classList.toggle("hidden");
                     toggleSearchButton.classList.toggle("hidden");
-                    mainButton.classList.toggle("flipOut");
-                    toggleSearchButton.classList.toggle("flipIn");
                 }
 
                 function showSearch() {
@@ -209,8 +198,21 @@
                 toggleSearchButton.addEventListener("click", showQuestion);
                 overlay.addEventListener("click", hideAll);
 
-                searchButton.addEventListener("click", () => alert(`Поиск: ${searchInput.value}`));
-                questionButton.addEventListener("click", () => alert(`Вопрос: ${questionInput.value}`));
+                searchButton.addEventListener("click", () => {
+                    if (searchInput.value.trim()) {
+                        alert(`Поиск: ${searchInput.value}`);
+                    } else {
+                        alert("Введите запрос для поиска.");
+                    }
+                });
+
+                questionButton.addEventListener("click", () => {
+                    if (questionInput.value.trim()) {
+                        alert(`Вопрос: ${questionInput.value}`);
+                    } else {
+                        alert("Введите вопрос.");
+                    }
+                });
             } else {
                 console.warn("Telegram WebApp API недоступен!");
             }
