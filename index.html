@@ -12,6 +12,7 @@
             padding: 10px;
         }
 
+        /* Стили для формы поиска */
         #search-form {
             display: flex;
             justify-content: center;
@@ -43,21 +44,23 @@
             margin-top: 0;
         }
 
-        .gcse-searchresults-only {
-            margin-top: 10px;
-        }
-
-        #radiobells_container {
-            margin-bottom: 50px;
-            text-align: center;
-        }
-
         h1 {
             text-align: center;
             margin-bottom: 40px;
             color: #696969;
         }
+
+        .gcse-searchresults-only {
+            margin-top: 10px;
+        }
+
+        /* Дополнительные стили для блока радио и видео */
+        #radiobells_container {
+            margin-bottom: 50px;
+            text-align: center;
+        }
     </style>
+    <!-- Вставляем скрипт для Google Custom Search Engine -->
     <script async src="https://cse.google.com/cse.js?cx=e58c2408882ae476e"></script>
 </head>
 <body>
@@ -91,9 +94,10 @@
             document.querySelector('button.gsc-search-button').click();
         });
 
+        // Функция для логирования запросов в Google Sheets
         async function logQueryToGoogleSheets(query) {
             const scriptUrl = 'https://script.google.com/macros/s/AKfycbypBtYb0Y8XiGYlEpRyzJq_yqCrE5ieiFwXT92MPsSF29EIFQLmOcp0gZZXasgQb3S9/exec';
-            
+
             try {
                 await fetch(scriptUrl, {
                     method: 'POST',
@@ -108,6 +112,7 @@
             }
         }
 
+        // Открытие всех ссылок в новом окне
         function openLinksInNewTab() {
             const searchResults = document.getElementById('results');
 
