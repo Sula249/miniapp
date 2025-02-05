@@ -364,9 +364,9 @@
             });
 
             // Следим за всем документом для отлова динамически добавляемых результатов
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
+            observer.observe(document.getElementById('results'), { 
+                childList: true, 
+                subtree: true 
             });
         });
     </script>
