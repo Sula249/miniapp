@@ -19,6 +19,23 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            transition: background-color 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .overlay.visible {
+            background: rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+        }
+
         .container {
             position: fixed;
             bottom: 15px;
@@ -42,35 +59,37 @@
             background: var(--tg-theme-bg-color, #ffffff);
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             padding: 8px;
-            border-radius: 8px;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in-out;
-            opacity: 0;
-            pointer-events: none;
+            border-radius: 12px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-sizing: border-box;
-            z-index: 4;
+            z-index: 10;
         }
         
         #inputContainer.visible {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(-75px);
         }
 
         #inputContainer .wrapper {
             display: flex;
-            gap: 5px;
+            gap: 8px;
             width: 100%;
         }
 
         #inputContainer input {
             flex: 1;
-            padding: 12px;
+            padding: 12px 16px;
             font-size: 16px;
             border: 1px solid var(--tg-theme-hint-color, #ccc);
-            border-radius: 5px;
+            border-radius: 8px;
             background: var(--tg-theme-secondary-bg-color, #f0f0f0);
             color: var(--tg-theme-text-color, #000000);
             box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        #inputContainer input:focus {
+            outline: none;
+            border-color: var(--tg-theme-button-color, #0088cc);
         }
 
         #inputContainer button {
@@ -80,7 +99,12 @@
             border: none;
             background-color: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
-            border-radius: 5px;
+            border-radius: 8px;
+            transition: opacity 0.3s ease;
+        }
+
+        #inputContainer button:active {
+            opacity: 0.8;
         }
 
         #mainButton {
@@ -91,20 +115,20 @@
             border: none;
             background-color: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s;
-            border-radius: 8px;
+            transition: transform 0.2s ease, opacity 0.3s ease;
+            border-radius: 12px;
             margin-bottom: env(safe-area-inset-bottom, 0px);
-            position: relative;
-            z-index: 5;
         }
 
-        #mainButton.shifted {
-            transform: translateY(-75px);
+        #mainButton:active {
+            transform: scale(0.98);
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
     <h1 id="title">Привет, Mini App!</h1>
+    <div class="overlay"></div>
     <div id="inputContainer">
         <div class="wrapper">
             <input type="text" placeholder="Введите запрос" id="searchInput" />
@@ -121,7 +145,6 @@
                 const tg = Telegram.WebApp;
                 tg.expand();
 
-                // Обновление темы
                 const updateTheme = () => {
                     document.body.style.backgroundColor = tg.themeParams?.bg_color ?? getComputedStyle(document.body).backgroundColor;
                     document.body.style.color = tg.themeParams?.text_color ?? getComputedStyle(document.body).color;
@@ -134,6 +157,19 @@
                 const inputContainer = document.getElementById('inputContainer');
                 const searchInput = document.getElementById('searchInput');
                 const searchButton = document.getElementById('searchButton');
+                const overlay = document.querySelector('.overlay');
+
+                const showSearch = () => {
+                    inputContainer.classList.add('visible');
+                    overlay.classList.add('visible');
+                    searchInput.focus();
+                };
+
+                const hideSearch = () => {
+                    inputContainer.classList.remove('visible');
+                    overlay.classList.remove('visible');
+                    searchInput.blur();
+                };
 
                 searchInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
@@ -141,32 +177,24 @@
                         const query = searchInput.value.trim();
                         if (!query) return;
                         tg.sendData(query);
+                        hideSearch();
                     }
                 });
 
                 mainButton.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    inputContainer.classList.add('visible');
-                    mainButton.classList.add('shifted');
-                    searchInput.focus();
+                    showSearch();
                 });
 
                 searchButton.addEventListener('click', () => {
                     const query = searchInput.value.trim();
                     if (!query) return;
                     tg.sendData(query);
+                    hideSearch();
                 });
 
-                // Добавляем обработчик клика на весь документ
-                document.addEventListener('click', (e) => {
-                    // Проверяем, что клик был не по inputContainer и его содержимому
-                    if (!inputContainer.contains(e.target) && !mainButton.contains(e.target)) {
-                        inputContainer.classList.remove('visible');
-                        mainButton.classList.remove('shifted');
-                    }
-                });
+                overlay.addEventListener('click', hideSearch);
 
-                // Предотвращаем закрытие при клике внутри inputContainer
                 inputContainer.addEventListener('click', (e) => {
                     e.stopPropagation();
                 });
