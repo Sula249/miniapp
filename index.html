@@ -3,146 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram MiniApp</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Linkee iBot | Поиск в Telegram</title>
     <style>
-        /* Стили остаются без изменений */
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+        }
+        #search-form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0;
+        }
+        #query {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4682B4;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e03e00;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        .gcse-searchresults-only {
+            margin-top: 20px;
+        }
     </style>
+    <script async src="https://cse.google.com/cse.js?cx=e58c2408882ae476e"></script>
 </head>
 <body>
-    <h1 id="title">Привет, Mini App!</h1>
-    <div class="overlay"></div>
+    <h1>Linkee iBot | Поиск</h1>
+    
+    <!-- Форма поиска -->
+    <form id="search-form">
+        <input type="text" id="query" placeholder="Введите запрос для поиска" required>
+        <button type="submit"> 🔎 Поиск </button>
+    </form>
 
-    <div id="searchContainer" class="inputContainer">
-        <div class="wrapper">
-            <input type="text" placeholder="Введите запрос" id="searchInput" />
-            <button id="searchButton">🔎 Поиск</button>
-        </div>
-    </div>
-
-    <div id="questionContainer" class="inputContainer">
-        <div class="wrapper">
-            <input type="text" placeholder="Введите вопрос" id="questionInput" />
-            <button id="questionButton">💭 Задать</button>
-        </div>
-    </div>
-
-    <div class="container">
-        <button id="mainButton" class="toggleButton">🔎 Начать поиск</button>
-        <button id="toggleSearchButton" class="toggleButton hidden">💭 Задать вопрос</button>
-    </div>
+    <!-- Контейнер для результатов поиска -->
+    <div class="gcse-searchresults-only" id="results"></div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tg = Telegram.WebApp;
-                tg.expand();
+        const searchForm = document.getElementById('search-form');
+        const queryInput = document.getElementById('query');
 
-                const updateTheme = () => {
-                    document.body.style.backgroundColor = tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor;
-                    document.body.style.color = tg.themeParams.text_color || getComputedStyle(document.body).color;
-                };
+        // Обработка отправки формы
+        searchForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const query = queryInput.value;
+            if (!query) return;
 
-                updateTheme();
-                tg.onEvent("themeChanged", updateTheme);
+            // Логируем запрос в Google Sheets
+            logQueryToGoogleSheets(query);
 
-                const mainButton = document.getElementById("mainButton");
-                const toggleSearchButton = document.getElementById("toggleSearchButton");
-                const searchContainer = document.getElementById("searchContainer");
-                const questionContainer = document.getElementById("questionContainer");
-                const searchInput = document.getElementById("searchInput");
-                const searchButton = document.getElementById("searchButton");
-                const questionInput = document.getElementById("questionInput");
-                const questionButton = document.getElementById("questionButton");
-                const overlay = document.querySelector(".overlay");
-
-                // Функция для переключения кнопок
-                function toggleButtons() {
-                    mainButton.classList.toggle("hidden");
-                    toggleSearchButton.classList.toggle("hidden");
-                }
-
-                // Функции для показа и скрытия элементов
-                function showSearch() {
-                    searchContainer.classList.add("visible");
-                    questionContainer.classList.remove("visible");
-                    overlay.classList.add("visible");
-                    searchInput.focus();
-                    toggleButtons();
-                    mainButton.classList.add("flip");
-                    toggleSearchButton.classList.add("flipBack");
-                    setTimeout(() => {
-                        mainButton.classList.remove("flip");
-                        toggleSearchButton.classList.remove("flipBack");
-                    }, 600); 
-                }
-
-                function showQuestion() {
-                    questionContainer.classList.add("visible");
-                    searchContainer.classList.remove("visible");
-                    overlay.classList.add("visible");
-                    questionInput.focus();
-                    toggleButtons();
-                    toggleSearchButton.classList.add("flip");
-                    mainButton.classList.add("flipBack");
-                    setTimeout(() => {
-                        toggleSearchButton.classList.remove("flip");
-                        mainButton.classList.remove("flipBack");
-                    }, 600); 
-                }
-
-                function hideAll() {
-                    searchContainer.classList.remove("visible");
-                    questionContainer.classList.remove("visible");
-                    overlay.classList.remove("visible");
-                }
-
-                mainButton.addEventListener("click", showSearch);
-                toggleSearchButton.addEventListener("click", showQuestion);
-                overlay.addEventListener("click", hideAll);
-
-                // Функция отправки запроса на сервер и логирование в Google Sheets
-                async function logSearch(query, category) {
-                    const response = await fetch('YOUR_GOOGLE_SCRIPT_URL', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            keyword: query,
-                            category: category,
-                            date: new Date().toISOString()
-                        })
-                    });
-                    const data = await response.json();
-                    console.log("Логирование завершено", data);
-                }
-
-                // Поиск
-                searchButton.addEventListener("click", () => {
-                    const query = searchInput.value.trim();
-                    if (query) {
-                        alert(`Поиск: ${query}`);
-                        logSearch(query, 'search');  // Логирование поискового запроса
-                    } else {
-                        alert("Введите запрос для поиска.");
-                    }
-                });
-
-                // Вопрос
-                questionButton.addEventListener("click", () => {
-                    const question = questionInput.value.trim();
-                    if (question) {
-                        alert(`Вопрос: ${question}`);
-                        logSearch(question, 'question');  // Логирование вопроса
-                    } else {
-                        alert("Введите вопрос.");
-                    }
-                });
-            } else {
-                console.warn("Telegram WebApp API недоступен!");
-            }
+            // Инициируем поиск через Google CSE
+            const searchElement = document.querySelector('input.gsc-input');
+            searchElement.value = query;
+            document.querySelector('button.gsc-search-button').click();
         });
+
+        // Логирование запроса в Google Sheets
+        async function logQueryToGoogleSheets(query) {
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbypBtYb0Y8XiGYlEpRyzJq_yqCrE5ieiFwXT92MPsSF29EIFQLmOcp0gZZXasgQb3S9/exec';
+            try {
+                await fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: query })
+                });
+            } catch (error) {
+                console.error('Ошибка логирования запроса:', error);
+            }
+        }
+
+        // Открытие ссылок в новом окне
+        function openLinksInNewTab() {
+            const searchResults = document.getElementById('results');
+
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length > 0) {
+                        const links = searchResults.querySelectorAll('a');
+                        links.forEach(link => {
+                            link.setAttribute('target', '_blank');
+                        });
+                    }
+                });
+            });
+
+            observer.observe(searchResults, { childList: true, subtree: true });
+        }
+
+        // Запуск при загрузке страницы
+        window.onload = function() {
+            openLinksInNewTab();
+        };
     </script>
 </body>
 </html>
