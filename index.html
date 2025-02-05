@@ -326,6 +326,7 @@
                         setTimeout(() => loader.classList.remove('visible'), 1000);
                     }
                     
+                    hideAll();
                 });
 
                 // Обработка вопросов
@@ -341,14 +342,9 @@
                 const observer = new MutationObserver(mutations => {
                     mutations.forEach(mutation => {
                         if (mutation.addedNodes.length) {
-                            // Находим все ссылки в результатах поиска
-                            const searchResults = document.querySelector('.gsc-results-wrapper-overlay') || document.getElementById('results');
-                            if (searchResults) {
-                                searchResults.querySelectorAll('a').forEach(link => {
-                                    link.target = '_blank';
-                                    link.rel = 'noopener noreferrer';
-                                });
-                            }
+                            document.querySelectorAll('#results a').forEach(link => {
+                                link.target = '_blank';
+                            });
                             
                             if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                                 loader.classList.remove('visible');
@@ -356,11 +352,9 @@
                         }
                     });
                 });
-
-                // Следим за всем документом для отлова динамически добавляемых результатов
-                observer.observe(document.body, {
-                    childList: true,
-                    subtree: true
+                observer.observe(document.getElementById('results'), { 
+                    childList: true, 
+                    subtree: true 
                 });
 
             } else {
