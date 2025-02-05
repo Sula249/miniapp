@@ -110,6 +110,7 @@
             transition: transform 0.2s ease, opacity 0.3s ease;
             border-radius: 8px;
             margin-bottom: env(safe-area-inset-bottom, 0px);
+            transform-origin: center;
         }
         .toggleButton:active {
             transform: scale(0.98);
@@ -117,6 +118,23 @@
         }
         .hidden {
             display: none;
+        }
+
+        /* Анимация переворота */
+        .toggleButton.flip {
+            animation: flip 0.6s ease forwards;
+        }
+
+        @keyframes flip {
+            0% {
+                transform: rotateY(0deg);
+            }
+            50% {
+                transform: rotateY(90deg);
+            }
+            100% {
+                transform: rotateY(180deg);
+            }
         }
     </style>
 </head>
@@ -178,6 +196,8 @@
                     overlay.classList.add("visible");
                     searchInput.focus();
                     toggleButtons();
+                    mainButton.classList.add("flip");
+                    setTimeout(() => mainButton.classList.remove("flip"), 600); // Убираем анимацию после завершения
                 }
 
                 function showQuestion() {
@@ -186,6 +206,8 @@
                     overlay.classList.add("visible");
                     questionInput.focus();
                     toggleButtons();
+                    toggleSearchButton.classList.add("flip");
+                    setTimeout(() => toggleSearchButton.classList.remove("flip"), 600); // Убираем анимацию после завершения
                 }
 
                 function hideAll() {
