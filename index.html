@@ -36,7 +36,7 @@
             position: fixed;
             bottom: 15px;
             left: 50%;
-            transform: translateX(-50%) translateY(100%);
+            transform: translateX(-50%) translateY(0);
             width: calc(100% - 20px);
             max-width: 500px;
             background: var(--tg-theme-bg-color, #ffffff);
@@ -47,13 +47,13 @@
             opacity: 0;
             pointer-events: none;
             box-sizing: border-box;
+            z-index: 10;
         }
         
         #inputContainer.visible {
             opacity: 1;
             pointer-events: auto;
-            bottom: 90px;
-            transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(-75px);
         }
 
         #inputContainer .wrapper {
@@ -138,11 +138,10 @@
                     }
                 });
 
-                mainButton.addEventListener('click', () => {
-                    inputContainer.classList.toggle('visible');
-                    if (inputContainer.classList.contains('visible')) {
-                        searchInput.focus();
-                    }
+                mainButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    inputContainer.classList.add('visible');
+                    searchInput.focus();
                 });
 
                 searchButton.addEventListener('click', () => {
@@ -151,16 +150,18 @@
                     tg.sendData(query);
                 });
 
-                if (tg.BackButton) {
-                    tg.BackButton.show();
-                    tg.BackButton.onClick(() => {
-                        if (inputContainer.classList.contains('visible')) {
-                            inputContainer.classList.remove('visible');
-                            return true;
-                        }
-                        return false;
-                    });
-                }
+                // Добавляем обработчик клика на весь документ
+                document.addEventListener('click', (e) => {
+                    // Проверяем, что клик был не по inputContainer и его содержимому
+                    if (!inputContainer.contains(e.target)) {
+                        inputContainer.classList.remove('visible');
+                    }
+                });
+
+                // Предотвращаем закрытие при клике внутри inputContainer
+                inputContainer.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
 
             } else {
                 console.warn("Telegram WebApp API недоступен!");
