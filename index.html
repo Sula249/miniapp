@@ -201,14 +201,6 @@
                 const questionButton = document.getElementById("questionButton");
                 const overlay = document.querySelector(".overlay");
 
-                const keywordLog = [];
-
-                function logSearch(query, type) {
-                    const timestamp = new Date().toLocaleString();
-                    keywordLog.push({ query, type, timestamp });
-                    console.log(`Лог поиска: ${query} (${type}) - ${timestamp}`);
-                }
-
                 function toggleButtons() {
                     mainButton.classList.toggle("hidden");
                     toggleSearchButton.classList.toggle("hidden");
@@ -255,7 +247,6 @@
                 searchButton.addEventListener("click", () => {
                     if (searchInput.value.trim()) {
                         alert(`Поиск: ${searchInput.value}`);
-                        logSearch(searchInput.value, 'Поиск');
                     } else {
                         alert("Введите запрос для поиска.");
                     }
@@ -264,7 +255,6 @@
                 questionButton.addEventListener("click", () => {
                     if (questionInput.value.trim()) {
                         alert(`Вопрос: ${questionInput.value}`);
-                        logSearch(questionInput.value, 'Вопрос');
                     } else {
                         alert("Введите вопрос.");
                     }
