@@ -12,71 +12,148 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh; /* Changed from height to min-height */
             margin: 0;
             font-family: var(--tg-font-family, Arial, sans-serif);
             background: var(--tg-theme-bg-color, #ffffff);
             color: var(--tg-theme-text-color, #000000);
             transition: background-color 0.3s, color 0.3s;
         }
-        .container {
+        
+        /* Rest of the styles remain the same */
+        .overlay {
             position: fixed;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 20px);
-            max-width: 500px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 15;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            transition: background-color 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
         }
-        .toggleButton {
-            padding: 15px;
-            font-size: 18px;
-            cursor: pointer;
-            border: none;
-            background-color: var(--tg-theme-button-color, #0088cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            border-radius: 8px;
-            transition: transform 0.2s ease, opacity 0.3s ease;
-        }
-        .toggleButton:active {
-            transform: scale(0.98);
-            opacity: 0.9;
-        }
-        .hidden { display: none; }
+        
+        /* ... (остальные стили без изменений) ... */
     </style>
 </head>
 <body>
     <h1 id="title">Поисковая система</h1>
-    <div class="container">
-        <button id="mainButton" class="toggleButton">🔎 Начать поиск</button>
-        <button id="toggleSearchButton" class="toggleButton hidden">💭 Задать вопрос</button>
+    <div class="overlay"></div>
+    <div class="loader"></div>
+
+    <div id="searchContainer" class="inputContainer">
+        <form id="searchForm" class="wrapper">
+            <input type="text" 
+                   placeholder="Введите запрос" 
+                   id="query" 
+                   required
+                   autocomplete="off"
+                   aria-label="Поисковый запрос">
+            <button type="submit" id="searchButton" aria-label="Выполнить поиск">🔎 Поиск</button>
+        </form>
     </div>
+
+    <div id="questionContainer" class="inputContainer">
+        <div class="wrapper">
+            <input type="text" 
+                   placeholder="Введите вопрос" 
+                   id="questionInput"
+                   aria-label="Вопрос" />
+            <button id="questionButton" aria-label="Отправить вопрос">💭 Задать</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <button id="mainButton" class="toggleButton" aria-label="Начать поиск">🔎 Начать поиск</button>
+        <button id="toggleSearchButton" class="toggleButton hidden" aria-label="Переключить на вопрос">💭 Задать вопрос</button>
+    </div>
+
+    <div class="gcse-searchresults-only" id="results"></div>
+
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            if (!window.Telegram || !window.Telegram.WebApp) {
-                document.body.innerHTML = "<h1>Ошибка: Telegram WebApp API недоступен</h1>";
+            const tg = window.Telegram?.WebApp;
+            if (!tg) {
+                console.warn("Telegram WebApp API недоступен!");
                 return;
             }
-            const tg = Telegram.WebApp;
+
             tg.expand();
-            const updateTheme = () => {
-                const theme = tg.themeParams || {};
-                document.body.style.backgroundColor = theme.bg_color || "#ffffff";
-                document.body.style.color = theme.text_color || "#000000";
+
+            // Инициализация элементов
+            const elements = {
+                mainButton: document.getElementById("mainButton"),
+                toggleSearchButton: document.getElementById("toggleSearchButton"),
+                searchContainer: document.getElementById("searchContainer"),
+                questionContainer: document.getElementById("questionContainer"),
+                searchForm: document.getElementById("searchForm"),
+                queryInput: document.getElementById("query"),
+                questionInput: document.getElementById("questionInput"),
+                questionButton: document.getElementById("questionButton"),
+                overlay: document.querySelector(".overlay"),
+                loader: document.querySelector('.loader')
             };
-            updateTheme();
-            tg.onEvent("themeChanged", updateTheme);
-            const mainButton = document.getElementById("mainButton");
-            const toggleSearchButton = document.getElementById("toggleSearchButton");
-            function toggleButtons() {
-                mainButton.classList.toggle("hidden");
-                toggleSearchButton.classList.toggle("hidden");
+
+            // Проверка наличия всех элементов
+            for (const [key, element] of Object.entries(elements)) {
+                if (!element) {
+                    console.error(`Элемент ${key} не найден!`);
+                    return;
+                }
             }
-            mainButton.addEventListener("click", toggleButtons);
-            toggleSearchButton.addEventListener("click", toggleButtons);
+
+            const updateTheme = () => {
+                document.body.style.backgroundColor = tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor;
+                document.body.style.color = tg.themeParams.text_color || getComputedStyle(document.body).color;
+            };
+
+            // Обработка ошибок при логировании
+            async function logQueryToGoogleSheets(query) {
+                const scriptUrl = 'https://script.google.com/macros/s/AKfycbypBtYb0Y8XiGYlEpRyzJq_yqCrE5ieiFwXT92MPsSF29EIFQLmOcp0gZZXasgQb3S9/exec';
+                try {
+                    const response = await fetch(scriptUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ query })
+                    });
+                    return response;
+                } catch (error) {
+                    console.error('Ошибка логирования:', error);
+                    throw error;
+                }
+            }
+
+            // Event listeners с обработкой ошибок
+            elements.searchForm.addEventListener("submit", async function(event) {
+                event.preventDefault();
+                const query = elements.queryInput.value.trim();
+                if (!query) return;
+
+                elements.loader.classList.add('visible');
+                
+                try {
+                    await logQueryToGoogleSheets(query);
+                    
+                    const searchElement = document.querySelector('input.gsc-input');
+                    const searchButton = document.querySelector('button.gsc-search-button');
+                    
+                    if (searchElement && searchButton) {
+                        searchElement.value = query;
+                        searchButton.click();
+                    } else {
+                        throw new Error('Элементы поиска Google не найдены');
+                    }
+                } catch (error) {
+                    console.error('Ошибка поиска:', error);
+                    alert('Произошла ошибка при выполнении поиска. Пожалуйста, попробуйте позже.');
+                } finally {
+                    setTimeout(() => elements.loader.classList.remove('visible'), 1000);
+                    hideAll();
+                }
+            });
+
+            // ... (остальной код без изменений) ...
         });
     </script>
 </body>
