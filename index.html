@@ -248,7 +248,7 @@
                     const values = [[date, query, category]];
 
                     const params = {
-                        spreadsheetId: 'your-spreadsheet-id',
+                        spreadsheetId: '1KpEYbZnmyIsyJ4ETXsLx0O7llr6kfaUjNf4_9A1Ba8Y', // ID вашего Google Spreadsheet
                         range: range,
                         valueInputOption: 'RAW',
                         resource: {
@@ -268,7 +268,7 @@
                     const values = [[date, query, category]];
 
                     const params = {
-                        spreadsheetId: 'your-spreadsheet-id',
+                        spreadsheetId: '1KpEYbZnmyIsyJ4ETXsLx0O7llr6kfaUjNf4_9A1Ba8Y', // ID вашего Google Spreadsheet
                         range: range,
                         valueInputOption: 'RAW',
                         resource: {
@@ -287,23 +287,17 @@
 
                 searchButton.addEventListener("click", () => {
                     if (searchInput.value.trim()) {
-                        logSearch(searchInput.value); // Логирование запроса в Google Sheets
-                        alert(`Поиск: ${searchInput.value}`);
-                    } else {
-                        alert("Введите запрос для поиска.");
+                        logSearch(searchInput.value.trim());
                     }
+                    searchInput.value = '';
                 });
 
                 questionButton.addEventListener("click", () => {
                     if (questionInput.value.trim()) {
-                        logQuestion(questionInput.value); // Логирование вопроса в Google Sheets
-                        alert(`Вопрос: ${questionInput.value}`);
-                    } else {
-                        alert("Введите вопрос.");
+                        logQuestion(questionInput.value.trim());
                     }
+                    questionInput.value = '';
                 });
-            } else {
-                console.warn("Telegram WebApp API недоступен!");
             }
         });
     </script>
