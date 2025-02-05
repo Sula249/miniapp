@@ -127,68 +127,75 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tg = Telegram.WebApp;
-                tg.expand();
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.Telegram && window.Telegram.WebApp) {
+        const tg = Telegram.WebApp;
+        tg.ready(() => {
+            tg.expand();
 
-                const updateTheme = () => {
+            const updateTheme = () => {
+                if (tg.themeParams) {
                     document.body.style.backgroundColor = tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor;
                     document.body.style.color = tg.themeParams.text_color || getComputedStyle(document.body).color;
-                };
-
-                updateTheme();
-                tg.onEvent("themeChanged", updateTheme);
-
-                const mainButton = document.getElementById("mainButton");
-                const inputContainer = document.getElementById("inputContainer");
-                const searchInput = document.getElementById("searchInput");
-                const searchButton = document.getElementById("searchButton");
-                const overlay = document.querySelector(".overlay");
-
-                const showSearch = () => {
-                    inputContainer.classList.add("visible");
-                    overlay.classList.add("visible");
-                    searchInput.focus();
-                };
-
-                const hideSearch = () => {
-                    inputContainer.classList.remove("visible");
-                    overlay.classList.remove("visible");
-                    searchInput.blur();
-                };
-
-                searchInput.addEventListener("keydown", (e) => {
-                    if (e.key === "Enter") {
-                        e.preventDefault();
-                        sendQuery();
-                    }
-                });
-
-                searchButton.addEventListener("click", sendQuery);
-
-                function sendQuery() {
-                    const query = searchInput.value.trim();
-                    if (!query) return;
-                    if (tg.initDataUnsafe && tg.sendData) {
-                        tg.sendData(query);
-                    } else {
-                        console.warn("sendData не поддерживается");
-                    }
-                    hideSearch();
                 }
+            };
 
-                mainButton.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    showSearch();
-                });
+            updateTheme();
+            tg.onEvent("themeChanged", updateTheme);
+        });
 
-                overlay.addEventListener("click", hideSearch);
-                inputContainer.addEventListener("click", (e) => e.stopPropagation());
-            } else {
-                console.warn("Telegram WebApp API недоступен!");
+        const mainButton = document.getElementById("mainButton");
+        const inputContainer = document.getElementById("inputContainer");
+        const searchInput = document.getElementById("searchInput");
+        const searchButton = document.getElementById("searchButton");
+        const overlay = document.querySelector(".overlay");
+
+        const showSearch = () => {
+            inputContainer.classList.add("visible");
+            overlay.classList.add("visible");
+            searchInput.focus();
+        };
+
+        const hideSearch = () => {
+            inputContainer.classList.remove("visible");
+            overlay.classList.remove("visible");
+            searchInput.blur();
+        };
+
+        searchInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                sendQuery();
             }
         });
+
+        searchButton.addEventListener("click", sendQuery);
+
+        function sendQuery() {
+            const query = searchInput.value.trim();
+            if (!query) return;
+
+            if (typeof tg.sendData === "function") {
+                tg.sendData(query);
+            } else {
+                console.warn("sendData не поддерживается");
+            }
+
+            hideSearch();
+        }
+
+        mainButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            showSearch();
+        });
+
+        overlay.addEventListener("click", hideSearch);
+        inputContainer.addEventListener("click", (e) => e.stopPropagation());
+    } else {
+        console.warn("Telegram WebApp API недоступен!");
+    }
+});
     </script>
 </body>
 </html>
