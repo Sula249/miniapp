@@ -27,13 +27,12 @@
             width: calc(100% - 20px);
             max-width: 500px;
             display: flex;
-            flex-direction: column;
             gap: 10px;
             z-index: 15;
         }
 
         .toggleButton {
-            width: 100%;
+            flex: 1;
             padding: 15px;
             font-size: 18px;
             cursor: pointer;
@@ -51,13 +50,13 @@
 
         .inputContainer {
             position: fixed;
-            bottom: 15px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 20px);
             max-width: 500px;
             background: var(--tg-theme-bg-color, #ffffff);
-            padding: 5px;
+            padding: 10px;
             border-radius: 8px;
             transition: opacity 0.3s ease, visibility 0.3s ease;
             box-sizing: border-box;
@@ -114,19 +113,20 @@
     <div id="searchContainer" class="inputContainer">
         <div class="wrapper">
             <input type="text" placeholder="Введите запрос" id="searchInput" />
-            <button class="sendButton" id="searchSendButton">Отправить</button>
+            <button class="sendButton" id="searchSendButton">Поиск</button>
         </div>
     </div>
 
     <div id="questionContainer" class="inputContainer">
         <div class="wrapper">
             <input type="text" placeholder="Введите вопрос" id="questionInput" />
-            <button class="sendButton" id="questionSendButton">Задать</button>
+            <button class="sendButton" id="questionSendButton">Отправить</button>
         </div>
     </div>
 
     <div class="container">
-        <button id="toggleButton" class="toggleButton" data-state="search">Начать поиск</button>
+        <button id="searchButton" class="toggleButton" data-state="search">Начать поиск</button>
+        <button id="questionButton" class="toggleButton" data-state="question">Задать вопрос</button>
     </div>
 
     <script>
@@ -135,7 +135,8 @@
                 const tg = Telegram.WebApp;
                 tg.expand();
 
-                const toggleButton = document.getElementById("toggleButton");
+                const searchButton = document.getElementById("searchButton");
+                const questionButton = document.getElementById("questionButton");
                 const searchContainer = document.getElementById("searchContainer");
                 const questionContainer = document.getElementById("questionContainer");
                 const searchInput = document.getElementById("searchInput");
@@ -143,31 +144,22 @@
                 const searchSendButton = document.getElementById("searchSendButton");
                 const questionSendButton = document.getElementById("questionSendButton");
 
-                function toggleState() {
-                    const state = toggleButton.getAttribute("data-state");
-
-                    if (state === "search") {
-                        // Переключаем на "Задать вопрос"
-                        toggleButton.classList.add("flip");
-                        setTimeout(() => {
-                            toggleButton.textContent = "Задать вопрос";
-                            toggleButton.setAttribute("data-state", "question");
-                            searchContainer.classList.add("visible");
-                            questionContainer.classList.remove("visible");
-                        }, 300);
-                    } else {
-                        // Переключаем на "Начать поиск"
-                        toggleButton.classList.remove("flip");
-                        setTimeout(() => {
-                            toggleButton.textContent = "Начать поиск";
-                            toggleButton.setAttribute("data-state", "search");
-                            questionContainer.classList.add("visible");
-                            searchContainer.classList.remove("visible");
-                        }, 300);
-                    }
+                function toggleSearch() {
+                    searchButton.classList.toggle("flip");
+                    questionButton.classList.remove("flip");
+                    searchContainer.classList.toggle("visible");
+                    questionContainer.classList.remove("visible");
                 }
 
-                toggleButton.addEventListener("click", toggleState);
+                function toggleQuestion() {
+                    questionButton.classList.toggle("flip");
+                    searchButton.classList.remove("flip");
+                    questionContainer.classList.toggle("visible");
+                    searchContainer.classList.remove("visible");
+                }
+
+                searchButton.addEventListener("click", toggleSearch);
+                questionButton.addEventListener("click", toggleQuestion);
 
                 searchSendButton.addEventListener("click", () => {
                     const query = searchInput.value.trim();
