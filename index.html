@@ -355,7 +355,7 @@
             });
 
             // Следим за всем документом для отлова динамически добавляемых результатов
-            observer.observe(document.body, {
+            observer.observe(document.getElementById('results'), { 
                 childList: true,
                 subtree: true
             });
