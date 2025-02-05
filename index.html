@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram MiniApp</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
     <style>
-        /* Твой CSS стиль */
         body {
             display: flex;
             flex-direction: column;
@@ -202,13 +202,11 @@
                 const questionButton = document.getElementById("questionButton");
                 const overlay = document.querySelector(".overlay");
 
-                // Функция переключения кнопок
                 function toggleButtons() {
                     mainButton.classList.toggle("hidden");
                     toggleSearchButton.classList.toggle("hidden");
                 }
 
-                // Функция отображения контейнера поиска
                 function showSearch() {
                     searchContainer.classList.add("visible");
                     questionContainer.classList.remove("visible");
@@ -223,7 +221,6 @@
                     }, 600); 
                 }
 
-                // Функция отображения контейнера вопроса
                 function showQuestion() {
                     questionContainer.classList.add("visible");
                     searchContainer.classList.remove("visible");
@@ -238,34 +235,69 @@
                     }, 600); 
                 }
 
-                // Функция скрытия всех элементов
                 function hideAll() {
                     searchContainer.classList.remove("visible");
                     questionContainer.classList.remove("visible");
                     overlay.classList.remove("visible");
                 }
 
-                // Обработчики событий для кнопок
+                function logSearch(query) {
+                    const date = new Date().toLocaleString();
+                    const category = 'Search';
+                    const range = 'Sheet1!A1:C1'; // Использовать нужный диапазон в вашей таблице
+                    const values = [[date, query, category]];
+
+                    const params = {
+                        spreadsheetId: 'your-spreadsheet-id',
+                        range: range,
+                        valueInputOption: 'RAW',
+                        resource: {
+                            values: values
+                        }
+                    };
+
+                    gapi.client.sheets.spreadsheets.values.append(params).then((response) => {
+                        console.log('Logged search query');
+                    });
+                }
+
+                function logQuestion(query) {
+                    const date = new Date().toLocaleString();
+                    const category = 'Question';
+                    const range = 'Sheet1!A1:C1'; // Использовать нужный диапазон в вашей таблице
+                    const values = [[date, query, category]];
+
+                    const params = {
+                        spreadsheetId: 'your-spreadsheet-id',
+                        range: range,
+                        valueInputOption: 'RAW',
+                        resource: {
+                            values: values
+                        }
+                    };
+
+                    gapi.client.sheets.spreadsheets.values.append(params).then((response) => {
+                        console.log('Logged question');
+                    });
+                }
+
                 mainButton.addEventListener("click", showSearch);
                 toggleSearchButton.addEventListener("click", showQuestion);
                 overlay.addEventListener("click", hideAll);
 
-                // Поиск
                 searchButton.addEventListener("click", () => {
-                    const query = searchInput.value.trim();
-                    if (query) {
-                        // Здесь подключаем поисковую логику, например, отправку запроса на сервер
-                        alert(`Поиск: ${query}`);
+                    if (searchInput.value.trim()) {
+                        logSearch(searchInput.value); // Логирование запроса в Google Sheets
+                        alert(`Поиск: ${searchInput.value}`);
                     } else {
                         alert("Введите запрос для поиска.");
                     }
                 });
 
-                // Обработчик для вопросов
                 questionButton.addEventListener("click", () => {
-                    const question = questionInput.value.trim();
-                    if (question) {
-                        alert(`Вопрос: ${question}`);
+                    if (questionInput.value.trim()) {
+                        logQuestion(questionInput.value); // Логирование вопроса в Google Sheets
+                        alert(`Вопрос: ${questionInput.value}`);
                     } else {
                         alert("Введите вопрос.");
                     }
