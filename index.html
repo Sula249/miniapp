@@ -32,7 +32,7 @@
             z-index: 15;
         }
 
-        #toggleButton {
+        .toggleButton {
             width: 100%;
             padding: 15px;
             font-size: 18px;
@@ -41,16 +41,15 @@
             background-color: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
             border-radius: 8px;
-            margin-bottom: env(safe-area-inset-bottom, 0px);
             transition: transform 0.6s ease;
             backface-visibility: hidden;
         }
 
-        #toggleButton.flip {
+        .toggleButton.flip {
             transform: rotateY(180deg);
         }
 
-        #inputContainer {
+        .inputContainer {
             position: fixed;
             bottom: 15px;
             left: 50%;
@@ -66,7 +65,7 @@
             display: none;
         }
 
-        #inputContainer.visible {
+        .inputContainer.visible {
             display: block;
         }
 
@@ -76,7 +75,7 @@
             width: 100%;
         }
 
-        #searchInput {
+        .inputContainer input {
             flex: 1;
             padding: 12px 16px;
             font-size: 16px;
@@ -88,12 +87,12 @@
             transition: border-color 0.3s ease;
         }
 
-        #searchInput:focus {
+        .inputContainer input:focus {
             outline: none;
             border-color: var(--tg-theme-button-color, #0088cc);
         }
 
-        #sendButton {
+        .sendButton {
             padding: 12px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -104,7 +103,7 @@
             transition: opacity 0.3s ease;
         }
 
-        #sendButton:active {
+        .sendButton:active {
             opacity: 0.8;
         }
     </style>
@@ -112,15 +111,22 @@
 <body>
     <h1 id="title">Привет, Mini App!</h1>
 
-    <div id="inputContainer">
+    <div id="searchContainer" class="inputContainer">
         <div class="wrapper">
             <input type="text" placeholder="Введите запрос" id="searchInput" />
-            <button id="sendButton">Отправить</button>
+            <button class="sendButton" id="searchSendButton">Отправить</button>
+        </div>
+    </div>
+
+    <div id="questionContainer" class="inputContainer">
+        <div class="wrapper">
+            <input type="text" placeholder="Введите вопрос" id="questionInput" />
+            <button class="sendButton" id="questionSendButton">Задать</button>
         </div>
     </div>
 
     <div class="container">
-        <button id="toggleButton" data-state="search">Начать поиск</button>
+        <button id="toggleButton" class="toggleButton" data-state="search">Начать поиск</button>
     </div>
 
     <script>
@@ -130,9 +136,12 @@
                 tg.expand();
 
                 const toggleButton = document.getElementById("toggleButton");
-                const inputContainer = document.getElementById("inputContainer");
+                const searchContainer = document.getElementById("searchContainer");
+                const questionContainer = document.getElementById("questionContainer");
                 const searchInput = document.getElementById("searchInput");
-                const sendButton = document.getElementById("sendButton");
+                const questionInput = document.getElementById("questionInput");
+                const searchSendButton = document.getElementById("searchSendButton");
+                const questionSendButton = document.getElementById("questionSendButton");
 
                 function toggleState() {
                     const state = toggleButton.getAttribute("data-state");
@@ -143,6 +152,8 @@
                         setTimeout(() => {
                             toggleButton.textContent = "Задать вопрос";
                             toggleButton.setAttribute("data-state", "question");
+                            searchContainer.classList.add("visible");
+                            questionContainer.classList.remove("visible");
                         }, 300);
                     } else {
                         // Переключаем на "Начать поиск"
@@ -150,22 +161,15 @@
                         setTimeout(() => {
                             toggleButton.textContent = "Начать поиск";
                             toggleButton.setAttribute("data-state", "search");
-                            inputContainer.classList.remove("visible");
+                            questionContainer.classList.add("visible");
+                            searchContainer.classList.remove("visible");
                         }, 300);
                     }
                 }
 
-                toggleButton.addEventListener("click", () => {
-                    const state = toggleButton.getAttribute("data-state");
+                toggleButton.addEventListener("click", toggleState);
 
-                    if (state === "search") {
-                        toggleState();
-                    } else {
-                        inputContainer.classList.add("visible");
-                    }
-                });
-
-                sendButton.addEventListener("click", () => {
+                searchSendButton.addEventListener("click", () => {
                     const query = searchInput.value.trim();
                     if (!query) return;
 
@@ -176,14 +180,34 @@
                     }
 
                     searchInput.value = "";
-                    inputContainer.classList.remove("visible");
-                    toggleState();
+                    searchContainer.classList.remove("visible");
+                });
+
+                questionSendButton.addEventListener("click", () => {
+                    const question = questionInput.value.trim();
+                    if (!question) return;
+
+                    if (tg.initDataUnsafe && tg.sendData) {
+                        tg.sendData(question);
+                    } else {
+                        console.warn("sendData не поддерживается");
+                    }
+
+                    questionInput.value = "";
+                    questionContainer.classList.remove("visible");
                 });
 
                 searchInput.addEventListener("keydown", (e) => {
                     if (e.key === "Enter") {
                         e.preventDefault();
-                        sendButton.click();
+                        searchSendButton.click();
+                    }
+                });
+
+                questionInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        questionSendButton.click();
                     }
                 });
 
