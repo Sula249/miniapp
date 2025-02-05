@@ -18,7 +18,21 @@
             color: var(--tg-theme-text-color, #000000);
             transition: background-color 0.3s, color 0.3s;
         }
-
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            transition: background-color 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .overlay.visible {
+            background: rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+        }
         .container {
             position: fixed;
             bottom: 15px;
@@ -27,54 +41,33 @@
             width: calc(100% - 20px);
             max-width: 500px;
             display: flex;
+            flex-direction: column;
             gap: 10px;
             z-index: 15;
         }
-
-        .toggleButton {
-            flex: 1;
-            padding: 15px;
-            font-size: 18px;
-            cursor: pointer;
-            border: none;
-            background-color: var(--tg-theme-button-color, #0088cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            border-radius: 8px;
-            transition: transform 0.6s ease;
-            backface-visibility: hidden;
-        }
-
-        .toggleButton.flip {
-            transform: rotateY(180deg);
-        }
-
-        .inputContainer {
+        #inputContainer {
             position: fixed;
-            bottom: 80px;
+            bottom: 15px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(3px);
             width: calc(100% - 20px);
             max-width: 500px;
             background: var(--tg-theme-bg-color, #ffffff);
-            padding: 10px;
+            padding: 5px;
             border-radius: 8px;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-sizing: border-box;
             z-index: 10;
-            display: none;
         }
-
-        .inputContainer.visible {
-            display: block;
+        #inputContainer.visible {
+            transform: translateX(-50%) translateY(-68px);
         }
-
-        .wrapper {
+        #inputContainer .wrapper {
             display: flex;
             gap: 5px;
             width: 100%;
         }
-
-        .inputContainer input {
+        #inputContainer input {
             flex: 1;
             padding: 12px 16px;
             font-size: 16px;
@@ -85,13 +78,11 @@
             box-sizing: border-box;
             transition: border-color 0.3s ease;
         }
-
-        .inputContainer input:focus {
+        #inputContainer input:focus {
             outline: none;
             border-color: var(--tg-theme-button-color, #0088cc);
         }
-
-        .sendButton {
+        #inputContainer button {
             padding: 12px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -101,32 +92,38 @@
             border-radius: 6px;
             transition: opacity 0.3s ease;
         }
-
-        .sendButton:active {
+        #inputContainer button:active {
             opacity: 0.8;
+        }
+        #mainButton {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            background-color: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            transition: transform 0.2s ease, opacity 0.3s ease;
+            border-radius: 8px;
+            margin-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        #mainButton:active {
+            transform: scale(0.98);
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
     <h1 id="title">Привет, Mini App!</h1>
-
-    <div id="searchContainer" class="inputContainer">
+    <div class="overlay"></div>
+    <div id="inputContainer">
         <div class="wrapper">
             <input type="text" placeholder="Введите запрос" id="searchInput" />
-            <button class="sendButton" id="searchSendButton">Поиск</button>
+            <button id="searchButton">Поиск</button>
         </div>
     </div>
-
-    <div id="questionContainer" class="inputContainer">
-        <div class="wrapper">
-            <input type="text" placeholder="Введите вопрос" id="questionInput" />
-            <button class="sendButton" id="questionSendButton">Отправить</button>
-        </div>
-    </div>
-
     <div class="container">
-        <button id="searchButton" class="toggleButton" data-state="search">Начать поиск</button>
-        <button id="questionButton" class="toggleButton" data-state="question">Задать вопрос</button>
+        <button id="mainButton">Начать поиск</button>
     </div>
 
     <script>
@@ -135,74 +132,59 @@
                 const tg = Telegram.WebApp;
                 tg.expand();
 
-                const searchButton = document.getElementById("searchButton");
-                const questionButton = document.getElementById("questionButton");
-                const searchContainer = document.getElementById("searchContainer");
-                const questionContainer = document.getElementById("questionContainer");
+                const updateTheme = () => {
+                    document.body.style.backgroundColor = tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor;
+                    document.body.style.color = tg.themeParams.text_color || getComputedStyle(document.body).color;
+                };
+
+                updateTheme();
+                tg.onEvent("themeChanged", updateTheme);
+
+                const mainButton = document.getElementById("mainButton");
+                const inputContainer = document.getElementById("inputContainer");
                 const searchInput = document.getElementById("searchInput");
-                const questionInput = document.getElementById("questionInput");
-                const searchSendButton = document.getElementById("searchSendButton");
-                const questionSendButton = document.getElementById("questionSendButton");
+                const searchButton = document.getElementById("searchButton");
+                const overlay = document.querySelector(".overlay");
 
-                function toggleSearch() {
-                    searchButton.classList.toggle("flip");
-                    questionButton.classList.remove("flip");
-                    searchContainer.classList.toggle("visible");
-                    questionContainer.classList.remove("visible");
-                }
+                const showSearch = () => {
+                    inputContainer.classList.add("visible");
+                    overlay.classList.add("visible");
+                    searchInput.focus();
+                };
 
-                function toggleQuestion() {
-                    questionButton.classList.toggle("flip");
-                    searchButton.classList.remove("flip");
-                    questionContainer.classList.toggle("visible");
-                    searchContainer.classList.remove("visible");
-                }
+                const hideSearch = () => {
+                    inputContainer.classList.remove("visible");
+                    overlay.classList.remove("visible");
+                    searchInput.blur();
+                };
 
-                searchButton.addEventListener("click", toggleSearch);
-                questionButton.addEventListener("click", toggleQuestion);
+                searchInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        sendQuery();
+                    }
+                });
 
-                searchSendButton.addEventListener("click", () => {
+                searchButton.addEventListener("click", sendQuery);
+
+                function sendQuery() {
                     const query = searchInput.value.trim();
                     if (!query) return;
-
                     if (tg.initDataUnsafe && tg.sendData) {
                         tg.sendData(query);
                     } else {
                         console.warn("sendData не поддерживается");
                     }
+                    hideSearch();
+                }
 
-                    searchInput.value = "";
-                    searchContainer.classList.remove("visible");
+                mainButton.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    showSearch();
                 });
 
-                questionSendButton.addEventListener("click", () => {
-                    const question = questionInput.value.trim();
-                    if (!question) return;
-
-                    if (tg.initDataUnsafe && tg.sendData) {
-                        tg.sendData(question);
-                    } else {
-                        console.warn("sendData не поддерживается");
-                    }
-
-                    questionInput.value = "";
-                    questionContainer.classList.remove("visible");
-                });
-
-                searchInput.addEventListener("keydown", (e) => {
-                    if (e.key === "Enter") {
-                        e.preventDefault();
-                        searchSendButton.click();
-                    }
-                });
-
-                questionInput.addEventListener("keydown", (e) => {
-                    if (e.key === "Enter") {
-                        e.preventDefault();
-                        questionSendButton.click();
-                    }
-                });
-
+                overlay.addEventListener("click", hideSearch);
+                inputContainer.addEventListener("click", (e) => e.stopPropagation());
             } else {
                 console.warn("Telegram WebApp API недоступен!");
             }
