@@ -140,7 +140,7 @@
 
     <div class="container">
         <button id="mainButton" class="toggleButton">Начать поиск</button>
-        <button id="questionButtonToggle" class="toggleButton hidden">Задать вопрос</button>
+        <button id="toggleSearchButton" class="toggleButton hidden">Задать вопрос</button> <!-- Изменил ID -->
     </div>
 
     <script>
@@ -158,7 +158,7 @@
                 tg.onEvent("themeChanged", updateTheme);
 
                 const mainButton = document.getElementById("mainButton");
-                const questionButtonToggle = document.getElementById("questionButtonToggle");
+                const toggleSearchButton = document.getElementById("toggleSearchButton");
                 const searchContainer = document.getElementById("searchContainer");
                 const questionContainer = document.getElementById("questionContainer");
                 const searchInput = document.getElementById("searchInput");
@@ -169,7 +169,7 @@
 
                 function toggleButtons() {
                     mainButton.classList.toggle("hidden");
-                    questionButtonToggle.classList.toggle("hidden");
+                    toggleSearchButton.classList.toggle("hidden");
                 }
 
                 function showSearch() {
@@ -195,7 +195,7 @@
                 }
 
                 mainButton.addEventListener("click", showSearch);
-                questionButtonToggle.addEventListener("click", showQuestion);
+                toggleSearchButton.addEventListener("click", showQuestion);
                 overlay.addEventListener("click", hideAll);
 
                 searchButton.addEventListener("click", () => alert(`Поиск: ${searchInput.value}`));
