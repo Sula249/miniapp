@@ -23,8 +23,9 @@
             position: fixed;
             bottom: 15px;
             left: 50%;
-            width: calc(100% - 15px);
             transform: translateX(-50%);
+            width: calc(100% - 30px);
+            max-width: 500px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -35,45 +36,44 @@
             position: fixed;
             bottom: 15px;
             left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
+            transform: translateX(-50%) translateY(100%);
+            width: calc(100% - 30px);
+            max-width: 500px;
             background: var(--tg-theme-bg-color, #ffffff);
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            padding: 10px 0;
-            display: flex;
-            gap: 5px;
+            padding: 10px;
+            border-radius: 8px;
             transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
             opacity: 0;
             pointer-events: none;
-            transform: translateY(100%);
+            box-sizing: border-box;
         }
         
         #inputContainer.visible {
             opacity: 1;
             pointer-events: auto;
-            transform: translateY(0);
+            transform: translateX(-50%) translateY(0);
         }
 
         #inputContainer .wrapper {
-            width: calc(100% - 15px);
-            margin: 0 auto;
             display: flex;
             gap: 5px;
+            width: 100%;
         }
 
         #inputContainer input {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             font-size: 16px;
             border: 1px solid var(--tg-theme-hint-color, #ccc);
             border-radius: 5px;
             background: var(--tg-theme-secondary-bg-color, #f0f0f0);
             color: var(--tg-theme-text-color, #000000);
+            box-sizing: border-box;
         }
 
         #inputContainer button {
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-size: 16px;
             cursor: pointer;
             border: none;
