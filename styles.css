@@ -251,7 +251,7 @@ body {
 }
 
 /* Адаптация для мобильных */
-@media (max-width: 480px) {
+@media (max-width: 500px) {
     .gsc-webResult.gsc-result {
         margin-bottom: 8px !important;
         padding: 12px !important;
