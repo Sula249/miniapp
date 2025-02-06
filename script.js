@@ -110,6 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Открытие ссылок в новых вкладках
+        // Открытие ссылок в новых вкладках
         const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 if (mutation.addedNodes.length) {
@@ -120,10 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             link.rel = 'noopener noreferrer';
                         });
                     }
-                    
-                    if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
-                        loader.classList.remove('visible');
-                    }
                 }
             });
         });
@@ -132,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
             childList: true,
             subtree: true
         });
+
 
     } else {
         console.warn("Telegram WebApp API недоступен!");
