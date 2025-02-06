@@ -149,8 +149,8 @@ body {
 .gcse-searchresults-only {
     position: fixed;
     top: 70px;
-    left: 0;
-    right: 0;
+    left: 10px;      /* ← Отступ слева */
+    right: 10px;     /* ← Отступ справа */
     bottom: 100px;
     overflow-y: auto;
     padding: 10px;
@@ -158,9 +158,10 @@ body {
     z-index: 5;
 }
 
+/* Для расширения внутреннего контента */
 .gsc-control-cse {
-    background: transparent !important;
-    border: none !important;
+    width: 100% !important;
+    max-width: none !important;
     padding: 0 !important;
 }
 
@@ -188,12 +189,11 @@ body {
     100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
+/* Убрать лишние отступы в результатах */
 .gsc-webResult.gsc-result {
-    background: var(--tg-theme-secondary-bg-color, #f0f0f0) !important;
-    border-radius: 8px !important;
-    margin-bottom: 12px !important;
-    border: none !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
 }
 
 .gs-title {
@@ -242,12 +242,13 @@ body {
     background: var(--tg-theme-secondary-bg-color, #f0f0f0) !important;
 }
 
+/* Адаптация для мобильных */
 @media (max-width: 500px) {
-    .gsc-webResult.gsc-result {
-        margin-bottom: 8px !important;
-        padding: 13px !important;
+    .gcse-searchresults-only {
+        left: 5px;    /* Меньшие отступы для мобильных */
+        right: 5px;
     }
-    
+}
     .gs-title {
         font-size: 15px !important;
     }
