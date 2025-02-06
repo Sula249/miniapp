@@ -11,6 +11,23 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
+.inputContainer {
+    position: absolute;
+    bottom: 50px;
+    background: var(--tg-theme-bg-color, #ffffff);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.inputContainer.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
 .loader {
     border: 4px solid var(--tg-theme-secondary-bg-color, #f0f0f0);
     border-top: 4px solid var(--tg-theme-button-color, #0088cc);
