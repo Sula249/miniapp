@@ -1,7 +1,14 @@
 body {
-    padding: 20px 0 100px; /* Отступ снизу для кнопок */
-    height: auto; /* Убрать фиксированную высоту */
-    min-height: 100vh; /* Минимальная высота */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    font-family: var(--tg-font-family, Arial, sans-serif);
+    background: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .overlay {
@@ -28,6 +35,8 @@ body {
     transform: translateX(-50%);
     width: calc(100% - 20px);
     max-width: 500px;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
     z-index: 15;
 }
@@ -138,10 +147,11 @@ body {
 }
 
 .gcse-searchresults-only {
-    position: static; /* Изменено с fixed */
-    width: 100%;
-    height: calc(100vh - 200px); /* Динамическая высота */
-    margin-top: 20px;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    bottom: 100px;
     overflow-y: auto;
     padding: 10px;
     background: var(--tg-theme-secondary-bg-color, #f0f0f0);
@@ -177,9 +187,7 @@ body {
     0% { transform: translate(-50%, -50%) rotate(0deg); }
     100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
-/* Добавьте эти стили в конец styles.css */
 
-/* Общие стили для результатов */
 .gsc-webResult.gsc-result {
     background: var(--tg-theme-secondary-bg-color, #f0f0f0) !important;
     border-radius: 8px !important;
@@ -188,7 +196,6 @@ body {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Заголовки результатов */
 .gs-title {
     color: var(--tg-theme-link-color, #0088cc) !important;
     font-size: 18px !important;
@@ -200,7 +207,6 @@ body {
     text-decoration: underline !important;
 }
 
-/* Описания */
 .gs-snippet {
     color: var(--tg-theme-text-color, #000000) !important;
     font-size: 15px !important;
@@ -208,13 +214,11 @@ body {
     font-family: var(--tg-font-family, Arial, sans-serif) !important;
 }
 
-/* URL результатов */
 .gs-url {
     color: var(--tg-theme-hint-color, #707579) !important;
     font-size: 13px !important;
 }
 
-/* Пагинация */
 .gsc-cursor-page {
     color: var(--tg-theme-button-color, #0088cc) !important;
     border: none !important;
@@ -227,20 +231,17 @@ body {
     font-weight: bold !important;
 }
 
-/* Иконка поиска */
 .gsc-search-button {
     padding: 8px !important;
     margin-left: 5px !important;
 }
 
-/* Поле ввода поиска */
 .gsc-input-box {
     border-radius: 6px !important;
     border-color: var(--tg-theme-hint-color, #ccc) !important;
     background: var(--tg-theme-secondary-bg-color, #f0f0f0) !important;
 }
 
-/* Адаптация для мобильных */
 @media (max-width: 500px) {
     .gsc-webResult.gsc-result {
         margin-bottom: 8px !important;
