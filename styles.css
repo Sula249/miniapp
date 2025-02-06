@@ -161,7 +161,7 @@ body {
 .gsc-control-cse {
     background: transparent !important;
     border: none !important;
-    padding: 1 !important;
+    padding: 0.5 !important;
 }
 
 .loader {
