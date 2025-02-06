@@ -3,46 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Web App</title>
+    <title>Telegram MiniApp</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script async src="https://cse.google.com/cse.js?cx=e58c2408882ae476e"></script>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/@telegram/web-app@1.0.0-beta.7"></script>
 </head>
 <body>
-    <div class="container">
-        <!-- Главная кнопка -->
-        <button id="mainButton" class="main-button">
-            Найти каналы
-        </button>
+    <h1 id="title">Поисковая система</h1>
+    <div class="overlay"></div>
+    <div class="loader"></div>
 
-        <!-- Кнопка для переключения на поиск по вопросам -->
-        <button id="toggleSearchButton" class="toggle-search-button hidden">
-            Задать вопрос
-        </button>
+    <!-- Контейнеры для ввода -->
+    <div id="searchContainer" class="inputContainer">
+        <form id="searchForm" class="wrapper">
+            <input type="text" 
+                   placeholder="Введите запрос" 
+                   id="query" 
+                   required
+                   autocomplete="off">
+            <button type="submit" id="searchButton">🔎 Поиск</button>
+        </form>
+    </div>
 
-        <!-- Контейнер для поиска -->
-        <div id="searchContainer" class="search-container">
-            <form id="searchForm">
-                <input type="text" id="query" placeholder="Введите запрос" required>
-                <button type="submit">Поиск</button>
-            </form>
-        </div>
-
-        <!-- Контейнер для вопросов -->
-        <div id="questionContainer" class="question-container">
-            <input type="text" id="questionInput" placeholder="Задайте вопрос">
-            <button id="questionButton">Отправить</button>
-        </div>
-
-        <!-- Слой для затемнения -->
-        <div class="overlay"></div>
-
-        <!-- Лоадер -->
-        <div class="loader">
-            <div class="spinner"></div>
+    <div id="questionContainer" class="inputContainer">
+        <div class="wrapper">
+            <input type="text" placeholder="Введите вопрос" id="questionInput" />
+            <button id="questionButton">💭 Задать</button>
         </div>
     </div>
 
-    <!-- Скрипты -->
-    <script src="app.js"></script>
+    <!-- Кнопки переключения -->
+    <div class="container">
+        <button id="mainButton" class="toggleButton">🔎 Начать поиск</button>
+        <button id="toggleSearchButton" class="toggleButton hidden">💭 Задать вопрос</button>
+    </div>
+
+    <!-- Контейнер для результатов -->
+    <div class="gcse-searchresults-only" id="results"></div>
+
+    <script src="script.js"></script>
 </body>
 </html>
