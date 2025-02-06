@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.Telegram && window.Telegram.WebApp) {
         const tg = Telegram.WebApp;
         tg.expand();
-        tg.BackButton.onClick(() => window.history.back());
 
         // Инициализация темы
         const updateTheme = () => {
@@ -32,6 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 tg.BackButton.hide();
             }
         };
+
+        // Настройка обработчика кнопки "Назад"
+        tg.BackButton.onClick(() => {
+            window.history.back();
+        });
 
         // Оригинальные функции анимации
         function toggleButtons() {
@@ -77,7 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
-            updateBackButton();
         }
 
         // Обработчики событий
@@ -155,9 +158,17 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!event.state) {
                 hideAll();
             } else if (event.state.page === 'search') {
-                showSearch();
+                searchContainer.classList.add("visible");
+                questionContainer.classList.remove("visible");
+                overlay.classList.add("visible");
+                mainButton.classList.add("hidden");
+                toggleSearchButton.classList.remove("hidden");
             } else if (event.state.page === 'question') {
-                showQuestion();
+                questionContainer.classList.add("visible");
+                searchContainer.classList.remove("visible");
+                overlay.classList.add("visible");
+                mainButton.classList.add("hidden");
+                toggleSearchButton.classList.remove("hidden");
             }
             updateBackButton();
         });
