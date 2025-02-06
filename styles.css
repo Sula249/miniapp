@@ -201,7 +201,7 @@ body {
 /* Заголовки результатов */
 .gs-title {
     color: var(--tg-theme-link-color, #0088cc) !important;
-    font-size: 17px !important;
+    font-size: 18px !important;
     text-decoration: none !important;
     font-family: var(--tg-font-family, Arial, sans-serif) !important;
 }
