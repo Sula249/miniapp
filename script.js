@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const mainButton = document.getElementById("mainButton");
     const toggleSearchButton = document.getElementById("toggleSearchButton");
+    const searchContainer = document.getElementById("searchContainer");
+    const questionContainer = document.getElementById("questionContainer");
     const searchForm = document.getElementById("searchForm");
     const queryInput = document.getElementById("query");
     const questionButton = document.getElementById("questionButton");
@@ -20,28 +22,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const loader = document.querySelector(".loader");
 
     mainButton.addEventListener("click", () => {
-        document.getElementById("searchContainer").classList.toggle("visible");
+        searchContainer.classList.add("visible");
+        questionContainer.classList.remove("visible");
     });
 
     toggleSearchButton.addEventListener("click", () => {
-        document.getElementById("questionContainer").classList.toggle("visible");
+        questionContainer.classList.add("visible");
+        searchContainer.classList.remove("visible");
     });
 
     searchForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const query = queryInput.value.trim();
         if (!query) return;
-        loader.classList.add("visible");
+        loader.style.display = "block";
         try {
-            await fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
+            const response = await fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ query })
             });
+            if (!response.ok) {
+                throw new Error(`Ошибка HTTP: ${response.status}`);
+            }
         } catch (error) {
             console.error("Ошибка логирования запроса:", error);
         } finally {
-            loader.classList.remove("visible");
+            loader.style.display = "none";
         }
     });
 
@@ -55,4 +62,3 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
-
