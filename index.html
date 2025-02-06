@@ -316,22 +316,28 @@
                         await logQueryToGoogleSheets(query);
                         
                         const searchElement = document.querySelector('input.gsc-input');
-                        if (searchElement) {
+                        const searchButton = document.querySelector('button.gsc-search-button');
+                        
+                        if (searchElement && searchButton) {
                             searchElement.value = query;
-                            document.querySelector('button.gsc-search-button').click();
+                            searchButton.click();
+                            queryInput.value = ''; // очищаем поле ввода
+                        } else {
+                            throw new Error('Элементы поиска не найдены');
                         }
                     } catch (error) {
                         console.error('Ошибка поиска:', error);
+                        alert('Произошла ошибка при выполнении поиска');
                     } finally {
                         setTimeout(() => loader.classList.remove('visible'), 1000);
                     }
-
                 });
 
-                // Обработка вопросов
                 questionButton.addEventListener("click", () => {
-                    if (questionInput.value.trim()) {
-                        alert(`Вопрос: ${questionInput.value}`);
+                    const question = questionInput.value.trim();
+                    if (question) {
+                        alert(`Вопрос: ${question}`);
+                        questionInput.value = ''; // очищаем поле ввода
                     } else {
                         alert("Введите вопрос.");
                     }
