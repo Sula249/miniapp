@@ -3,116 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Поиск Telegram каналов</title>
-    <style>
-        /* Анимация загрузки */
-        .loading {
-            animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Стили для кнопки и интерфейса */
-        .second-button {
-            display: block;
-        }
-
-        .results {
-            margin-top: 20px;
-        }
-
-        /* Оформление */
-        .search-container {
-            margin: 20px;
-            text-align: center;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            margin: 20px auto;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
-            border-radius: 50%;
-        }
-    </style>
+    <title>Telegram MiniApp</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script async src="https://cse.google.com/cse.js?cx=e58c2408882ae476e"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <h1 id="title">Поисковая система</h1>
+    <div class="overlay"></div>
+    <div class="loader"></div>
 
-<div class="search-container">
-    <input type="text" id="search-input" placeholder="Введите запрос">
-    <button id="search-button">Поиск</button>
-    <div class="loading-spinner"></div>
-    <div class="results"></div>
-</div>
+    <!-- Контейнеры для ввода -->
+    <div id="searchContainer" class="inputContainer">
+        <form id="searchForm" class="wrapper">
+            <input type="text" 
+                   placeholder="Введите запрос" 
+                   id="query" 
+                   required
+                   autocomplete="off">
+            <button type="submit" id="searchButton">🔎 Поиск</button>
+        </form>
+    </div>
 
-<button class="second-button">Вторая кнопка</button>
+    <div id="questionContainer" class="inputContainer">
+        <div class="wrapper">
+            <input type="text" placeholder="Введите вопрос" id="questionInput" />
+            <button id="questionButton">💭 Задать</button>
+        </div>
+    </div>
 
-<script>
-document.getElementById('search-button').addEventListener('click', function() {
-    let query = document.getElementById('search-input').value;
-    if (query) {
-        showLoading();  // Показать анимацию загрузки
-        search(query);  // Выполнить поиск
-        logSearch(query);  // Логировать запрос
-    } else {
-        alert('Введите запрос для поиска');
-    }
-});
+    <!-- Кнопки переключения -->
+    <div class="container">
+        <button id="mainButton" class="toggleButton">🔎 Начать поиск</button>
+        <button id="toggleSearchButton" class="toggleButton hidden">💭 Задать вопрос</button>
+    </div>
 
-function search(query) {
-    // Замените на URL вашего API, который взаимодействует с Google Sheets
-    fetch(`https://your-google-sheet-api-url?query=${query}`)
-        .then(response => response.json())
-        .then(data => {
-            displayResults(data);
-            hideLoading();  // Скрыть анимацию загрузки
-        })
-        .catch(error => {
-            console.error('Ошибка поиска:', error);
-            hideLoading();  // Скрыть анимацию загрузки в случае ошибки
-        });
-}
+    <!-- Контейнер для результатов -->
+    <div class="gcse-searchresults-only" id="results"></div>
 
-function displayResults(data) {
-    const resultsDiv = document.querySelector('.results');
-    resultsDiv.innerHTML = ''; // Очищаем старые результаты
-
-    if (data.length > 0) {
-        data.forEach(item => {
-            let resultItem = document.createElement('div');
-            resultItem.classList.add('result-item');
-            resultItem.textContent = item.name; // Измените под свои данные
-            resultsDiv.appendChild(resultItem);
-        });
-    } else {
-        resultsDiv.textContent = 'Ничего не найдено.';
-    }
-}
-
-function logSearch(query) {
-    // Замените на URL вашего API для логирования запросов в Google Sheets
-    fetch('https://your-google-sheet-log-api-url', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: query, date: new Date().toISOString() })
-    })
-    .then(response => response.json())
-    .then(data => console.log('Запись в лог успешна:', data))
-    .catch(error => console.error('Ошибка логирования:', error));
-}
-
-function showLoading() {
-    document.querySelector('.loading-spinner').classList.add('loading');
-}
-
-function hideLoading() {
-    document.querySelector('.loading-spinner').classList.remove('loading');
-}
-</script>
-
+    <script src="app.js"></script>
 </body>
 </html>
