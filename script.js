@@ -23,14 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const overlay = document.querySelector(".overlay");
         const loader = document.querySelector('.loader');
 
-        // Функции анимации и переключения
+        // Оригинальные функции анимации
         function toggleButtons() {
             mainButton.classList.toggle("hidden");
             toggleSearchButton.classList.toggle("hidden");
         }
 
-        function showSearch(event) {
-            event.preventDefault();
+        function showSearch() {
             searchContainer.classList.add("visible");
             questionContainer.classList.remove("visible");
             overlay.classList.add("visible");
@@ -44,8 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 600); 
         }
 
-        function showQuestion(event) {
-            event.preventDefault();
+        function showQuestion() {
             questionContainer.classList.add("visible");
             searchContainer.classList.remove("visible");
             overlay.classList.add("visible");
@@ -65,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
         }
 
-        // Привязка событий с preventDefault()
+        // Обработчики событий
         mainButton.addEventListener("click", showSearch);
         toggleSearchButton.addEventListener("click", showQuestion);
         overlay.addEventListener("click", hideAll);
@@ -110,10 +108,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Открытие ссылок в новых вкладках
-        // Открытие ссылок в новых вкладках
         const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 if (mutation.addedNodes.length) {
+                    // Находим все ссылки в результатах поиска
                     const searchResults = document.querySelector('.gsc-results-wrapper-overlay') || document.getElementById('results');
                     if (searchResults) {
                         searchResults.querySelectorAll('a').forEach(link => {
@@ -121,15 +119,19 @@ document.addEventListener("DOMContentLoaded", () => {
                             link.rel = 'noopener noreferrer';
                         });
                     }
+                    
+                    if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
+                        loader.classList.remove('visible');
+                    }
                 }
             });
         });
 
+        // Следим за всем документом для отлова динамически добавляемых результатов
         observer.observe(document.body, {
             childList: true,
             subtree: true
         });
-
 
     } else {
         console.warn("Telegram WebApp API недоступен!");
