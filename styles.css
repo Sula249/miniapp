@@ -201,7 +201,7 @@ body {
 /* Заголовки результатов */
 .gs-title {
     color: var(--tg-theme-link-color, #0088cc) !important;
-    font-size: 18px !important;
+    font-size: 17px !important;
     text-decoration: none !important;
     font-family: var(--tg-font-family, Arial, sans-serif) !important;
 }
@@ -213,7 +213,7 @@ body {
 /* Описания */
 .gs-snippet {
     color: var(--tg-theme-text-color, #000000) !important;
-    font-size: 16px !important;
+    font-size: 15px !important;
     line-height: 1.4 !important;
     font-family: var(--tg-font-family, Arial, sans-serif) !important;
 }
@@ -221,7 +221,7 @@ body {
 /* URL результатов */
 .gs-url {
     color: var(--tg-theme-hint-color, #707579) !important;
-    font-size: 14px !important;
+    font-size: 13px !important;
 }
 
 /* Пагинация */
@@ -254,14 +254,14 @@ body {
 @media (max-width: 500px) {
     .gsc-webResult.gsc-result {
         margin-bottom: 8px !important;
-        padding: 14px !important;
+        padding: 13px !important;
     }
     
     .gs-title {
-        font-size: 16px !important;
+        font-size: 15px !important;
     }
     
     .gs-snippet {
-        font-size: 14px !important;
+        font-size: 13px !important;
     }
 }
