@@ -4,31 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram MiniApp</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script async src="https://cse.google.com/cse.js?cx=e58c2408882ae476e"></script>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1 id="title">Поисковая система</h1>
     <div class="overlay"></div>
     <div class="loader"></div>
+
+    <!-- Контейнеры для ввода -->
     <div id="searchContainer" class="inputContainer">
         <form id="searchForm" class="wrapper">
             <input type="text" placeholder="Введите запрос" id="query" required autocomplete="off">
-            <button type="submit" id="searchButton" aria-label="Начать поиск">🔎 Поиск</button>
+            <button type="submit" id="searchButton">🔎 Поиск</button>
         </form>
     </div>
+
     <div id="questionContainer" class="inputContainer">
         <div class="wrapper">
-            <input type="text" placeholder="Введите вопрос" id="questionInput">
-            <button id="questionButton" aria-label="Задать вопрос">💭 Задать</button>
+            <input type="text" placeholder="Введите вопрос" id="questionInput" />
+            <button id="questionButton">💭 Задать</button>
         </div>
     </div>
+
+    <!-- Кнопки переключения -->
     <div class="container">
         <button id="mainButton" class="toggleButton">🔎 Начать поиск</button>
         <button id="toggleSearchButton" class="toggleButton hidden">💭 Задать вопрос</button>
     </div>
+
+    <!-- Контейнер для результатов -->
     <div class="gcse-searchresults-only" id="results"></div>
-    <script src="script.js"></script>
+
+    <script src="script.js"></script> <!-- Link to the JS file -->
 </body>
 </html>
