@@ -73,12 +73,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function showSearchResults() {
             searchResultsContainer.classList.add('visible');
-            searchContainer.classList.add('hidden'); // Сворачиваем строку поиска
+            searchContainer.classList.add('hidden'); // Скрываем строку поиска
         }
 
         function hideSearchResults() {
             searchResultsContainer.classList.remove('visible');
-            searchContainer.classList.remove('hidden'); // Разворачиваем строку поиска
+            searchContainer.classList.remove('hidden'); // Показываем строку поиска
         }
 
         // Обработчики событий
