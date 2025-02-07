@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const questionButton = document.getElementById("questionButton");
         const overlay = document.querySelector(".overlay");
         const loader = document.querySelector('.loader');
+        const resultsContainer = document.querySelector('.gcse-searchresults-only');
 
         // Оригинальные функции анимации
         function toggleButtons() {
@@ -65,7 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleSearchButton.classList.add("hidden");
 
             // Скрываем контейнер с результатами поиска
-            const resultsContainer = document.querySelector('.gcse-searchresults-only');
             resultsContainer.classList.remove('visible');
         }
 
@@ -92,10 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     searchElement.value = query;
                     searchButton.click();
                     queryInput.value = ''; // очищаем поле ввода
-
-                    // Показываем контейнер с результатами поиска
-                    const resultsContainer = document.querySelector('.gcse-searchresults-only');
-                    resultsContainer.classList.add('visible');
                 } else {
                     throw new Error('Элементы поиска не найдены');
                 }
@@ -128,6 +124,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             link.target = '_blank';
                             link.rel = 'noopener noreferrer';
                         });
+
+                        // Показываем контейнер с результатами поиска
+                        resultsContainer.classList.add('visible');
                     }
                     
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
