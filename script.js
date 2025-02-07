@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.Telegram && window.Telegram.WebApp) {
         const tg = Telegram.WebApp;
         tg.expand();
-        tg.BackButton.onClick(() => window.history.back());
 
         // Инициализация темы
         const updateTheme = () => {
@@ -32,6 +31,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 tg.BackButton.hide();
             }
         };
+
+        // Обработчик кнопки "Назад"
+        tg.BackButton.onClick(() => {
+            if (window.history.length > 1) {
+                window.history.back(); // Возврат в предыдущее состояние
+            } else {
+                tg.close(); // Закрытие MiniApp, если история пуста
+            }
+        });
 
         // Оригинальные функции анимации
         function toggleButtons() {
@@ -83,7 +91,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // Обработчики событий
         mainButton.addEventListener("click", showSearch);
         toggleSearchButton.addEventListener("click", showQuestion);
-        overlay.addEventListener("click", hideAll);
+        overlay.addEventListener("click", () => {
+            if (searchContainer.classList.contains("visible") || questionContainer.classList.contains("visible")) {
+                hideAll(); // Скрываем интерфейс
+            } else {
+                tg.close(); // Закрываем MiniApp, если интерфейс уже скрыт
+            }
+        });
 
         // Обработка поиска
         searchForm.addEventListener("submit", async function(event) {
