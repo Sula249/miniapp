@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleButtons();
             mainButton.classList.add("flip");
             toggleSearchButton.classList.add("flipBack");
-            window.history.pushState({page: 'search'}, '', '#search');
             setTimeout(() => {
                 mainButton.classList.remove("flip");
                 toggleSearchButton.classList.remove("flipBack");
@@ -52,7 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleButtons();
             toggleSearchButton.classList.add("flip");
             mainButton.classList.add("flipBack");
-            window.history.pushState({page: 'question'}, '', '#question');
             setTimeout(() => {
                 toggleSearchButton.classList.remove("flip");
                 mainButton.classList.remove("flipBack");
@@ -65,6 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
+
+            // Скрываем контейнер с результатами поиска
+            const resultsContainer = document.querySelector('.gcse-searchresults-only');
+            resultsContainer.classList.remove('visible');
         }
 
         // Обработчики событий
@@ -90,6 +92,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     searchElement.value = query;
                     searchButton.click();
                     queryInput.value = ''; // очищаем поле ввода
+
+                    // Показываем контейнер с результатами поиска
+                    const resultsContainer = document.querySelector('.gcse-searchresults-only');
+                    resultsContainer.classList.add('visible');
                 } else {
                     throw new Error('Элементы поиска не найдены');
                 }
