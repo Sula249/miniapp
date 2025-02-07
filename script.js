@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.Telegram && window.Telegram.WebApp) {
         const tg = Telegram.WebApp;
         tg.expand();
-        tg.BackButton.onClick(() => window.history.back());
 
         // Инициализация темы
         const updateTheme = () => {
@@ -24,15 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const overlay = document.querySelector(".overlay");
         const loader = document.querySelector('.loader');
 
-        // Функция для управления кнопкой "Назад"
-        const updateBackButton = () => {
-            if (window.history.length > 1) {
-                tg.BackButton.show();
-            } else {
-                tg.BackButton.hide();
-            }
-        };
-
         // Оригинальные функции анимации
         function toggleButtons() {
             mainButton.classList.toggle("hidden");
@@ -48,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
             mainButton.classList.add("flip");
             toggleSearchButton.classList.add("flipBack");
             window.history.pushState({page: 'search'}, '', '#search');
-            updateBackButton();
             setTimeout(() => {
                 mainButton.classList.remove("flip");
                 toggleSearchButton.classList.remove("flipBack");
@@ -64,7 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleSearchButton.classList.add("flip");
             mainButton.classList.add("flipBack");
             window.history.pushState({page: 'question'}, '', '#question');
-            updateBackButton();
             setTimeout(() => {
                 toggleSearchButton.classList.remove("flip");
                 mainButton.classList.remove("flipBack");
@@ -77,7 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
-            updateBackButton();
         }
 
         // Обработчики событий
@@ -149,21 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
             childList: true,
             subtree: true
         });
-
-        // Обработка навигации браузера
-        window.addEventListener('popstate', (event) => {
-            if (!event.state) {
-                hideAll();
-            } else if (event.state.page === 'search') {
-                showSearch();
-            } else if (event.state.page === 'question') {
-                showQuestion();
-            }
-            updateBackButton();
-        });
-
-        // Инициализация состояния кнопки "Назад"
-        updateBackButton();
 
     } else {
         console.warn("Telegram WebApp API недоступен!");
