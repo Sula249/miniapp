@@ -151,6 +151,7 @@ body {
     100% { transform: rotateY(0deg); }
 }
 
+/* Анимация для контейнера с результатами поиска */
 .gcse-searchresults-only {
     position: fixed;
     top: 100px; /* Отступ сверху для заголовка и других элементов */
@@ -164,10 +165,14 @@ body {
     max-height: calc(100vh - 100px); /* Ограничиваем высоту контейнера */
     transform: translateY(100%); /* Начальное положение за пределами экрана */
     transition: transform 0.3s ease-in-out; /* Анимация появления */
+    opacity: 0; /* Начальная прозрачность */
+    visibility: hidden; /* Начальное состояние: скрыт */
 }
 
 .gcse-searchresults-only.visible {
     transform: translateY(0); /* Показываем контейнер */
+    opacity: 1; /* Делаем полностью видимым */
+    visibility: visible; /* Показываем контейнер */
 }
 
 .gsc-control-cse {
