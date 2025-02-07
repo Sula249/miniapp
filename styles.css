@@ -156,12 +156,18 @@ body {
     top: 100px; /* Отступ сверху для заголовка и других элементов */
     left: 0;
     right: 0;
-    bottom: 120px; /* Отступ снизу для кнопок */
+    bottom: 0;
     overflow-y: auto; /* Добавляем прокрутку */
     padding: 10px;
     background: var(--tg-theme-secondary-bg-color, #f0f0f0);
     z-index: 5;
-    max-height: calc(100vh - 220px); /* Ограничиваем высоту контейнера */
+    max-height: calc(100vh - 100px); /* Ограничиваем высоту контейнера */
+    transform: translateY(100%); /* Начальное положение за пределами экрана */
+    transition: transform 0.3s ease-in-out; /* Анимация появления */
+}
+
+.gcse-searchresults-only.visible {
+    transform: translateY(0); /* Показываем контейнер */
 }
 
 .gsc-control-cse {
