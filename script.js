@@ -92,6 +92,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     searchElement.value = query;
                     searchButton.click();
                     queryInput.value = ''; // очищаем поле ввода
+
+                    // Показываем контейнер с результатами поиска
+                    resultsContainer.classList.add('visible');
                 } else {
                     throw new Error('Элементы поиска не найдены');
                 }
@@ -124,9 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             link.target = '_blank';
                             link.rel = 'noopener noreferrer';
                         });
-
-                        // Показываем контейнер с результатами поиска
-                        resultsContainer.classList.add('visible');
                     }
                     
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
