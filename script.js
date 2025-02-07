@@ -22,8 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const questionButton = document.getElementById("questionButton");
         const overlay = document.querySelector(".overlay");
         const loader = document.querySelector('.loader');
+        const searchResultsContainer = document.getElementById('searchResultsContainer');
 
-        // Функции анимации
+        // Оригинальные функции анимации
         function toggleButtons() {
             mainButton.classList.toggle("hidden");
             toggleSearchButton.classList.toggle("hidden");
@@ -65,6 +66,15 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
+            hideSearchResults();
+        }
+
+        function showSearchResults() {
+            searchResultsContainer.classList.add('visible');
+        }
+
+        function hideSearchResults() {
+            searchResultsContainer.classList.remove('visible');
         }
 
         // Обработчики событий
@@ -85,19 +95,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 const searchElement = document.querySelector('input.gsc-input');
                 const searchButton = document.querySelector('button.gsc-search-button');
-                const resultsContainer = document.querySelector('.gcse-searchresults-only');
                 
                 if (searchElement && searchButton) {
                     searchElement.value = query;
                     searchButton.click();
-                    queryInput.value = '';
-
-                    // Добавляем класс visible после небольшой задержки
-                    setTimeout(() => {
-                        if (resultsContainer) {
-                            resultsContainer.classList.add('visible');
-                        }
-                    }, 100);
+                    queryInput.value = ''; // очищаем поле ввода
+                    showSearchResults(); // Показываем результаты с анимацией
                 } else {
                     throw new Error('Элементы поиска не найдены');
                 }
@@ -113,16 +116,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const question = questionInput.value.trim();
             if (question) {
                 alert(`Вопрос: ${question}`);
-                questionInput.value = '';
+                questionInput.value = ''; // очищаем поле ввода
             } else {
                 alert("Введите вопрос.");
             }
         });
 
-        // Обработка результатов поиска
+        // Открытие ссылок в новых вкладках
         const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 if (mutation.addedNodes.length) {
+                    // Находим все ссылки в результатах поиска
                     const searchResults = document.querySelector('.gsc-results-wrapper-overlay') || document.getElementById('results');
                     if (searchResults) {
                         searchResults.querySelectorAll('a').forEach(link => {
@@ -133,17 +137,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                         loader.classList.remove('visible');
-                        
-                        // Добавляем класс visible к контейнеру результатов
-                        const resultsContainer = document.querySelector('.gcse-searchresults-only');
-                        if (resultsContainer && !resultsContainer.classList.contains('visible')) {
-                            resultsContainer.classList.add('visible');
-                        }
                     }
                 }
             });
         });
 
+        // Следим за всем документом для отлова динамически добавляемых результатов
         observer.observe(document.body, {
             childList: true,
             subtree: true
