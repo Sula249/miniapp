@@ -22,9 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const questionButton = document.getElementById("questionButton");
         const overlay = document.querySelector(".overlay");
         const loader = document.querySelector('.loader');
-        const resultsContainer = document.querySelector('.gcse-searchresults-only');
 
-        // Оригинальные функции анимации
+        // Функции анимации
         function toggleButtons() {
             mainButton.classList.toggle("hidden");
             toggleSearchButton.classList.toggle("hidden");
@@ -38,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleButtons();
             mainButton.classList.add("flip");
             toggleSearchButton.classList.add("flipBack");
+            window.history.pushState({page: 'search'}, '', '#search');
             setTimeout(() => {
                 mainButton.classList.remove("flip");
                 toggleSearchButton.classList.remove("flipBack");
@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleButtons();
             toggleSearchButton.classList.add("flip");
             mainButton.classList.add("flipBack");
+            window.history.pushState({page: 'question'}, '', '#question');
             setTimeout(() => {
                 toggleSearchButton.classList.remove("flip");
                 mainButton.classList.remove("flipBack");
@@ -64,9 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
-
-            // Скрываем контейнер с результатами поиска
-            resultsContainer.classList.remove('visible');
         }
 
         // Обработчики событий
@@ -87,14 +85,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 const searchElement = document.querySelector('input.gsc-input');
                 const searchButton = document.querySelector('button.gsc-search-button');
+                const resultsContainer = document.querySelector('.gcse-searchresults-only');
                 
                 if (searchElement && searchButton) {
                     searchElement.value = query;
                     searchButton.click();
-                    queryInput.value = ''; // очищаем поле ввода
+                    queryInput.value = '';
 
-                    // Показываем контейнер с результатами поиска
-                    resultsContainer.classList.add('visible');
+                    // Добавляем класс visible после небольшой задержки
+                    setTimeout(() => {
+                        if (resultsContainer) {
+                            resultsContainer.classList.add('visible');
+                        }
+                    }, 100);
                 } else {
                     throw new Error('Элементы поиска не найдены');
                 }
@@ -110,17 +113,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const question = questionInput.value.trim();
             if (question) {
                 alert(`Вопрос: ${question}`);
-                questionInput.value = ''; // очищаем поле ввода
+                questionInput.value = '';
             } else {
                 alert("Введите вопрос.");
             }
         });
 
-        // Открытие ссылок в новых вкладках
+        // Обработка результатов поиска
         const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 if (mutation.addedNodes.length) {
-                    // Находим все ссылки в результатах поиска
                     const searchResults = document.querySelector('.gsc-results-wrapper-overlay') || document.getElementById('results');
                     if (searchResults) {
                         searchResults.querySelectorAll('a').forEach(link => {
@@ -131,12 +133,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                         loader.classList.remove('visible');
+                        
+                        // Добавляем класс visible к контейнеру результатов
+                        const resultsContainer = document.querySelector('.gcse-searchresults-only');
+                        if (resultsContainer && !resultsContainer.classList.contains('visible')) {
+                            resultsContainer.classList.add('visible');
+                        }
                     }
                 }
             });
         });
 
-        // Следим за всем документом для отлова динамически добавляемых результатов
         observer.observe(document.body, {
             childList: true,
             subtree: true
