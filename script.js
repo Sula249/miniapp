@@ -23,6 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const overlay = document.querySelector(".overlay");
         const loader = document.querySelector('.loader');
         const searchResultsContainer = document.getElementById('searchResultsContainer');
+        const closeResultsButton = document.getElementById('closeResultsButton');
+        const dragHandle = document.querySelector('.drag-handle');
 
         // Оригинальные функции анимации
         function toggleButtons() {
@@ -81,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         mainButton.addEventListener("click", showSearch);
         toggleSearchButton.addEventListener("click", showQuestion);
         overlay.addEventListener("click", hideAll);
+        closeResultsButton.addEventListener("click", hideSearchResults);
 
         // Обработка поиска
         searchForm.addEventListener("submit", async function(event) {
