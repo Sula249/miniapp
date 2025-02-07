@@ -2,7 +2,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Изменено на flex-start */
+    justify-content: flex-start;
     height: 100vh;
     margin: 0;
     font-family: var(--tg-font-family, Arial, sans-serif);
@@ -12,8 +12,8 @@ body {
 }
 
 #title {
-    margin-top: 20px; /* Отступ сверху для заголовка */
-    z-index: 10; /* Убедитесь, что заголовок находится выше результатов поиска */
+    margin-top: 20px;
+    z-index: 10;
 }
 
 .overlay {
@@ -43,7 +43,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    z-index: 15; /* Убедитесь, что кнопки находятся выше результатов поиска */
+    z-index: 15;
 }
 
 .inputContainer {
@@ -153,15 +153,15 @@ body {
 
 .gcse-searchresults-only {
     position: fixed;
-    top: 100px; /* Отступ сверху для заголовка и других элементов */
+    top: 100px;
     left: 0;
     right: 0;
-    bottom: 120px; /* Отступ снизу для кнопок */
-    overflow-y: auto; /* Добавляем прокрутку */
+    bottom: 120px;
+    overflow-y: auto;
     padding: 10px;
     background: var(--tg-theme-secondary-bg-color, #f0f0f0);
     z-index: 5;
-    max-height: calc(100vh - 220px); /* Ограничиваем высоту контейнера */
+    max-height: calc(100vh - 220px);
 }
 
 .gsc-control-cse {
