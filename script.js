@@ -1,171 +1,224 @@
-document.addEventListener("DOMContentLoaded", () => {
-    if (window.Telegram && window.Telegram.WebApp) {
-        const tg = Telegram.WebApp;
-        tg.expand();
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    margin: 0;
+    font-family: var(--tg-font-family, Arial, sans-serif);
+    background: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+    transition: background-color 0.3s, color 0.3s;
+}
 
-        // Инициализация темы
-        const updateTheme = () => {
-            document.body.style.backgroundColor = tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor;
-            document.body.style.color = tg.themeParams.text_color || getComputedStyle(document.body).color;
-        };
-        updateTheme();
-        tg.onEvent("themeChanged", updateTheme);
+#title {
+    margin-top: 20px;
+    z-index: 10;
+}
 
-        // Все элементы управления
-        const mainButton = document.getElementById("mainButton");
-        const toggleSearchButton = document.getElementById("toggleSearchButton");
-        const searchContainer = document.getElementById("searchContainer");
-        const questionContainer = document.getElementById("questionContainer");
-        const searchForm = document.getElementById("searchForm");
-        const queryInput = document.getElementById("query");
-        const questionInput = document.getElementById("questionInput");
-        const questionButton = document.getElementById("questionButton");
-        const overlay = document.querySelector(".overlay");
-        const loader = document.querySelector('.loader');
-        const searchResultsContainer = document.getElementById('searchResultsContainer');
-        const closeResultsButton = document.getElementById('closeResultsButton');
-        const dragHandle = document.querySelector('.drag-handle');
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background-color 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+}
 
-        // Оригинальные функции анимации
-        function toggleButtons() {
-            mainButton.classList.toggle("hidden");
-            toggleSearchButton.classList.toggle("hidden");
-        }
+.overlay.visible {
+    background: rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
+}
 
-        function showSearch() {
-            searchContainer.classList.add("visible");
-            questionContainer.classList.remove("visible");
-            overlay.classList.add("visible");
-            queryInput.focus();
-            toggleButtons();
-            mainButton.classList.add("flip");
-            toggleSearchButton.classList.add("flipBack");
-            window.history.pushState({page: 'search'}, '', '#search');
-            setTimeout(() => {
-                mainButton.classList.remove("flip");
-                toggleSearchButton.classList.remove("flipBack");
-            }, 600); 
-        }
+.container {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 20px);
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 25; /* Кнопки над плашкой */
+}
 
-        function showQuestion() {
-            questionContainer.classList.add("visible");
-            searchContainer.classList.remove("visible");
-            overlay.classList.add("visible");
-            questionInput.focus();
-            toggleButtons();
-            toggleSearchButton.classList.add("flip");
-            mainButton.classList.add("flipBack");
-            window.history.pushState({page: 'question'}, '', '#question');
-            setTimeout(() => {
-                toggleSearchButton.classList.remove("flip");
-                mainButton.classList.remove("flipBack");
-            }, 600); 
-        }
+.inputContainer {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%) translateY(3px);
+    width: calc(100% - 20px);
+    max-width: 500px;
+    background: var(--tg-theme-bg-color, #ffffff);
+    padding: 5px;
+    border-radius: 8px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    box-sizing: border-box;
+    z-index: 20; /* Строка поиска над плашкой */
+    opacity: 1;
+    pointer-events: auto;
+}
 
-        function hideAll() {
-            searchContainer.classList.remove("visible");
-            questionContainer.classList.remove("visible");
-            overlay.classList.remove("visible");
-            mainButton.classList.remove("hidden");
-            toggleSearchButton.classList.add("hidden");
-            hideSearchResults();
-        }
+.inputContainer.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
 
-        function showSearchResults() {
-            searchResultsContainer.classList.add('visible');
-        }
+.inputContainer .wrapper {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+}
 
-        function hideSearchResults() {
-            searchResultsContainer.classList.remove('visible');
-        }
+.inputContainer input {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 1px solid var(--tg-theme-hint-color, #ccc);
+    border-radius: 6px;
+    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    color: var(--tg-theme-text-color, #000000);
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
 
-        // Обработчики событий
-        mainButton.addEventListener("click", showSearch);
-        toggleSearchButton.addEventListener("click", showQuestion);
-        overlay.addEventListener("click", hideAll);
-        closeResultsButton.addEventListener("click", hideSearchResults);
+.inputContainer input:focus {
+    outline: none;
+    border-color: var(--tg-theme-button-color, #0088cc);
+}
 
-        // Обработка поиска
-        searchForm.addEventListener("submit", async function(event) {
-            event.preventDefault();
-            const query = queryInput.value.trim();
-            if (!query) return;
+.inputContainer button {
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    background-color: var(--tg-theme-button-color, #0088cc);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border-radius: 6px;
+    transition: opacity 0.3s ease;
+}
 
-            loader.classList.add('visible');
-            
-            try {
-                await logQueryToGoogleSheets(query);
-                
-                const searchElement = document.querySelector('input.gsc-input');
-                const searchButton = document.querySelector('button.gsc-search-button');
-                
-                if (searchElement && searchButton) {
-                    searchElement.value = query;
-                    searchButton.click();
-                    queryInput.value = ''; // очищаем поле ввода
-                    showSearchResults(); // Показываем результаты с анимацией
-                } else {
-                    throw new Error('Элементы поиска не найдены');
-                }
-            } catch (error) {
-                console.error('Ошибка поиска:', error);
-                alert('Произошла ошибка при выполнении поиска');
-            } finally {
-                setTimeout(() => loader.classList.remove('visible'), 1000);
-            }
-        });
+.inputContainer button:active {
+    opacity: 0.8;
+}
 
-        questionButton.addEventListener("click", () => {
-            const question = questionInput.value.trim();
-            if (question) {
-                alert(`Вопрос: ${question}`);
-                questionInput.value = ''; // очищаем поле ввода
-            } else {
-                alert("Введите вопрос.");
-            }
-        });
+.toggleButton {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    background-color: var(--tg-theme-button-color, #0088cc);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    transition: transform 0.2s ease, opacity 0.3s ease;
+    border-radius: 8px;
+    margin-bottom: env(safe-area-inset-bottom, 0px);
+    transform-origin: center;
+    backface-visibility: hidden;
+}
 
-        // Открытие ссылок в новых вкладках
-        const observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                if (mutation.addedNodes.length) {
-                    // Находим все ссылки в результатах поиска
-                    const searchResults = document.querySelector('.gsc-results-wrapper-overlay') || document.getElementById('results');
-                    if (searchResults) {
-                        searchResults.querySelectorAll('a').forEach(link => {
-                            link.target = '_blank';
-                            link.rel = 'noopener noreferrer';
-                        });
-                    }
-                    
-                    if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
-                        loader.classList.remove('visible');
-                    }
-                }
-            });
-        });
+.toggleButton:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
 
-        // Следим за всем документом для отлова динамически добавляемых результатов
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+.hidden {
+    display: none;
+}
 
-    } else {
-        console.warn("Telegram WebApp API недоступен!");
-    }
-});
+.flip {
+    animation: flip 0.3s ease forwards;
+}
 
-async function logQueryToGoogleSheets(query) {
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbypBtYb0Y8XiGYlEpRyzJq_yqCrE5ieiFwXT92MPsSF29EIFQLmOcp0gZZXasgQb3S9/exec';
-    try {
-        await fetch(scriptUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ query })
-        });
-    } catch (error) {
-        console.error('Ошибка логирования:', error);
-    }
+@keyframes flip {
+    0% { transform: rotateY(0deg); }
+    50% { transform: rotateY(90deg); }
+    100% { transform: rotateY(180deg); }
+}
+
+.toggleButton.flipBack {
+    animation: flipBack 0.3s ease forwards;
+}
+
+@keyframes flipBack {
+    0% { transform: rotateY(180deg); }
+    50% { transform: rotateY(90deg); }
+    100% { transform: rotateY(0deg); }
+}
+
+/* Стили для плашки с результатами поиска */
+.search-results-container {
+    position: fixed;
+    bottom: -100%; /* Начальное положение за пределами экрана */
+    left: 0;
+    right: 0;
+    height: 70%; /* Высота плашки */
+    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    transition: bottom 0.5s ease-in-out;
+    z-index: 15; /* Плашка под кнопками */
+}
+
+.search-results-container.visible {
+    bottom: 60px; /* Плашка открывается, оставляя место для кнопок */
+}
+
+/* Полоса для растягивания */
+.drag-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--tg-theme-hint-color, #ccc);
+    border-radius: 2px;
+    margin: 8px auto;
+    cursor: pointer;
+}
+
+/* Крестик закрытия */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--tg-theme-text-color, #000000);
+    cursor: pointer;
+    z-index: 21;
+}
+
+/* Результаты поиска */
+.gcse-searchresults-only {
+    height: calc(100% - 40px); /* Учитываем полосу и крестик */
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.loader {
+    border: 4px solid var(--tg-theme-secondary-bg-color, #f0f0f0);
+    border-top: 4px solid var(--tg-theme-button-color, #0088cc);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    display: none;
+}
+
+.loader.visible {
+    display: block;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
