@@ -35,10 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.add("visible");
             queryInput.focus();
             toggleButtons();
-            mainButton.classList.add("flip");
-            toggleSearchButton.classList.add("flipBack");
-
-            // Вместо pushState используем replaceState, чтобы не дублировать историю
             window.history.replaceState({page: 'search'}, '', '#search');
             tg.BackButton.show();
         }
@@ -49,9 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.add("visible");
             questionInput.focus();
             toggleButtons();
-            toggleSearchButton.classList.add("flip");
-            mainButton.classList.add("flipBack");
-
             window.history.replaceState({page: 'question'}, '', '#question');
             tg.BackButton.show();
         }
@@ -62,18 +55,16 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
-
-            // Убираем результаты поиска и сбрасываем историю
-            resultsContainer.style.display = 'none';
+            resultsContainer.style.display = 'none'; // Скрываем результаты поиска
             tg.BackButton.hide();
             window.history.replaceState(null, '', window.location.pathname);
         }
 
         mainButton.addEventListener("click", showSearch);
         toggleSearchButton.addEventListener("click", showQuestion);
-        overlay.addEventListener("click", () => {
-            window.history.back();
-        });
+
+        // 🛠 Исправлено: Теперь overlay скрывает все, включая поисковую строку
+        overlay.addEventListener("click", hideAll);
 
         searchForm.addEventListener("submit", async function(event) {
             event.preventDefault();
@@ -102,7 +93,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 setTimeout(() => loader.classList.remove('visible'), 1000);
             }
 
-            // После поиска обновляем историю, но не дублируем ее
             window.history.replaceState({page: 'results'}, '', '#results');
             tg.BackButton.show();
         });
@@ -130,9 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                         loader.classList.remove('visible');
-                        if (resultsContainer) {
-                            resultsContainer.style.display = 'block';
-                        }
+                        resultsContainer.style.display = 'block';
                         tg.BackButton.show();
                     }
                 }
