@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.add("visible");
             queryInput.focus();
             toggleButtons();
-            window.history.replaceState({page: 'search'}, '', '#search');
+            window.history.pushState({page: 'search'}, '', '#search');
             tg.BackButton.show();
         }
 
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.add("visible");
             questionInput.focus();
             toggleButtons();
-            window.history.replaceState({page: 'question'}, '', '#question');
+            window.history.pushState({page: 'question'}, '', '#question');
             tg.BackButton.show();
         }
 
@@ -57,13 +57,17 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleSearchButton.classList.add("hidden");
             resultsContainer.style.display = 'none'; // Скрываем результаты поиска
             tg.BackButton.hide();
-            window.history.replaceState(null, '', window.location.pathname);
+
+            // 👇 Добавлено: Убираем последнее состояние в истории
+            if (window.history.state) {
+                window.history.back();
+            } else {
+                window.history.replaceState(null, '', window.location.pathname);
+            }
         }
 
         mainButton.addEventListener("click", showSearch);
         toggleSearchButton.addEventListener("click", showQuestion);
-
-        // 🛠 Исправлено: Теперь overlay скрывает все, включая поисковую строку
         overlay.addEventListener("click", hideAll);
 
         searchForm.addEventListener("submit", async function(event) {
@@ -93,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 setTimeout(() => loader.classList.remove('visible'), 1000);
             }
 
-            window.history.replaceState({page: 'results'}, '', '#results');
+            window.history.pushState({page: 'results'}, '', '#results');
             tg.BackButton.show();
         });
 
