@@ -35,8 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.add("visible");
             queryInput.focus();
             toggleButtons();
-            window.history.pushState({page: 'search'}, '', '#search');
-            tg.BackButton.show();
         }
 
         function showQuestion() {
@@ -45,8 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.add("visible");
             questionInput.focus();
             toggleButtons();
-            window.history.pushState({page: 'question'}, '', '#question');
-            tg.BackButton.show();
         }
 
         function hideAll() {
@@ -55,7 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
-            tg.BackButton.hide();
+            resultsContainer.style.display = 'none';
+            tg.BackButton.hide(); // Меняем "Назад" на "Закрыть"
         }
 
         mainButton.addEventListener("click", showSearch);
@@ -89,13 +86,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 setTimeout(() => loader.classList.remove('visible'), 1000);
             }
 
-            // 1️⃣ Добавляем в историю поиск, чтобы "Назад" работал
-            window.history.pushState({page: 'results'}, '', '#results');
+            // Показываем кнопку "Назад" после поиска
             tg.BackButton.show();
-
-            // 2️⃣ Скрываем поисковую строку, но "Назад" восстановит её
-            searchContainer.classList.remove("visible");
-            overlay.classList.remove("visible");
         });
 
         questionButton.addEventListener("click", () => {
@@ -133,28 +125,9 @@ document.addEventListener("DOMContentLoaded", () => {
             subtree: true
         });
 
-        // ✅ КНОПКА "НАЗАД" ТЕПЕРЬ РАБОТАЕТ ПРАВИЛЬНО
+        // ✅ КНОПКА "НАЗАД" ТЕПЕРЬ СКРЫВАЕТ ВСЁ!
         tg.BackButton.onClick(() => {
-            window.history.back();
-        });
-
-        window.addEventListener("popstate", (event) => {
-            if (event.state) {
-                if (event.state.page === 'search') {
-                    // 🔄 Возвращаем строку поиска
-                    searchContainer.classList.add("visible");
-                    overlay.classList.add("visible");
-                } else if (event.state.page === 'results') {
-                    // ❌ Если вернулись из результатов, скрываем их
-                    resultsContainer.style.display = 'none';
-                    tg.BackButton.hide();
-                    window.history.back(); // Идём ещё на один шаг назад
-                } else {
-                    hideAll();
-                }
-            } else {
-                hideAll();
-            }
+            hideAll(); // Закрываем поиск и результаты
         });
 
     } else {
