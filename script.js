@@ -113,22 +113,17 @@ document.addEventListener("DOMContentLoaded", () => {
 questionButton.addEventListener("click", async () => {
     const question = questionInput.value.trim();
     if (question) {
-        // Показываем загрузку
         loader.classList.add('visible');
 
         try {
-            // Отправляем вопрос в API DeepSeek
             const aiResponse = await sendQuestionToAI(question);
-
-            // Показываем ответ пользователю
             alert(`Ответ: ${aiResponse}`);
         } catch (error) {
             console.error('Ошибка:', error);
             alert('Произошла ошибка при обработке вашего вопроса.');
         } finally {
-            // Скрываем загрузку
             loader.classList.remove('visible');
-            questionInput.value = ''; // Очищаем поле ввода
+            questionInput.value = '';
         }
     } else {
         alert("Введите вопрос.");
