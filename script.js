@@ -89,12 +89,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 setTimeout(() => loader.classList.remove('visible'), 1000);
             }
 
-            // 1️⃣ Сначала добавляем новое состояние в историю
+            // 1️⃣ Добавляем в историю поиск, чтобы "Назад" работал
             window.history.pushState({page: 'results'}, '', '#results');
             tg.BackButton.show();
 
-            // 2️⃣ Затем скрываем строку поиска
-            hideAll();
+            // 2️⃣ Скрываем поисковую строку, но "Назад" восстановит её
+            searchContainer.classList.remove("visible");
+            overlay.classList.remove("visible");
         });
 
         questionButton.addEventListener("click", () => {
@@ -132,20 +133,27 @@ document.addEventListener("DOMContentLoaded", () => {
             subtree: true
         });
 
-        // 🛠 КНОПКА "НАЗАД" ВЕРНУЛАСЬ!
+        // ✅ КНОПКА "НАЗАД" ТЕПЕРЬ РАБОТАЕТ ПРАВИЛЬНО
         tg.BackButton.onClick(() => {
             window.history.back();
         });
 
         window.addEventListener("popstate", (event) => {
-            if (event.state && event.state.page === 'search') {
-                showSearch();
-            } else if (event.state && event.state.page === 'question') {
-                showQuestion();
+            if (event.state) {
+                if (event.state.page === 'search') {
+                    // 🔄 Возвращаем строку поиска
+                    searchContainer.classList.add("visible");
+                    overlay.classList.add("visible");
+                } else if (event.state.page === 'results') {
+                    // ❌ Если вернулись из результатов, скрываем их
+                    resultsContainer.style.display = 'none';
+                    tg.BackButton.hide();
+                    window.history.back(); // Идём ещё на один шаг назад
+                } else {
+                    hideAll();
+                }
             } else {
-                // Если истории нет, полностью очищаем интерфейс
                 hideAll();
-                resultsContainer.style.display = 'none';
             }
         });
 
