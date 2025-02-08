@@ -180,7 +180,7 @@ async function logQueryToGoogleSheets(query) {
     }
 }
 // Добавьте API-ключ DeepSeek
-const DEEPSEEK_API_KEY = 'ваш_api_ключ_от_deepseek'; // Замените на ваш ключ
+const DEEPSEEK_API_KEY = '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'; // Замените на ваш ключ
 
 // Функция для отправки запроса к DeepSeek API
 async function askDeepSeek(question) {
