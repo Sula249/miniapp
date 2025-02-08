@@ -296,7 +296,7 @@ body {
         flex: 1; /* Растягиваем поле ввода на доступное пространство */
         background: var(--tg-theme-secondary-bg-color, #f0f0f0); /* Фон из Telegram */
         border: 1px solid var(--tg-theme-hint-color, #ccc); /* Граница из Telegram */
-        border-radius: 8px; /* Скругление углов */
+        border-radius: 6px; /* Скругление углов */
         color: var(--tg-theme-text-color, #000000); /* Цвет текста из Telegram */
     }
 
@@ -307,7 +307,7 @@ body {
         white-space: nowrap; /* Текст в одну строку */
         background: var(--tg-theme-button-color, #0088cc); /* Цвет фона кнопки из Telegram */
         border: none; /* Убираем границу */
-        border-radius: 8px; /* Скругление углов */
+        border-radius: 6px; /* Скругление углов */
         color: var(--tg-theme-button-text-color, #ffffff); /* Цвет текста кнопки из Telegram */
     }
 }
