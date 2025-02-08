@@ -110,15 +110,30 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        questionButton.addEventListener("click", () => {
-            const question = questionInput.value.trim();
-            if (question) {
-                alert(`Вопрос: ${question}`);
-                questionInput.value = ''; // очищаем поле ввода
-            } else {
-                alert("Введите вопрос.");
-            }
-        });
+questionButton.addEventListener("click", async () => {
+    const question = questionInput.value.trim();
+    if (question) {
+        // Показываем загрузку
+        loader.classList.add('visible');
+
+        try {
+            // Отправляем вопрос в API DeepSeek
+            const aiResponse = await sendQuestionToAI(question);
+
+            // Показываем ответ пользователю
+            alert(`Ответ: ${aiResponse}`);
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка при обработке вашего вопроса.');
+        } finally {
+            // Скрываем загрузку
+            loader.classList.remove('visible');
+            questionInput.value = ''; // Очищаем поле ввода
+        }
+    } else {
+        alert("Введите вопрос.");
+    }
+});
 
         // Открытие ссылок в новых вкладках
         const observer = new MutationObserver(mutations => {
