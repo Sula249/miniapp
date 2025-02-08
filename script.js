@@ -39,10 +39,11 @@ document.addEventListener("DOMContentLoaded", () => {
             mainButton.classList.add("flip");
             toggleSearchButton.classList.add("flipBack");
             window.history.pushState({page: 'search'}, '', '#search');
+            tg.BackButton.show(); // Показываем кнопку "Назад"
             setTimeout(() => {
                 mainButton.classList.remove("flip");
                 toggleSearchButton.classList.remove("flipBack");
-            }, 600); 
+            }, 600);
         }
 
         function showQuestion() {
@@ -54,10 +55,11 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleSearchButton.classList.add("flip");
             mainButton.classList.add("flipBack");
             window.history.pushState({page: 'question'}, '', '#question');
+            tg.BackButton.show(); // Показываем кнопку "Назад"
             setTimeout(() => {
                 toggleSearchButton.classList.remove("flip");
                 mainButton.classList.remove("flipBack");
-            }, 600); 
+            }, 600);
         }
 
         function hideAll() {
@@ -67,16 +69,17 @@ document.addEventListener("DOMContentLoaded", () => {
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
             if (resultsContainer) {
-                resultsContainer.style.display = 'none';
+                resultsContainer.style.display = 'none'; // Скрываем результаты поиска
             }
-            window.history.pushState({page: 'main'}, '', '/');
-            tg.BackButton.hide();
+            tg.BackButton.hide(); // Скрываем кнопку "Назад"
         }
 
         // Обработчики событий
         mainButton.addEventListener("click", showSearch);
         toggleSearchButton.addEventListener("click", showQuestion);
-        overlay.addEventListener("click", hideAll);
+        overlay.addEventListener("click", () => {
+            window.history.back(); // Возвращаемся назад в истории
+        });
 
         // Обработка поиска
         searchForm.addEventListener("submit", async function(event) {
@@ -95,8 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (searchElement && searchButton) {
                     searchElement.value = query;
                     searchButton.click();
-                    queryInput.value = '';
-                    tg.BackButton.show();
+                    queryInput.value = ''; // очищаем поле ввода
                 } else {
                     throw new Error('Элементы поиска не найдены');
                 }
@@ -112,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const question = questionInput.value.trim();
             if (question) {
                 alert(`Вопрос: ${question}`);
-                questionInput.value = '';
+                questionInput.value = ''; // очищаем поле ввода
             } else {
                 alert("Введите вопрос.");
             }
@@ -122,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 if (mutation.addedNodes.length) {
+                    // Находим все ссылки в результатах поиска
                     const searchResults = document.querySelector('.gsc-results-wrapper-overlay') || document.getElementById('results');
                     if (searchResults) {
                         searchResults.querySelectorAll('a').forEach(link => {
@@ -132,11 +135,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                         loader.classList.remove('visible');
-                        hideAll();
+                        hideAll(); // Сворачиваем поисковую строку при загрузке результатов
                         if (resultsContainer) {
-                            resultsContainer.style.display = 'block';
-                            tg.BackButton.show();
+                            resultsContainer.style.display = 'block'; // Показываем результаты поиска
                         }
+                        tg.BackButton.show(); // Показываем кнопку "Назад"
                     }
                 }
             });
@@ -150,16 +153,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Обработка кнопки "Назад" в Telegram
         tg.BackButton.onClick(() => {
-            if (resultsContainer.style.display === 'block') {
-                hideAll();
-            }
+            window.history.back(); // Откат на предыдущую страницу
         });
 
-        // Обработка истории браузера
-        window.addEventListener('popstate', (event) => {
-            if (event.state && event.state.page === 'main') {
-                hideAll();
-            }
+        // Добавляем обработку кнопки "Назад" браузера
+        window.addEventListener("popstate", (event) => {
+            hideAll();
         });
 
     } else {
