@@ -15,7 +15,7 @@ app.post('/ask-deepseek', async (req, res) => {
         }, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.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}`
+                'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`
             }
         });
         res.json({ answer: response.data.choices[0].message.content });
