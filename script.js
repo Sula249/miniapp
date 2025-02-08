@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const questionButton = document.getElementById("questionButton");
         const overlay = document.querySelector(".overlay");
         const loader = document.querySelector('.loader');
+        const resultsContainer = document.querySelector('.gcse-searchresults-only');
 
         // Оригинальные функции анимации
         function toggleButtons() {
@@ -65,6 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
+            resultsContainer.style.display = 'none'; // Скрываем результаты поиска
         }
 
         // Обработчики событий
@@ -127,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                         loader.classList.remove('visible');
                         hideAll(); // Сворачиваем поисковую строку при загрузке результатов
+                        resultsContainer.style.display = 'block'; // Показываем результаты поиска
                         tg.BackButton.show(); // Показываем кнопку "Назад"
                     }
                 }
@@ -142,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Обработка кнопки "Назад" в Telegram
         tg.BackButton.onClick(() => {
             tg.BackButton.hide(); // Скрываем кнопку "Назад"
-            hideAll(); // Возвращаемся на начальный экран
+            hideAll(); // Скрываем результаты поиска и возвращаемся на начальный экран
         });
 
     } else {
