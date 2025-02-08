@@ -85,6 +85,13 @@ body {
     color: var(--tg-theme-text-color, #000000);
     box-sizing: border-box;
     transition: border-color 0.3s ease;
+    min-width: 150px; /* Добавлено: минимальная ширина поля ввода */
+}
+
+@media (max-width: 500px) {
+    .inputContainer input {
+        min-width: 100px; /* Уменьшение минимальной ширины для мобильных устройств */
+    }
 }
 
 .inputContainer input:focus {
