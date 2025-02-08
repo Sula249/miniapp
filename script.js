@@ -68,13 +68,13 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!query) return;
 
             loader.classList.add('visible');
-            
+
             try {
                 await logQueryToGoogleSheets(query);
-                
+
                 const searchElement = document.querySelector('input.gsc-input');
                 const searchButton = document.querySelector('button.gsc-search-button');
-                
+
                 if (searchElement && searchButton) {
                     searchElement.value = query;
                     searchButton.click();
@@ -89,10 +89,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 setTimeout(() => loader.classList.remove('visible'), 1000);
             }
 
+            // 1️⃣ Сначала добавляем новое состояние в историю
             window.history.pushState({page: 'results'}, '', '#results');
             tg.BackButton.show();
 
-            hideAll(); // 🛠 Автоматически скрываем строку поиска
+            // 2️⃣ Затем скрываем строку поиска
+            hideAll();
         });
 
         questionButton.addEventListener("click", () => {
@@ -115,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             link.rel = 'noopener noreferrer';
                         });
                     }
-                    
+
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                         loader.classList.remove('visible');
                         resultsContainer.style.display = 'block';
@@ -130,6 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
             subtree: true
         });
 
+        // 🛠 КНОПКА "НАЗАД" ВЕРНУЛАСЬ!
         tg.BackButton.onClick(() => {
             window.history.back();
         });
@@ -140,7 +143,9 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (event.state && event.state.page === 'question') {
                 showQuestion();
             } else {
+                // Если истории нет, полностью очищаем интерфейс
                 hideAll();
+                resultsContainer.style.display = 'none';
             }
         });
 
