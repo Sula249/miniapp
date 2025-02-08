@@ -179,3 +179,37 @@ async function logQueryToGoogleSheets(query) {
         console.error('Ошибка логирования:', error);
     }
 }
+async function sendQuestionToAI(question) {
+    const apiKey = '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'; // Замените на ваш API-ключ
+    const apiUrl = 'https://api.deepseek.com/v1/chat/completions'; // Пример URL, уточните в документации DeepSeek
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: "deepseek-chat", // Уточните модель в документации DeepSeek
+                messages: [
+                    {
+                        role: "user",
+                        content: question
+                    }
+                ],
+                max_tokens: 150 // Ограничение на длину ответа
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Ошибка при запросе к API');
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content; // Предполагаем, что ответ находится в таком формате
+    } catch (error) {
+        console.error('Ошибка:', error);
+        return 'Произошла ошибка при обработке вашего вопроса.';
+    }
+}
