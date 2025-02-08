@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const loader = document.querySelector('.loader');
         const resultsContainer = document.querySelector('.gcse-searchresults-only');
 
-        // Оригинальные функции анимации
         function toggleButtons() {
             mainButton.classList.toggle("hidden");
             toggleSearchButton.classList.toggle("hidden");
@@ -38,12 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleButtons();
             mainButton.classList.add("flip");
             toggleSearchButton.classList.add("flipBack");
-            window.history.pushState({page: 'search'}, '', '#search');
-            tg.BackButton.show(); // Показываем кнопку "Назад"
-            setTimeout(() => {
-                mainButton.classList.remove("flip");
-                toggleSearchButton.classList.remove("flipBack");
-            }, 600);
+
+            // Вместо pushState используем replaceState, чтобы не дублировать историю
+            window.history.replaceState({page: 'search'}, '', '#search');
+            tg.BackButton.show();
         }
 
         function showQuestion() {
@@ -54,12 +51,9 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleButtons();
             toggleSearchButton.classList.add("flip");
             mainButton.classList.add("flipBack");
-            window.history.pushState({page: 'question'}, '', '#question');
-            tg.BackButton.show(); // Показываем кнопку "Назад"
-            setTimeout(() => {
-                toggleSearchButton.classList.remove("flip");
-                mainButton.classList.remove("flipBack");
-            }, 600);
+
+            window.history.replaceState({page: 'question'}, '', '#question');
+            tg.BackButton.show();
         }
 
         function hideAll() {
@@ -68,20 +62,19 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
-            if (resultsContainer) {
-                resultsContainer.style.display = 'none'; // Скрываем результаты поиска
-            }
-            tg.BackButton.hide(); // Скрываем кнопку "Назад"
+
+            // Убираем результаты поиска и сбрасываем историю
+            resultsContainer.style.display = 'none';
+            tg.BackButton.hide();
+            window.history.replaceState(null, '', window.location.pathname);
         }
 
-        // Обработчики событий
         mainButton.addEventListener("click", showSearch);
         toggleSearchButton.addEventListener("click", showQuestion);
         overlay.addEventListener("click", () => {
-            window.history.back(); // Возвращаемся назад в истории
+            window.history.back();
         });
 
-        // Обработка поиска
         searchForm.addEventListener("submit", async function(event) {
             event.preventDefault();
             const query = queryInput.value.trim();
@@ -98,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (searchElement && searchButton) {
                     searchElement.value = query;
                     searchButton.click();
-                    queryInput.value = ''; // очищаем поле ввода
+                    queryInput.value = '';
                 } else {
                     throw new Error('Элементы поиска не найдены');
                 }
@@ -108,23 +101,25 @@ document.addEventListener("DOMContentLoaded", () => {
             } finally {
                 setTimeout(() => loader.classList.remove('visible'), 1000);
             }
+
+            // После поиска обновляем историю, но не дублируем ее
+            window.history.replaceState({page: 'results'}, '', '#results');
+            tg.BackButton.show();
         });
 
         questionButton.addEventListener("click", () => {
             const question = questionInput.value.trim();
             if (question) {
                 alert(`Вопрос: ${question}`);
-                questionInput.value = ''; // очищаем поле ввода
+                questionInput.value = '';
             } else {
                 alert("Введите вопрос.");
             }
         });
 
-        // Открытие ссылок в новых вкладках
         const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 if (mutation.addedNodes.length) {
-                    // Находим все ссылки в результатах поиска
                     const searchResults = document.querySelector('.gsc-results-wrapper-overlay') || document.getElementById('results');
                     if (searchResults) {
                         searchResults.querySelectorAll('a').forEach(link => {
@@ -135,30 +130,32 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                         loader.classList.remove('visible');
-                        hideAll(); // Сворачиваем поисковую строку при загрузке результатов
                         if (resultsContainer) {
-                            resultsContainer.style.display = 'block'; // Показываем результаты поиска
+                            resultsContainer.style.display = 'block';
                         }
-                        tg.BackButton.show(); // Показываем кнопку "Назад"
+                        tg.BackButton.show();
                     }
                 }
             });
         });
 
-        // Следим за всем документом для отлова динамически добавляемых результатов
         observer.observe(document.body, {
             childList: true,
             subtree: true
         });
 
-        // Обработка кнопки "Назад" в Telegram
         tg.BackButton.onClick(() => {
-            window.history.back(); // Откат на предыдущую страницу
+            window.history.back();
         });
 
-        // Добавляем обработку кнопки "Назад" браузера
         window.addEventListener("popstate", (event) => {
-            hideAll();
+            if (event.state && event.state.page === 'search') {
+                showSearch();
+            } else if (event.state && event.state.page === 'question') {
+                showQuestion();
+            } else {
+                hideAll();
+            }
         });
 
     } else {
