@@ -239,3 +239,23 @@ function displayAnswer(answer) {
         resultsContainer.style.display = 'block'; // Показываем контейнер с ответом
     }
 }
+
+// Обновите обработчик кнопки "Задать вопрос"
+questionButton.addEventListener("click", async () => {
+    const question = questionInput.value.trim();
+    if (question) {
+        loader.classList.add('visible'); // Показываем загрузчик
+        try {
+            const answer = await askDeepSeek(question); // Получаем ответ от DeepSeek
+            displayAnswer(answer); // Отображаем ответ в интерфейсе
+        } catch (error) {
+            console.error('Ошибка:', error);
+            displayAnswer('Произошла ошибка при обработке вашего вопроса.'); // Отображаем ошибку в интерфейсе
+        } finally {
+            loader.classList.remove('visible'); // Скрываем загрузчик
+        }
+        questionInput.value = ''; // Очищаем поле ввода
+    } else {
+        displayAnswer('Введите вопрос.'); // Отображаем сообщение об ошибке в интерфейсе
+    }
+});
