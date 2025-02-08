@@ -195,18 +195,20 @@ async function logQueryToGoogleSheets(query) {
     }
 }
 async function sendQuestionToAI(question) {
-    const apiKey = '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'; // Замените на ваш API-ключ
-    const apiUrl = 'https://api.deepseek.com/v1/chat/completions'; // Пример URL, уточните в документации DeepSeek
+    const apiKey = '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'; // Замените на ваш API-ключ от OpenRouter.ai
+    const apiUrl = 'https://openrouter.ai/api/v1/chat/completions'; // URL API OpenRouter.ai
 
     try {
         const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
+                'Authorization': `Bearer ${apiKey}`,
+                'HTTP-Referer': 'https://your-website.com', // Укажите ваш сайт
+                'X-Title': 'Telegram MiniApp' // Название вашего приложения
             },
             body: JSON.stringify({
-                model: "deepseek-chat", // Уточните модель в документации DeepSeek
+                model: "deepseek-chat", // Укажите модель DeepSeek или другую
                 messages: [
                     {
                         role: "user",
@@ -218,11 +220,11 @@ async function sendQuestionToAI(question) {
         });
 
         if (!response.ok) {
-            throw new Error('Ошибка при запросе к API');
+            throw new Error(`Ошибка API: ${response.statusText}`);
         }
 
         const data = await response.json();
-        return data.choices[0].message.content; // Предполагаем, что ответ находится в таком формате
+        return data.choices[0].message.content; // Извлекаем ответ
     } catch (error) {
         console.error('Ошибка:', error);
         return 'Произошла ошибка при обработке вашего вопроса.';
