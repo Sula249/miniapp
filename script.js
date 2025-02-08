@@ -179,3 +179,18 @@ async function logQueryToGoogleSheets(query) {
         console.error('Ошибка логирования:', error);
     }
 }
+
+async function askDeepSeek(question) {
+    try {
+        const response = await fetch('http://localhost:3000/ask-deepseek', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question })
+        });
+        const data = await response.json();
+        return data.answer;
+    } catch (error) {
+        console.error('Ошибка при запросе к серверу:', error);
+        return 'Произошла ошибка при обработке вашего вопроса.';
+    }
+}
