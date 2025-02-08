@@ -66,7 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
-            resultsContainer.style.display = 'none'; // Скрываем результаты поиска
+            if (resultsContainer) {
+                resultsContainer.style.display = 'none'; // Скрываем результаты поиска
+            }
         }
 
         // Обработчики событий
@@ -129,7 +131,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                         loader.classList.remove('visible');
                         hideAll(); // Сворачиваем поисковую строку при загрузке результатов
-                        resultsContainer.style.display = 'block'; // Показываем результаты поиска
+                        if (resultsContainer) {
+                            resultsContainer.style.display = 'block'; // Показываем результаты поиска
+                        }
                         tg.BackButton.show(); // Показываем кнопку "Назад"
                     }
                 }
