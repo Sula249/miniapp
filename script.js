@@ -66,8 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
+
+            // Очищаем контейнер с результатами поиска
             if (resultsContainer) {
-                resultsContainer.style.display = 'none'; // Скрываем результаты поиска
+                resultsContainer.innerHTML = ''; // Очищаем содержимое контейнера
             }
         }
 
@@ -131,9 +133,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                         loader.classList.remove('visible');
                         hideAll(); // Сворачиваем поисковую строку при загрузке результатов
-                        if (resultsContainer) {
-                            resultsContainer.style.display = 'block'; // Показываем результаты поиска
-                        }
                         tg.BackButton.show(); // Показываем кнопку "Назад"
                     }
                 }
@@ -149,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Обработка кнопки "Назад" в Telegram
         tg.BackButton.onClick(() => {
             tg.BackButton.hide(); // Скрываем кнопку "Назад"
-            hideAll(); // Скрываем результаты поиска и возвращаемся на начальный экран
+            hideAll(); // Очищаем результаты поиска и возвращаемся на начальный экран
         });
 
     } else {
