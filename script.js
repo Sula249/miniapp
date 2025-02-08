@@ -55,15 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
-            resultsContainer.style.display = 'none'; // Скрываем результаты поиска
             tg.BackButton.hide();
-
-            // 👇 Добавлено: Убираем последнее состояние в истории
-            if (window.history.state) {
-                window.history.back();
-            } else {
-                window.history.replaceState(null, '', window.location.pathname);
-            }
         }
 
         mainButton.addEventListener("click", showSearch);
@@ -99,6 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             window.history.pushState({page: 'results'}, '', '#results');
             tg.BackButton.show();
+
+            hideAll(); // 🛠 Автоматически скрываем строку поиска
         });
 
         questionButton.addEventListener("click", () => {
