@@ -23,10 +23,27 @@ document.addEventListener("DOMContentLoaded", () => {
         const overlay = document.querySelector(".overlay");
         const loader = document.querySelector('.loader');
 
-        // Функция для сброса состояния
+        // Функция для сброса состояния на начальный экран
         function resetToInitialState() {
-            hideAll();
-            tg.BackButton.hide(); // Скрываем кнопку "Назад"
+            // Скрываем поисковую строку и результаты
+            searchContainer.classList.remove("visible");
+            questionContainer.classList.remove("visible");
+            overlay.classList.remove("visible");
+
+            // Скрываем кнопку "Назад"
+            tg.BackButton.hide();
+
+            // Очищаем результаты поиска
+            const resultsContainer = document.getElementById("results");
+            if (resultsContainer) {
+                resultsContainer.innerHTML = ""; // Очищаем контейнер с результатами
+            }
+
+            // Возвращаем кнопки в начальное состояние
+            mainButton.classList.remove("hidden");
+            toggleSearchButton.classList.add("hidden");
+
+            // Обновляем историю браузера
             window.history.pushState({page: 'initial'}, '', '#');
         }
 
@@ -64,14 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 toggleSearchButton.classList.remove("flip");
                 mainButton.classList.remove("flipBack");
             }, 600); 
-        }
-
-        function hideAll() {
-            searchContainer.classList.remove("visible");
-            questionContainer.classList.remove("visible");
-            overlay.classList.remove("visible");
-            mainButton.classList.remove("hidden");
-            toggleSearchButton.classList.add("hidden");
         }
 
         // Обработчики событий
