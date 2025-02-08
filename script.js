@@ -67,9 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
 
-            // Очищаем контейнер с результатами поиска
+            // Скрываем контейнер с результатами поиска
             if (resultsContainer) {
-                resultsContainer.innerHTML = ''; // Очищаем содержимое контейнера
+                resultsContainer.style.display = 'none'; // Скрываем контейнер
+                console.log('Results container hidden'); // Отладка
             }
         }
 
@@ -96,6 +97,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     searchElement.value = query;
                     searchButton.click();
                     queryInput.value = ''; // очищаем поле ввода
+
+                    // Показываем контейнер с результатами поиска
+                    if (resultsContainer) {
+                        resultsContainer.style.display = 'block'; // Показываем контейнер
+                        console.log('Results container shown'); // Отладка
+                    }
                 } else {
                     throw new Error('Элементы поиска не найдены');
                 }
@@ -132,7 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                         loader.classList.remove('visible');
-                        hideAll(); // Сворачиваем поисковую строку при загрузке результатов
                         tg.BackButton.show(); // Показываем кнопку "Назад"
                     }
                 }
@@ -148,7 +154,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Обработка кнопки "Назад" в Telegram
         tg.BackButton.onClick(() => {
             tg.BackButton.hide(); // Скрываем кнопку "Назад"
-            hideAll(); // Очищаем результаты поиска и возвращаемся на начальный экран
+            hideAll(); // Скрываем результаты поиска и возвращаемся на начальный экран
+            console.log('Back button clicked'); // Отладка
         });
 
     } else {
