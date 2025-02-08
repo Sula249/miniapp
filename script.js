@@ -213,16 +213,16 @@ questionButton.addEventListener("click", async () => {
         loader.classList.add('visible'); // Показываем загрузчик
         try {
             const answer = await askDeepSeek(question); // Получаем ответ от DeepSeek
-            displayAnswer(answer); // Отображаем ответ
+            displayAnswer(answer); // Отображаем ответ в интерфейсе
         } catch (error) {
             console.error('Ошибка:', error);
-            alert('Произошла ошибка при обработке вашего вопроса.');
+            displayAnswer('Произошла ошибка при обработке вашего вопроса.'); // Отображаем ошибку в интерфейсе
         } finally {
             loader.classList.remove('visible'); // Скрываем загрузчик
         }
         questionInput.value = ''; // Очищаем поле ввода
     } else {
-        alert("Введите вопрос.");
+        displayAnswer('Введите вопрос.'); // Отображаем сообщение об ошибке в интерфейсе
     }
 });
 
