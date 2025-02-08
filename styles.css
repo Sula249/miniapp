@@ -2,7 +2,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-start; /* Изменено на flex-start */
     height: 100vh;
     margin: 0;
     font-family: var(--tg-font-family, Arial, sans-serif);
@@ -12,8 +12,8 @@ body {
 }
 
 #title {
-    margin-top: 20px;
-    z-index: 10;
+    margin-top: 20px; /* Отступ сверху для заголовка */
+    z-index: 10; /* Убедитесь, что заголовок находится выше результатов поиска */
 }
 
 .overlay {
@@ -43,7 +43,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    z-index: 15;
+    z-index: 15; /* Убедитесь, что кнопки находятся выше результатов поиска */
 }
 
 .inputContainer {
@@ -56,6 +56,7 @@ body {
     background: var(--tg-theme-bg-color, #ffffff);
     padding: 5px;
     border-radius: 8px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
     box-sizing: border-box;
     z-index: 10;
     opacity: 0;
@@ -68,17 +69,14 @@ body {
     pointer-events: auto;
 }
 
-/* Фикс кнопок и полей ввода */
 .inputContainer .wrapper {
     display: flex;
     gap: 5px;
     width: 100%;
-    align-items: center;
 }
 
 .inputContainer input {
     flex: 1;
-    min-width: 0;
     padding: 12px 16px;
     font-size: 16px;
     border: 1px solid var(--tg-theme-hint-color, #ccc);
@@ -86,12 +84,17 @@ body {
     background: var(--tg-theme-secondary-bg-color, #f0f0f0);
     color: var(--tg-theme-text-color, #000000);
     box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.inputContainer input:focus {
+    outline: none;
+    border-color: var(--tg-theme-button-color, #0088cc);
 }
 
 .inputContainer button {
-    padding: 12px 16px;
+    padding: 12px 20px;
     font-size: 16px;
-    white-space: nowrap;
     cursor: pointer;
     border: none;
     background-color: var(--tg-theme-button-color, #0088cc);
@@ -150,15 +153,15 @@ body {
 
 .gcse-searchresults-only {
     position: fixed;
-    top: 100px;
+    top: 100px; /* Отступ сверху для заголовка и других элементов */
     left: 0;
     right: 0;
-    bottom: 120px;
-    overflow-y: auto;
+    bottom: 120px; /* Отступ снизу для кнопок */
+    overflow-y: auto; /* Добавляем прокрутку */
     padding: 10px;
     background: var(--tg-theme-secondary-bg-color, #f0f0f0);
     z-index: 5;
-    max-height: calc(100vh - 220px);
+    max-height: calc(100vh - 220px); /* Ограничиваем высоту контейнера */
 }
 
 .gsc-control-cse {
@@ -191,6 +194,7 @@ body {
     100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
+/* Общие стили для результатов */
 .gsc-webResult.gsc-result {
     background: var(--tg-theme-secondary-bg-color, #f0f0f0) !important;
     border-radius: 8px !important;
@@ -199,6 +203,7 @@ body {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
 }
 
+/* Заголовки результатов */
 .gs-title {
     color: var(--tg-theme-link-color, #0088cc) !important;
     font-size: 18px !important;
@@ -210,6 +215,7 @@ body {
     text-decoration: underline !important;
 }
 
+/* Описания */
 .gs-snippet {
     color: var(--tg-theme-text-color, #000000) !important;
     font-size: 15px !important;
@@ -217,11 +223,13 @@ body {
     font-family: var(--tg-font-family, Arial, sans-serif) !important;
 }
 
+/* URL результатов */
 .gs-url {
     color: var(--tg-theme-hint-color, #707579) !important;
     font-size: 13px !important;
 }
 
+/* Пагинация */
 .gsc-cursor-page {
     color: var(--tg-theme-button-color, #0088cc) !important;
     border: none !important;
@@ -234,24 +242,92 @@ body {
     font-weight: bold !important;
 }
 
-@media (max-width: 400px) {
+/* Иконка поиска */
+.gsc-search-button {
+    padding: 8px !important;
+    margin-left: 5px !important;
+}
+
+/* Поле ввода поиска */
+.gsc-input-box {
+    border-radius: 6px !important;
+    border-color: var(--tg-theme-hint-color, #ccc) !important;
+    background: var(--tg-theme-secondary-bg-color, #f0f0f0) !important;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 500px) {
+    .gsc-webResult.gsc-result {
+        margin-bottom: 8px !important;
+        padding: 13px !important;
+    }
+    
+    .gs-title {
+        font-size: 15px !important;
+    }
+    
+    .gs-snippet {
+        font-size: 13px !important;
+    }
+}
+/* Адаптация для маленьких экранов (до 500px) */
+@media (max-width: 500px) {
+    /* Контейнер для кнопок */
+    .container {
+        flex-direction: row; /* Кнопки в одну линию */
+        gap: 5px; /* Уменьшаем расстояние между кнопками */
+        bottom: 10px; /* Уменьшаем отступ снизу */
+        width: 90%; /* Уменьшаем ширину контейнера */
+    }
+
+    /* Контейнер для ввода */
+    .inputContainer {
+        width: 90%; /* Уменьшаем ширину */
+        max-width: 100%; /* Убираем ограничение по максимальной ширине */
+        transform: translateX(-50%) translateY(-60px); /* Корректируем позицию */
+    }
+
+    /* Обертка для полей ввода и кнопок */
     .inputContainer .wrapper {
-        flex-direction: row;
-        gap: 3px;
+        flex-direction: row; /* Поля ввода и кнопки в одну линию */
+        gap: 5px; /* Уменьшаем расстояние между элементами */
     }
 
+    /* Поле ввода */
     .inputContainer input {
-        font-size: 14px;
-        padding: 10px;
+        padding: 8px 10px; /* Уменьшаем отступы */
+        font-size: 14px; /* Уменьшаем размер шрифта */
+        flex: 1; /* Растягиваем поле ввода на доступное пространство */
     }
 
+    /* Кнопки ввода */
     .inputContainer button {
-        font-size: 14px;
-        padding: 10px;
+        padding: 8px 12px; /* Уменьшаем отступы */
+        font-size: 14px; /* Уменьшаем размер шрифта */
+        white-space: nowrap; /* Текст в одну строку */
     }
 
+    /* Кнопки переключения */
     .toggleButton {
-        font-size: 14px;
-        padding: 10px;
+        padding: 10px 12px; /* Уменьшаем отступы */
+        font-size: 14px; /* Уменьшаем размер шрифта */
+        white-space: nowrap; /* Текст в одну строку */
+    }
+
+    /* Контейнер для результатов поиска */
+    .gcse-searchresults-only {
+        top: 80px; /* Уменьшаем отступ сверху */
+        bottom: 100px; /* Уменьшаем отступ снизу */
+        max-height: calc(100vh - 180px); /* Корректируем высоту контейнера */
+    }
+
+    /* Заголовки результатов поиска */
+    .gs-title {
+        font-size: 14px !important; /* Уменьшаем размер шрифта заголовков */
+    }
+
+    /* Описания результатов поиска */
+    .gs-snippet {
+        font-size: 12px !important; /* Уменьшаем размер шрифта описаний */
     }
 }
