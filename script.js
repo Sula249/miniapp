@@ -114,47 +114,44 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        questionButton.addEventListener("click", () => {
+questionButton.addEventListener("click", () => {
     const question = questionInput.value.trim();
     if (question) {
         loader.classList.add('visible');
         
+        // Удаляем все iframe Google CSE
+        document.querySelectorAll('iframe').forEach(iframe => iframe.remove());
+        
+        // Создаем заглушку
         const result = document.createElement('div');
         result.className = 'question-result';
+        result.innerHTML = `
+            <div class="question-title">Вопрос: ${question}</div>
+            <div class="question-content">Ответ: Здесь будет ответ на ваш вопрос...</div>
+        `;
+
+        // Принудительное отображение поверх всего
+        questionResults.innerHTML = '';
+        questionResults.appendChild(result);
+        questionResults.style.display = 'block';
+        questionResults.style.zIndex = '6'; // Явное указание
         
-        const title = document.createElement('div');
-        title.className = 'question-title';
-        title.textContent = 'Вопрос: ' + question;
-        
-        const content = document.createElement('div');
-        content.className = 'question-content';
-        content.textContent = 'Ответ: Здесь будет ответ на ваш вопрос...';
-        
-        result.appendChild(title);
-        result.appendChild(content);
-        
-        if (questionResults) {
-            questionResults.innerHTML = '';
-            questionResults.appendChild(result);
-            questionResults.style.display = 'block'; // Показываем контейнер
+        // Жесткий сброс поисковых результатов
+        if (resultsContainer) {
+            resultsContainer.style.display = 'none';
+            resultsContainer.innerHTML = '';
         }
         
-        // Убираем вызов hideAll() и вручную управляем интерфейсом
+        // Сброс интерфейса
         searchContainer.classList.remove("visible");
         questionContainer.classList.remove("visible");
         overlay.classList.remove("visible");
         mainButton.classList.remove("hidden");
         toggleSearchButton.classList.add("hidden");
         
-        if (resultsContainer) {
-            resultsContainer.style.display = 'none';
-        }
-        
         questionInput.value = '';
         
-        setTimeout(() => {
-            loader.classList.remove('visible');
-        }, 1000);
+        setTimeout(() => loader.classList.remove('visible'), 1000);
     } else {
         alert("Введите вопрос.");
     }
