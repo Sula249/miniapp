@@ -114,47 +114,37 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
+// В файле script.js замените обработчик кнопки вопроса на:
 questionButton.addEventListener("click", () => {
     const question = questionInput.value.trim();
-    if (question) {
-        loader.classList.add('visible');
-        
-        // Удаляем все iframe Google CSE
-        document.querySelectorAll('iframe').forEach(iframe => iframe.remove());
-        
-        // Создаем заглушку
-        const result = document.createElement('div');
-        result.className = 'question-result';
-        result.innerHTML = `
-            <div class="question-title">Вопрос: ${question}</div>
-            <div class="question-content">Ответ: Здесь будет ответ на ваш вопрос...</div>
-        `;
+    if (!question) return alert("Введите вопрос.");
 
-        // Принудительное отображение поверх всего
-        questionResults.innerHTML = '';
-        questionResults.appendChild(result);
-        questionResults.style.display = 'block';
-        questionResults.style.zIndex = '6'; // Явное указание
-        
-        // Жесткий сброс поисковых результатов
-        if (resultsContainer) {
-            resultsContainer.style.display = 'none';
-            resultsContainer.innerHTML = '';
-        }
-        
-        // Сброс интерфейса
-        searchContainer.classList.remove("visible");
-        questionContainer.classList.remove("visible");
-        overlay.classList.remove("visible");
-        mainButton.classList.remove("hidden");
-        toggleSearchButton.classList.add("hidden");
-        
-        questionInput.value = '';
-        
-        setTimeout(() => loader.classList.remove('visible'), 1000);
-    } else {
-        alert("Введите вопрос.");
+    // Удаление всех элементов Google CSE
+    const googleResults = document.querySelector('.gsc-results-wrapper-overlay');
+    if (googleResults) googleResults.remove();
+
+    // Принудительный сброс поисковых результатов
+    if (resultsContainer) {
+        resultsContainer.style.display = 'none';
+        resultsContainer.replaceChildren(); // Полная очистка содержимого
     }
+
+    // Создание заглушки
+    questionResults.innerHTML = `
+        <div class="question-result">
+            <div class="question-title">Вопрос: ${question}</div>
+            <div class="question-content">Ответ: Здесь будет ответ...</div>
+        </div>
+    `;
+    
+    // Гарантия видимости
+    questionResults.style.display = 'block';
+    questionResults.style.zIndex = '1000'; // Экстремальное значение
+
+    // Сброс интерфейса
+    searchContainer.classList.remove("visible");
+    questionContainer.classList.remove("visible");
+    overlay.classList.remove("visible");
 });
 
         // Открытие ссылок в новых вкладках
