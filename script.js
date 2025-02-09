@@ -17,9 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const searchContainer = document.getElementById("searchContainer");
         const questionContainer = document.getElementById("questionContainer");
         const searchForm = document.getElementById("searchForm");
-        const questionForm = document.getElementById("questionForm");
         const queryInput = document.getElementById("query");
         const questionInput = document.getElementById("questionInput");
+        const questionButton = document.getElementById("questionButton");
         const overlay = document.querySelector(".overlay");
         const loader = document.querySelector('.loader');
         const searchResults = document.getElementById('searchResults');
@@ -110,38 +110,40 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
+        // Обработка ввода в поле вопроса
+        questionInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                questionButton.click();
+            }
+        });
+
         // Обработка вопросов
-        questionForm.addEventListener("submit", async function(event) {
-            event.preventDefault();
+        questionButton.addEventListener("click", function() {
             const question = questionInput.value.trim();
             if (!question) return;
 
             loader.classList.add('visible');
             
-            try {
-                // Создаем элемент с вопросом
-                const questionItem = document.createElement('div');
-                questionItem.className = 'question-item';
-                questionItem.innerHTML = `
-                    <div class="question-title">Ваш вопрос</div>
-                    <div class="question-content">${question}</div>
-                `;
-                
-                // Очищаем контейнер и добавляем новый вопрос
-                questionResults.innerHTML = '';
-                questionResults.appendChild(questionItem);
-                
-                // Показываем результаты
-                questionResults.style.display = 'block';
-                hideAll();
-                tg.BackButton.show();
-                questionInput.value = '';
-            } catch (error) {
-                console.error('Ошибка обработки вопроса:', error);
-                alert('Произошла ошибка при обработке вопроса');
-            } finally {
-                setTimeout(() => loader.classList.remove('visible'), 1000);
-            }
+            // Создаем элемент с вопросом
+            const questionItem = document.createElement('div');
+            questionItem.className = 'question-item';
+            questionItem.innerHTML = `
+                <div class="question-title">Ваш вопрос</div>
+                <div class="question-content">${question}</div>
+            `;
+            
+            // Очищаем контейнер и добавляем новый вопрос
+            questionResults.innerHTML = '';
+            questionResults.appendChild(questionItem);
+            
+            // Показываем результаты
+            questionResults.style.display = 'block';
+            hideAll();
+            tg.BackButton.show();
+            questionInput.value = '';
+            
+            setTimeout(() => loader.classList.remove('visible'), 1000);
         });
 
         // Открытие ссылок в новых вкладках
