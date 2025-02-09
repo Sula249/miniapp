@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     if (window.Telegram && window.Telegram.WebApp) {
         const tg = Telegram.WebApp;
-        tg.expand(); 
+        tg.expand();
 
         // Инициализация темы
         const updateTheme = () => {
