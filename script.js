@@ -117,55 +117,47 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-// В обработчике кнопки вопроса замените блок на:
+// В обработчике кнопки вопроса (script.js) замените код на:
 questionButton.addEventListener("click", () => {
     const question = questionInput.value.trim();
-    if (question) {
-        loader.classList.add('visible');
-        
-        // Полностью пересоздаем заглушку
-        const result = document.createElement('div');
-        result.className = 'question-result';
-        
-        const title = document.createElement('div');
-        title.className = 'question-title';
-        title.textContent = 'Вопрос: ' + question;
-        
-        const content = document.createElement('div');
-        content.className = 'question-content';
-        content.textContent = 'Ответ: Здесь будет ответ на ваш вопрос...';
-        
-        result.appendChild(title);
-        result.appendChild(content);
+    if (!question) return alert("Введите вопрос.");
 
-        // Принудительное управление слоями
-        if (questionResults) {
-            questionResults.innerHTML = '';
-            questionResults.appendChild(result);
-            questionResults.style.display = 'block';
-            questionResults.style.zIndex = "1000"; // Экстренное повышение
-        }
+    loader.classList.add('visible');
 
-        // Жесткий сброс поисковых результатов
-        if (resultsContainer) {
-            resultsContainer.style.display = 'none';
-            resultsContainer.innerHTML = ''; // Полная очистка
-            resultsContainer.style.zIndex = "1";
-        }
-
-        // Дополнительный сброс интерфейса
-        document.querySelector('.gsc-results-wrapper-overlay')?.remove();
-        searchContainer.classList.remove("visible");
-        questionContainer.classList.remove("visible");
-        overlay.classList.remove("visible");
-        
-        // Форсированное обновление layout
-        void questionResults.offsetHeight;
-
-        setTimeout(() => {
-            loader.classList.remove('visible');
-        }, 500);
+    // 1. Жесткий сброс поисковых результатов
+    if (resultsContainer) {
+        resultsContainer.style.display = 'none';
+        resultsContainer.innerHTML = ''; // Полная очистка DOM
+        const iframe = document.querySelector('iframe.gsc-resultsiframe');
+        iframe?.parentNode?.removeChild(iframe); // Удаление скрытых iframe
     }
+
+    // 2. Создание новой заглушки
+    const result = document.createElement('div');
+    result.className = 'question-result';
+    result.innerHTML = `
+        <div class="question-title">Вопрос: ${question}</div>
+        <div class="question-content">Ответ: Здесь будет ответ на ваш вопрос...</div>
+    `;
+
+    // 3. Принудительное отображение поверх всех элементов
+    questionResults.innerHTML = '';
+    questionResults.appendChild(result);
+    questionResults.style.display = 'block';
+    questionResults.style.zIndex = '1000';
+    
+    // 4. Блокировка фоновых элементов
+    document.querySelectorAll('.gsc-results, .gsc-tabsArea').forEach(el => {
+        el.style.pointerEvents = 'none'; // Запрет взаимодействия
+        el.style.opacity = '0.5'; // Визуальное затемнение
+    });
+
+    // 5. Финализация интерфейса
+    setTimeout(() => {
+        loader.classList.remove('visible');
+        window.scrollTo(0, 0); // Сброс скролла
+        questionInput.value = '';
+    }, 300);
 });
 
         // Открытие ссылок в новых вкладках
