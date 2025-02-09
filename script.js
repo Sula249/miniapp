@@ -63,20 +63,23 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 600);
         }
 
-        function hideAll() {
-            searchContainer.classList.remove("visible");
-            questionContainer.classList.remove("visible");
-            overlay.classList.remove("visible");
-            mainButton.classList.remove("hidden");
-            toggleSearchButton.classList.add("hidden");
-            if (resultsContainer) {
-                resultsContainer.style.display = 'none';
-            }
-            if (questionResults) {
-                questionResults.style.display = 'none';
-            }
-            tg.BackButton.hide();
-        }
+function hideAll() {
+    searchContainer.classList.remove("visible");
+    questionContainer.classList.remove("visible");
+    overlay.classList.remove("visible");
+    mainButton.classList.remove("hidden");
+    toggleSearchButton.classList.add("hidden");
+    
+    if (resultsContainer && resultsContainer.style) {
+        resultsContainer.style.display = 'none';
+    }
+    
+    if (questionResults && questionResults.style) {
+        questionResults.style.display = 'none';
+    }
+    
+    tg.BackButton.hide();
+}
 
         // Обработчики событий
         mainButton.addEventListener("click", showSearch);
