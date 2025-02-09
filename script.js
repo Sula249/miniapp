@@ -135,12 +135,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 result.appendChild(title);
                 result.appendChild(content);
                 
-                // Очищаем предыдущие результаты
-                questionResults.innerHTML = '';
-                questionResults.appendChild(result);
+                // Очищаем предыдущие результаты и добавляем новый
+                if (questionResults) {
+                    questionResults.innerHTML = '';
+                    questionResults.appendChild(result);
+                    questionResults.style.display = 'block';
+                }
                 
-                // Показываем контейнер с результатами
-                questionResults.style.display = 'block';
+                // Скрываем контейнер поиска
                 if (resultsContainer) {
                     resultsContainer.style.display = 'none';
                 }
