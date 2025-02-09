@@ -277,3 +277,44 @@ body {
         font-size: 13px !important;
     }
 }
+/* Добавляем стили для нового контейнера с ответами на вопросы */
+#questionResults {
+    position: fixed;
+    top: 100px; /* Отступ сверху для заголовка и других элементов */
+    left: 0;
+    right: 0;
+    bottom: 120px; /* Отступ снизу для кнопок */
+    overflow-y: auto; /* Добавляем прокрутку */
+    padding: 10px;
+    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    z-index: 5;
+    max-height: calc(100vh - 220px); /* Ограничиваем высоту контейнера */
+    display: none; /* По умолчанию скрываем */
+}
+
+/* Стили для ответов на вопросы */
+#questionResults .gsc-webResult.gsc-result {
+    background: var(--tg-theme-secondary-bg-color, #f0f0f0) !important;
+    border-radius: 8px !important;
+    margin-bottom: 12px !important;
+    border: none !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+#questionResults .gs-title {
+    color: var(--tg-theme-link-color, #0088cc) !important;
+    font-size: 18px !important;
+    text-decoration: none !important;
+    font-family: var(--tg-font-family, Arial, sans-serif) !important;
+}
+
+#questionResults .gs-title:hover {
+    text-decoration: underline !important;
+}
+
+#questionResults .gs-snippet {
+    color: var(--tg-theme-text-color, #000000) !important;
+    font-size: 15px !important;
+    line-height: 1.4 !important;
+    font-family: var(--tg-font-family, Arial, sans-serif) !important;
+}
