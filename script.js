@@ -17,9 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const searchContainer = document.getElementById("searchContainer");
         const questionContainer = document.getElementById("questionContainer");
         const searchForm = document.getElementById("searchForm");
+        const questionForm = document.getElementById("questionForm");
         const queryInput = document.getElementById("query");
         const questionInput = document.getElementById("questionInput");
-        const questionButton = document.getElementById("questionButton");
         const overlay = document.querySelector(".overlay");
         const loader = document.querySelector('.loader');
         const searchResults = document.getElementById('searchResults');
@@ -111,11 +111,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Обработка вопросов
-        questionButton.addEventListener("click", () => {
+        questionForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
             const question = questionInput.value.trim();
-            if (question) {
-                loader.classList.add('visible');
-                
+            if (!question) return;
+
+            loader.classList.add('visible');
+            
+            try {
                 // Создаем элемент с вопросом
                 const questionItem = document.createElement('div');
                 questionItem.className = 'question-item';
@@ -133,10 +136,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 hideAll();
                 tg.BackButton.show();
                 questionInput.value = '';
-                
+            } catch (error) {
+                console.error('Ошибка обработки вопроса:', error);
+                alert('Произошла ошибка при обработке вопроса');
+            } finally {
                 setTimeout(() => loader.classList.remove('visible'), 1000);
-            } else {
-                alert("Введите вопрос.");
             }
         });
 
