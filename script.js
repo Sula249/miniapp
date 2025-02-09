@@ -76,9 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 questionResults.style.display = 'none';
             }
             tg.BackButton.hide();
-            if (questionResults) {
-    questionResults.style.display = 'none';
-}
         }
 
         // Обработчики событий
@@ -113,18 +110,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error('Ошибка поиска:', error);
                 alert('Произошла ошибка при выполнении поиска');
             } finally {
-setTimeout(() => {
-    loader.classList.remove('visible');
-    // Скрываем ответы на вопросы при новом поиске
-    if (questionResults) {
-        questionResults.style.display = 'none';
-    }
-}, 1000);
-                
+                setTimeout(() => loader.classList.remove('visible'), 1000);
             }
         });
 
-questionButton.addEventListener("click", () => {
+        questionButton.addEventListener("click", () => {
     const question = questionInput.value.trim();
     if (question) {
         loader.classList.add('visible');
@@ -146,17 +136,16 @@ questionButton.addEventListener("click", () => {
         if (questionResults) {
             questionResults.innerHTML = '';
             questionResults.appendChild(result);
-            questionResults.style.display = 'block';
+            questionResults.style.display = 'block'; // Показываем контейнер
         }
-
-        // Убираем только элементы ввода
+        
+        // Убираем вызов hideAll() и вручную управляем интерфейсом
         searchContainer.classList.remove("visible");
         questionContainer.classList.remove("visible");
         overlay.classList.remove("visible");
         mainButton.classList.remove("hidden");
         toggleSearchButton.classList.add("hidden");
-
-        // Скрываем результаты поиска
+        
         if (resultsContainer) {
             resultsContainer.style.display = 'none';
         }
