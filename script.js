@@ -220,3 +220,7 @@ async function logQueryToGoogleSheets(query) {
         console.error('Ошибка логирования:', error);
     }
 }
+.question-results {
+    display: none; /* По умолчанию скрыт */
+    /* остальные стили */
+}
