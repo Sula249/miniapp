@@ -62,17 +62,20 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 600);
         }
 
-        function hideAll() {
-            searchContainer.classList.remove("visible");
-            questionContainer.classList.remove("visible");
-            overlay.classList.remove("visible");
-            mainButton.classList.remove("hidden");
-            toggleSearchButton.classList.add("hidden");
-            if (resultsContainer) {
-                resultsContainer.style.display = 'none'; // Скрываем результаты поиска
-            }
-            tg.BackButton.hide(); // Скрываем кнопку "Назад"
-        }
+function hideAll() {
+    searchContainer.classList.remove("visible");
+    questionContainer.classList.remove("visible");
+    overlay.classList.remove("visible");
+    mainButton.classList.remove("hidden");
+    toggleSearchButton.classList.add("hidden");
+
+    if (resultsContainer) {
+        resultsContainer.style.display = 'none'; // Скрываем результаты поиска
+    }
+    
+    tg.BackButton.hide(); // Скрываем кнопку "Назад"
+}
+
 
         // Обработчики событий
         mainButton.addEventListener("click", showSearch);
@@ -122,29 +125,29 @@ questionButton.addEventListener("click", () => {
 
 
         // Открытие ссылок в новых вкладках
-        const observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                if (mutation.addedNodes.length) {
-                    // Находим все ссылки в результатах поиска
-                    const searchResults = document.querySelector('.gsc-results-wrapper-overlay') || document.getElementById('results');
-                    if (searchResults) {
-                        searchResults.querySelectorAll('a').forEach(link => {
-                            link.target = '_blank';
-                            link.rel = 'noopener noreferrer';
-                        });
-                    }
-                    
-                    if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
-                        loader.classList.remove('visible');
-                        hideAll(); // Сворачиваем поисковую строку при загрузке результатов
-                        if (resultsContainer) {
-                            resultsContainer.style.display = 'block'; // Показываем результаты поиска
-                        }
-                        tg.BackButton.show(); // Показываем кнопку "Назад"
-                    }
+const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+        if (mutation.addedNodes.length) {
+            const searchResults = document.querySelector('.gsc-results-wrapper-overlay') || document.getElementById('results');
+            if (searchResults) {
+                searchResults.querySelectorAll('a').forEach(link => {
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                });
+            }
+            
+            if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
+                loader.classList.remove('visible');
+                hideAll(); // Сворачиваем контейнеры при загрузке результатов
+                if (resultsContainer) {
+                    resultsContainer.style.display = 'block'; // Показываем результаты поиска
                 }
-            });
-        });
+                tg.BackButton.show();
+            }
+        }
+    });
+});
+
 
         // Следим за всем документом для отлова динамически добавляемых результатов
         observer.observe(document.body, {
@@ -153,9 +156,11 @@ questionButton.addEventListener("click", () => {
         });
 
         // Обработка кнопки "Назад" в Telegram
-        tg.BackButton.onClick(() => {
-            window.history.back(); // Откат на предыдущую страницу
-        });
+tg.BackButton.onClick(() => {
+    hideAll();
+    window.history.back(); // Возвращаемся назад в истории браузера
+});
+
 
         // Добавляем обработку кнопки "Назад" браузера
         window.addEventListener("popstate", (event) => {
@@ -180,3 +185,13 @@ async function logQueryToGoogleSheets(query) {
         console.error('Ошибка логирования:', error);
     }
 }
+function toggleContainers() {
+    if (searchContainer.classList.contains("visible")) {
+        showQuestion();
+    } else {
+        showSearch();
+    }
+}
+
+mainButton.addEventListener("click", toggleContainers);
+toggleSearchButton.addEventListener("click", toggleContainers);
