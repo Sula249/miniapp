@@ -114,23 +114,51 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        questionButton.addEventListener("click", () => {
-            const question = questionInput.value.trim();
-            if (question) {
-                // Отображаем ответ в контейнере
-                questionResultsContainer.innerHTML = `
-                    <div class="gsc-webResult gsc-result">
-                        <div class="gs-title">Ответ на ваш вопрос:</div>
-                        <div class="gs-snippet">${question}</div>
-                    </div>
-                `;
-                questionResultsContainer.style.display = 'block'; // Показываем контейнер
-                questionInput.value = ''; // очищаем поле ввода
-                hideAll(); // Скрываем контейнеры ввода
-            } else {
-                alert("Введите вопрос.");
-            }
-        });
+questionButton.addEventListener("click", () => {
+    const question = questionInput.value.trim();
+    if (question) {
+        loader.classList.add('visible');
+        
+        const result = document.createElement('div');
+        result.className = 'question-result';
+        
+        const title = document.createElement('div');
+        title.className = 'question-title';
+        title.textContent = 'Вопрос: ' + question;
+        
+        const content = document.createElement('div');
+        content.className = 'question-content';
+        content.textContent = 'Ответ: Здесь будет ответ на ваш вопрос...';
+        
+        result.appendChild(title);
+        result.appendChild(content);
+        
+        if (questionResults) {
+            questionResults.innerHTML = '';
+            questionResults.appendChild(result);
+            questionResults.style.display = 'block'; // Показываем контейнер
+        }
+        
+        // Убираем вызов hideAll() и вручную управляем интерфейсом
+        searchContainer.classList.remove("visible");
+        questionContainer.classList.remove("visible");
+        overlay.classList.remove("visible");
+        mainButton.classList.remove("hidden");
+        toggleSearchButton.classList.add("hidden");
+        
+        if (resultsContainer) {
+            resultsContainer.style.display = 'none';
+        }
+        
+        questionInput.value = '';
+        
+        setTimeout(() => {
+            loader.classList.remove('visible');
+        }, 1000);
+    } else {
+        alert("Введите вопрос.");
+    }
+});
 
         // Открытие ссылок в новых вкладках
         const observer = new MutationObserver(mutations => {
