@@ -63,20 +63,24 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 600);
         }
 
-        function hideAll() {
-            searchContainer.classList.remove("visible");
-            questionContainer.classList.remove("visible");
-            overlay.classList.remove("visible");
-            mainButton.classList.remove("hidden");
-            toggleSearchButton.classList.add("hidden");
-            if (resultsContainer) {
-                resultsContainer.style.display = 'none';
-            }
-            if (questionResults) {
-                questionResults.style.display = 'none';
-            }
-            tg.BackButton.hide();
-        }
+// ======== ЗАМЕНИТЕ ВЕСЬ ЭТОТ БЛОК ========
+function hideAll() {
+    searchContainer.classList.remove("visible");
+    questionContainer.classList.remove("visible");
+    overlay.classList.remove("visible");
+    mainButton.classList.remove("hidden");
+    toggleSearchButton.classList.add("hidden");
+    
+    // Сбрасываем оба контейнера
+    if (resultsContainer) {
+        resultsContainer.style.display = 'none';
+    }
+    if (questionResults) {
+        questionResults.style.display = 'none';
+    }
+    
+    tg.BackButton.hide();
+}
 
         // Обработчики событий
         mainButton.addEventListener("click", showSearch);
@@ -85,36 +89,42 @@ document.addEventListener("DOMContentLoaded", () => {
             window.history.back();
         });
 
-        // Обработка поиска
-        searchForm.addEventListener("submit", async function(event) {
-            event.preventDefault();
-            const query = queryInput.value.trim();
-            if (!query) return;
+// ======== ЗАМЕНИТЕ ВЕСЬ ЭТОТ БЛОК ========
+searchForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+    const query = queryInput.value.trim();
+    if (!query) return;
 
-            loader.classList.add('visible');
-            
-            try {
-                await logQueryToGoogleSheets(query);
-                
-                const searchElement = document.querySelector('input.gsc-input');
-                const searchButton = document.querySelector('button.gsc-search-button');
-                
-                if (searchElement && searchButton) {
-                    searchElement.value = query;
-                    searchButton.click();
-                    queryInput.value = '';
-                } else {
-                    throw new Error('Элементы поиска не найдены');
-                }
-            } catch (error) {
-                console.error('Ошибка поиска:', error);
-                alert('Произошла ошибка при выполнении поиска');
-            } finally {
-                setTimeout(() => loader.classList.remove('visible'), 1000);
-            }
-        });
+    loader.classList.add('visible');
+    
+    try {
+        await logQueryToGoogleSheets(query);
+        
+        // Сброс состояния вопросов
+        if (questionResults) {
+            questionResults.style.display = 'none';
+        }
 
-        questionButton.addEventListener("click", () => {
+        const searchElement = document.querySelector('input.gsc-input');
+        const searchButton = document.querySelector('button.gsc-search-button');
+        
+        if (searchElement && searchButton) {
+            searchElement.value = query;
+            searchButton.click();
+            queryInput.value = '';
+        } else {
+            throw new Error('Элементы поиска не найдены');
+        }
+    } catch (error) {
+        console.error('Ошибка поиска:', error);
+        alert('Произошла ошибка при выполнении поиска');
+    } finally {
+        setTimeout(() => loader.classList.remove('visible'), 1000);
+    }
+});
+
+// ======== ЗАМЕНИТЕ ВЕСЬ ЭТОТ БЛОК ========
+questionButton.addEventListener("click", () => {
     const question = questionInput.value.trim();
     if (question) {
         loader.classList.add('visible');
@@ -133,27 +143,27 @@ document.addEventListener("DOMContentLoaded", () => {
         result.appendChild(title);
         result.appendChild(content);
         
-        // В обработчике questionButton замените блок:
         if (questionResults) {
             questionResults.innerHTML = '';
             questionResults.appendChild(result);
-            questionResults.style.display = 'block'; // Показываем контейнер
+            questionResults.style.display = 'block';
+            
+            // Принудительно скрываем поиск
             if (resultsContainer) {
-                resultsContainer.style.display = 'none'; // Скрываем поисковые результаты
+                resultsContainer.style.display = 'none';
             }
-            questionResults.style.zIndex = "6"; // Поверх поисковых результатов
+            
+            // Управление z-index
+            questionResults.style.zIndex = "6";
+            if (resultsContainer) resultsContainer.style.zIndex = "5";
         }
         
-        // Убираем вызов hideAll() и вручную управляем интерфейсом
+        // Сбрасываем интерфейс
         searchContainer.classList.remove("visible");
         questionContainer.classList.remove("visible");
         overlay.classList.remove("visible");
         mainButton.classList.remove("hidden");
         toggleSearchButton.classList.add("hidden");
-        
-        if (resultsContainer) {
-            resultsContainer.style.display = 'none';
-        }
         
         questionInput.value = '';
         
