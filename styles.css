@@ -10,7 +10,7 @@ body {
     color: var(--tg-theme-text-color, #000000);
     transition: background-color 0.3s, color 0.3s;
 }
-
+ 
 #title {
     margin-top: 20px;
     z-index: 10;
