@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 resultsContainer.style.display = 'none';
             }
             if (questionResults) {
-                questionResults.style.display = 'none';
+                questionResults.style.display = 'block';
             }
             tg.BackButton.hide();
         }
@@ -219,4 +219,13 @@ async function logQueryToGoogleSheets(query) {
     } catch (error) {
         console.error('Ошибка логирования:', error);
     }
+}
+questionInput.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        questionButton.click();
+    }
+});
+if (questionInput) {
+    questionInput.focus();
 }
