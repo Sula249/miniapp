@@ -117,53 +117,56 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Обработка вопросов
-        questionButton.addEventListener("click", () => {
-            const question = questionInput.value.trim();
-            if (question) {
-                loader.classList.add('visible');
-                
-                const result = document.createElement('div');
-                result.className = 'question-result';
-                
-                const title = document.createElement('div');
-                title.className = 'question-title';
-                title.textContent = 'Вопрос: ' + question;
-                
-                const content = document.createElement('div');
-                content.className = 'question-content';
-                content.textContent = 'Ответ: Здесь будет ответ на ваш вопрос...';
-                
-                result.appendChild(title);
-                result.appendChild(content);
-                
-                // Управление отображением
-                if (questionResults) {
-                    questionResults.innerHTML = '';
-                    questionResults.appendChild(result);
-                    questionResults.style.display = 'block';
-                    
-                    // Принудительно скрываем поиск
-                    if (resultsContainer) {
-                        resultsContainer.style.display = 'none';
-                        resultsContainer.innerHTML = '';
-                    }
-                }
-                
-                // Сброс интерфейса
-                searchContainer.classList.remove("visible");
-                questionContainer.classList.remove("visible");
-                overlay.classList.remove("visible");
-                mainButton.classList.remove("hidden");
-                toggleSearchButton.classList.add("hidden");
-                
-                questionInput.value = '';
-                
-                setTimeout(() => loader.classList.remove('visible'), 1000);
-            } else {
-                alert("Введите вопрос.");
-            }
-        });
+// В обработчике кнопки вопроса замените блок на:
+questionButton.addEventListener("click", () => {
+    const question = questionInput.value.trim();
+    if (question) {
+        loader.classList.add('visible');
+        
+        // Полностью пересоздаем заглушку
+        const result = document.createElement('div');
+        result.className = 'question-result';
+        
+        const title = document.createElement('div');
+        title.className = 'question-title';
+        title.textContent = 'Вопрос: ' + question;
+        
+        const content = document.createElement('div');
+        content.className = 'question-content';
+        content.textContent = 'Ответ: Здесь будет ответ на ваш вопрос...';
+        
+        result.appendChild(title);
+        result.appendChild(content);
+
+        // Принудительное управление слоями
+        if (questionResults) {
+            questionResults.innerHTML = '';
+            questionResults.appendChild(result);
+            questionResults.style.display = 'block';
+            questionResults.style.zIndex = "1000"; // Экстренное повышение
+        }
+
+        // Жесткий сброс поисковых результатов
+        if (resultsContainer) {
+            resultsContainer.style.display = 'none';
+            resultsContainer.innerHTML = ''; // Полная очистка
+            resultsContainer.style.zIndex = "1";
+        }
+
+        // Дополнительный сброс интерфейса
+        document.querySelector('.gsc-results-wrapper-overlay')?.remove();
+        searchContainer.classList.remove("visible");
+        questionContainer.classList.remove("visible");
+        overlay.classList.remove("visible");
+        
+        // Форсированное обновление layout
+        void questionResults.offsetHeight;
+
+        setTimeout(() => {
+            loader.classList.remove('visible');
+        }, 500);
+    }
+});
 
         // Открытие ссылок в новых вкладках
         const observer = new MutationObserver(mutations => {
