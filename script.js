@@ -110,15 +110,16 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        questionButton.addEventListener("click", () => {
-            const question = questionInput.value.trim();
-            if (question) {
-                alert(`Вопрос: ${question}`);
-                questionInput.value = ''; // очищаем поле ввода
-            } else {
-                alert("Введите вопрос.");
-            }
-        });
+questionButton.addEventListener("click", () => {
+    const question = questionInput.value.trim();
+    if (question) {
+        const questionResults = document.getElementById("questionResults");
+        questionResults.innerHTML = `<p><strong>Ваш вопрос:</strong> ${question}</p>`;
+        questionResults.classList.add("visible");
+        questionInput.value = ''; // очищаем поле ввода
+    }
+});
+
 
         // Открытие ссылок в новых вкладках
         const observer = new MutationObserver(mutations => {
