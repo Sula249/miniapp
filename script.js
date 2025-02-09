@@ -120,13 +120,13 @@ questionButton.addEventListener("click", () => {
     if (!question) return alert("Введите вопрос.");
 
     // Удаление всех элементов Google CSE
-    const googleResults = document.querySelector('.gsc-results-wrapper-overlay');
-    if (googleResults) googleResults.remove();
+    const googleElements = document.querySelectorAll('.gsc-results, .gsc-results-wrapper-overlay, .gsc-modal-background, .gsc-modal-box');
+    googleElements.forEach(element => element.remove());
 
-    // Принудительный сброс поисковых результатов
+    // Скрытие основного контейнера и сброс его содержимого
     if (resultsContainer) {
         resultsContainer.style.display = 'none';
-        resultsContainer.replaceChildren(); // Полная очистка содержимого
+        resultsContainer.innerHTML = ''; // Полная очистка
     }
 
     // Создание заглушки
@@ -139,12 +139,14 @@ questionButton.addEventListener("click", () => {
     
     // Гарантия видимости
     questionResults.style.display = 'block';
-    questionResults.style.zIndex = '1000'; // Экстремальное значение
+    questionResults.style.zIndex = '2147483647'; // Максимальный z-index
 
     // Сброс интерфейса
     searchContainer.classList.remove("visible");
     questionContainer.classList.remove("visible");
     overlay.classList.remove("visible");
+    mainButton.classList.remove("hidden");
+    toggleSearchButton.classList.add("hidden");
 });
 
         // Открытие ссылок в новых вкладках
