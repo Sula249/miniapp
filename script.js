@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.Telegram && window.Telegram.WebApp) {
         const tg = Telegram.WebApp;
         tg.expand();
-
+ 
         // Инициализация темы
         const updateTheme = () => {
             document.body.style.backgroundColor = tg.themeParams.bg_color || getComputedStyle(document.body).backgroundColor;
