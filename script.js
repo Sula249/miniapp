@@ -114,54 +114,54 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        questionButton.addEventListener("click", () => {
-            const question = questionInput.value.trim();
-            if (question) {
-                // Показываем loader
-                loader.classList.add('visible');
-                
-                // Создаем элемент с вопросом и ответом
-                const result = document.createElement('div');
-                result.className = 'question-result';
-                
-                const title = document.createElement('div');
-                title.className = 'question-title';
-                title.textContent = 'Вопрос: ' + question;
-                
-                const content = document.createElement('div');
-                content.className = 'question-content';
-                content.textContent = 'Ответ: Здесь будет ответ на ваш вопрос...';
-                
-                result.appendChild(title);
-                result.appendChild(content);
-                
-                // Очищаем предыдущие результаты и добавляем новый
-                if (questionResults) {
-                    questionResults.innerHTML = '';
-                    questionResults.appendChild(result);
-                    questionResults.style.display = 'block';
-                }
-                
-                // Скрываем контейнер поиска
-                if (resultsContainer) {
-                    resultsContainer.style.display = 'none';
-                }
-                
-                // Скрываем поисковую строку и показываем кнопку "Назад"
-                hideAll();
-                tg.BackButton.show();
-                
-                // Очищаем поле ввода
-                questionInput.value = '';
-                
-                // Скрываем loader через секунду
-                setTimeout(() => {
-                    loader.classList.remove('visible');
-                }, 1000);
-            } else {
-                alert("Введите вопрос.");
-            }
-        });
+questionButton.addEventListener("click", () => {
+    const question = questionInput.value.trim();
+    if (question) {
+        // Показываем loader
+        loader.classList.add('visible');
+        
+        // Создаем элемент с вопросом и ответом
+        const result = document.createElement('div');
+        result.className = 'question-result';
+        
+        const title = document.createElement('div');
+        title.className = 'question-title';
+        title.textContent = 'Вопрос: ' + question;
+        
+        const content = document.createElement('div');
+        content.className = 'question-content';
+        content.textContent = 'Ответ: Здесь будет ответ на ваш вопрос...';
+        
+        result.appendChild(title);
+        result.appendChild(content);
+        
+        // Очищаем предыдущие результаты и добавляем новый
+        if (questionResults) {
+            questionResults.innerHTML = '';
+            questionResults.appendChild(result);
+            questionResults.style.display = 'block'; // Показываем контейнер с результатами
+        }
+        
+        // Скрываем контейнер поиска
+        if (resultsContainer) {
+            resultsContainer.style.display = 'none';
+        }
+        
+        // Скрываем поисковую строку и показываем кнопку "Назад"
+        hideAll();
+        tg.BackButton.show();
+        
+        // Очищаем поле ввода
+        questionInput.value = '';
+        
+        // Скрываем loader через секунду
+        setTimeout(() => {
+            loader.classList.remove('visible');
+        }, 1000);
+    } else {
+        alert("Введите вопрос.");
+    }
+});
 
         // Открытие ссылок в новых вкладках
         const observer = new MutationObserver(mutations => {
