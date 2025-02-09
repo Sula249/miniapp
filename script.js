@@ -117,10 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
 questionButton.addEventListener("click", () => {
     const question = questionInput.value.trim();
     if (question) {
-        // Показываем loader
         loader.classList.add('visible');
         
-        // Создаем элемент с вопросом и ответом
         const result = document.createElement('div');
         result.className = 'question-result';
         
@@ -135,26 +133,25 @@ questionButton.addEventListener("click", () => {
         result.appendChild(title);
         result.appendChild(content);
         
-        // Очищаем предыдущие результаты и добавляем новый
         if (questionResults) {
             questionResults.innerHTML = '';
             questionResults.appendChild(result);
-            questionResults.style.display = 'block'; // Показываем контейнер с результатами
+            questionResults.style.display = 'block'; // Показываем контейнер
         }
         
-        // Скрываем контейнер поиска
+        // Убираем вызов hideAll() и вручную управляем интерфейсом
+        searchContainer.classList.remove("visible");
+        questionContainer.classList.remove("visible");
+        overlay.classList.remove("visible");
+        mainButton.classList.remove("hidden");
+        toggleSearchButton.classList.add("hidden");
+        
         if (resultsContainer) {
             resultsContainer.style.display = 'none';
         }
         
-        // Скрываем поисковую строку и показываем кнопку "Назад"
-        hideAll();
-        tg.BackButton.show();
-        
-        // Очищаем поле ввода
         questionInput.value = '';
         
-        // Скрываем loader через секунду
         setTimeout(() => {
             loader.classList.remove('visible');
         }, 1000);
@@ -219,8 +216,4 @@ async function logQueryToGoogleSheets(query) {
     } catch (error) {
         console.error('Ошибка логирования:', error);
     }
-}
-.question-results {
-    display: none; /* По умолчанию скрыт */
-    /* остальные стили */
 }
