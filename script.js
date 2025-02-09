@@ -64,20 +64,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 function hideAll() {
+    // Сбрасываем видимость основных элементов
     searchContainer.classList.remove("visible");
     questionContainer.classList.remove("visible");
     overlay.classList.remove("visible");
+    
+    // Сбрасываем кнопки
     mainButton.classList.remove("hidden");
     toggleSearchButton.classList.add("hidden");
     
-    if (resultsContainer && resultsContainer.style) {
+    // Принудительно скрываем ВСЕ контейнеры с результатами
+    if (resultsContainer) {
         resultsContainer.style.display = 'none';
+        resultsContainer.innerHTML = ''; // Очистка результатов поиска
     }
     
-    if (questionResults && questionResults.style) {
+    if (questionResults) {
         questionResults.style.display = 'none';
     }
     
+    // Всегда прячем кнопку "Назад" при сбросе
     tg.BackButton.hide();
 }
 
@@ -122,6 +128,9 @@ questionButton.addEventListener("click", () => {
     if (question) {
         loader.classList.add('visible');
         
+        // Принудительно скрываем ВСЕ контейнеры и сбрасываем состояние
+        hideAll();
+        
         const result = document.createElement('div');
         result.className = 'question-result';
         
@@ -133,31 +142,25 @@ questionButton.addEventListener("click", () => {
         content.className = 'question-content';
         content.textContent = 'Ответ: Здесь будет ответ на ваш вопрос...';
         
-        result.appendChild(title);
-        result.appendChild(content);
+        questionResults.innerHTML = '';
+        questionResults.appendChild(result);
         
-        if (questionResults) {
-            questionResults.innerHTML = '';
-            questionResults.appendChild(result);
-            questionResults.style.display = 'block';
-        }
+        // Явно показываем контейнер с вопросами
+        questionResults.style.display = 'block';
+        questionResults.style.zIndex = '100'; // Приоритет поверх других элементов
         
-        // Добавить принудительное скрытие поисковых результатов
+        // Дополнительный сброс состояния поиска
         if (resultsContainer) {
             resultsContainer.style.display = 'none';
+            resultsContainer.innerHTML = ''; // Очищаем предыдущие результаты
         }
         
-        // Обновленная секция управления интерфейсом
-        searchContainer.classList.remove("visible");
-        questionContainer.classList.remove("visible");
-        overlay.classList.remove("visible");
-        mainButton.classList.remove("hidden");
-        toggleSearchButton.classList.add("hidden");
-        
+        // Сбрасываем поле ввода
         questionInput.value = '';
         
         setTimeout(() => {
             loader.classList.remove('visible');
+            tg.BackButton.hide(); // Дополнительная страховка для кнопки "Назад"
         }, 1000);
     } else {
         alert("Введите вопрос.");
