@@ -114,39 +114,29 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-// В файле script.js замените обработчик кнопки вопроса на:
+// В файле script.js замените обработчик кнопки вопроса:
 questionButton.addEventListener("click", () => {
     const question = questionInput.value.trim();
     if (!question) return alert("Введите вопрос.");
 
-    // Удаление всех элементов Google CSE
-    const googleElements = document.querySelectorAll('.gsc-results, .gsc-results-wrapper-overlay, .gsc-modal-background, .gsc-modal-box');
-    googleElements.forEach(element => element.remove());
-
-    // Скрытие основного контейнера и сброс его содержимого
+    // 1. Скрываем контейнер поиска, не удаляя элементы Google CSE
     if (resultsContainer) {
         resultsContainer.style.display = 'none';
-        resultsContainer.innerHTML = ''; // Полная очистка
     }
 
-    // Создание заглушки
+    // 2. Отображаем заглушку
     questionResults.innerHTML = `
         <div class="question-result">
             <div class="question-title">Вопрос: ${question}</div>
             <div class="question-content">Ответ: Здесь будет ответ...</div>
         </div>
     `;
-    
-    // Гарантия видимости
     questionResults.style.display = 'block';
-    questionResults.style.zIndex = '2147483647'; // Максимальный z-index
 
-    // Сброс интерфейса
+    // 3. Сброс интерфейса
     searchContainer.classList.remove("visible");
     questionContainer.classList.remove("visible");
     overlay.classList.remove("visible");
-    mainButton.classList.remove("hidden");
-    toggleSearchButton.classList.add("hidden");
 });
 
         // Открытие ссылок в новых вкладках
