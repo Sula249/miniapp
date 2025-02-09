@@ -277,3 +277,21 @@ body {
         font-size: 13px !important;
     }
 }
+.resultsContainer {
+    position: fixed;
+    top: 100px;
+    left: 0;
+    right: 0;
+    bottom: 120px;
+    overflow-y: auto;
+    padding: 10px;
+    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    z-index: 5;
+    max-height: calc(100vh - 220px);
+    display: none;
+}
+
+.resultsContainer.visible {
+    display: block;
+}
+
