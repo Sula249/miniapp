@@ -257,15 +257,17 @@ body {
 }
 
 .question-results {
-    position: fixed;
-    top: 100px;
     left: 0;
     right: 0;
     bottom: 120px;
     overflow-y: auto;
     padding: 10px;
-    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
-    z-index: 6;
+
+    z-index: 1000 !important; /* Абсолютный приоритет */
+    position: fixed;
+    top: 100px !important; /* Переопределение позиции */
+    background: var(--tg-theme-bg-color) !important; /* Цвет фона */
+    
     max-height: calc(100vh - 220px);
     display: none;
 }
