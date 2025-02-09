@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 resultsContainer.style.display = 'none';
             }
             if (questionResults) {
-                questionResults.style.display = 'block';
+                questionResults.style.display = 'none';
             }
             tg.BackButton.hide();
         }
