@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const overlay = document.querySelector(".overlay");
         const loader = document.querySelector('.loader');
         const resultsContainer = document.querySelector('.gcse-searchresults-only');
+        const questionResults = document.getElementById('questionResults');
 
         // Оригинальные функции анимации
         function toggleButtons() {
@@ -39,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
             mainButton.classList.add("flip");
             toggleSearchButton.classList.add("flipBack");
             window.history.pushState({page: 'search'}, '', '#search');
-            tg.BackButton.show(); // Показываем кнопку "Назад"
+            tg.BackButton.show();
             setTimeout(() => {
                 mainButton.classList.remove("flip");
                 toggleSearchButton.classList.remove("flipBack");
@@ -55,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleSearchButton.classList.add("flip");
             mainButton.classList.add("flipBack");
             window.history.pushState({page: 'question'}, '', '#question');
-            tg.BackButton.show(); // Показываем кнопку "Назад"
+            tg.BackButton.show();
             setTimeout(() => {
                 toggleSearchButton.classList.remove("flip");
                 mainButton.classList.remove("flipBack");
@@ -69,16 +70,19 @@ document.addEventListener("DOMContentLoaded", () => {
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
             if (resultsContainer) {
-                resultsContainer.style.display = 'none'; // Скрываем результаты поиска
+                resultsContainer.style.display = 'none';
             }
-            tg.BackButton.hide(); // Скрываем кнопку "Назад"
+            if (questionResults) {
+                questionResults.style.display = 'none';
+            }
+            tg.BackButton.hide();
         }
 
         // Обработчики событий
         mainButton.addEventListener("click", showSearch);
         toggleSearchButton.addEventListener("click", showQuestion);
         overlay.addEventListener("click", () => {
-            window.history.back(); // Возвращаемся назад в истории
+            window.history.back();
         });
 
         // Обработка поиска
@@ -98,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (searchElement && searchButton) {
                     searchElement.value = query;
                     searchButton.click();
-                    queryInput.value = ''; // очищаем поле ввода
+                    queryInput.value = '';
                 } else {
                     throw new Error('Элементы поиска не найдены');
                 }
@@ -113,8 +117,45 @@ document.addEventListener("DOMContentLoaded", () => {
         questionButton.addEventListener("click", () => {
             const question = questionInput.value.trim();
             if (question) {
-                alert(`Вопрос: ${question}`);
-                questionInput.value = ''; // очищаем поле ввода
+                // Показываем loader
+                loader.classList.add('visible');
+                
+                // Создаем элемент с вопросом и ответом
+                const result = document.createElement('div');
+                result.className = 'question-result';
+                
+                const title = document.createElement('div');
+                title.className = 'question-title';
+                title.textContent = 'Вопрос: ' + question;
+                
+                const content = document.createElement('div');
+                content.className = 'question-content';
+                content.textContent = 'Ответ: Здесь будет ответ на ваш вопрос...';
+                
+                result.appendChild(title);
+                result.appendChild(content);
+                
+                // Очищаем предыдущие результаты
+                questionResults.innerHTML = '';
+                questionResults.appendChild(result);
+                
+                // Показываем контейнер с результатами
+                questionResults.style.display = 'block';
+                if (resultsContainer) {
+                    resultsContainer.style.display = 'none';
+                }
+                
+                // Скрываем поисковую строку и показываем кнопку "Назад"
+                hideAll();
+                tg.BackButton.show();
+                
+                // Очищаем поле ввода
+                questionInput.value = '';
+                
+                // Скрываем loader через секунду
+                setTimeout(() => {
+                    loader.classList.remove('visible');
+                }, 1000);
             } else {
                 alert("Введите вопрос.");
             }
@@ -124,7 +165,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 if (mutation.addedNodes.length) {
-                    // Находим все ссылки в результатах поиска
                     const searchResults = document.querySelector('.gsc-results-wrapper-overlay') || document.getElementById('results');
                     if (searchResults) {
                         searchResults.querySelectorAll('a').forEach(link => {
@@ -135,17 +175,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                         loader.classList.remove('visible');
-                        hideAll(); // Сворачиваем поисковую строку при загрузке результатов
+                        hideAll();
                         if (resultsContainer) {
-                            resultsContainer.style.display = 'block'; // Показываем результаты поиска
+                            resultsContainer.style.display = 'block';
                         }
-                        tg.BackButton.show(); // Показываем кнопку "Назад"
+                        tg.BackButton.show();
                     }
                 }
             });
         });
 
-        // Следим за всем документом для отлова динамически добавляемых результатов
         observer.observe(document.body, {
             childList: true,
             subtree: true
@@ -153,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Обработка кнопки "Назад" в Telegram
         tg.BackButton.onClick(() => {
-            window.history.back(); // Откат на предыдущую страницу
+            window.history.back();
         });
 
         // Добавляем обработку кнопки "Назад" браузера
