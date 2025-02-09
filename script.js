@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        questionButton.addEventListener("click", () => {
+questionButton.addEventListener("click", () => {
     const question = questionInput.value.trim();
     if (question) {
         loader.classList.add('visible');
@@ -136,19 +136,20 @@ document.addEventListener("DOMContentLoaded", () => {
         if (questionResults) {
             questionResults.innerHTML = '';
             questionResults.appendChild(result);
-            questionResults.style.display = 'block'; // Показываем контейнер
+            questionResults.style.display = 'block';
         }
         
-        // Убираем вызов hideAll() и вручную управляем интерфейсом
+        // Добавить принудительное скрытие поисковых результатов
+        if (resultsContainer) {
+            resultsContainer.style.display = 'none';
+        }
+        
+        // Обновленная секция управления интерфейсом
         searchContainer.classList.remove("visible");
         questionContainer.classList.remove("visible");
         overlay.classList.remove("visible");
         mainButton.classList.remove("hidden");
         toggleSearchButton.classList.add("hidden");
-        
-        if (resultsContainer) {
-            resultsContainer.style.display = 'none';
-        }
         
         questionInput.value = '';
         
