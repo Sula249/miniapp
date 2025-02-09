@@ -133,10 +133,15 @@ document.addEventListener("DOMContentLoaded", () => {
         result.appendChild(title);
         result.appendChild(content);
         
+        // В обработчике questionButton замените блок:
         if (questionResults) {
             questionResults.innerHTML = '';
             questionResults.appendChild(result);
             questionResults.style.display = 'block'; // Показываем контейнер
+            if (resultsContainer) {
+                resultsContainer.style.display = 'none'; // Скрываем поисковые результаты
+            }
+            questionResults.style.zIndex = "6"; // Поверх поисковых результатов
         }
         
         // Убираем вызов hideAll() и вручную управляем интерфейсом
