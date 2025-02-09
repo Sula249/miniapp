@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const overlay = document.querySelector(".overlay");
         const loader = document.querySelector('.loader');
         const resultsContainer = document.querySelector('.gcse-searchresults-only');
+        const questionResultsContainer = document.getElementById('questionResults');
 
         // Оригинальные функции анимации
         function toggleButtons() {
@@ -71,6 +72,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (resultsContainer) {
                 resultsContainer.style.display = 'none'; // Скрываем результаты поиска
             }
+            if (questionResultsContainer) {
+                questionResultsContainer.style.display = 'none'; // Скрываем результаты вопросов
+            }
             tg.BackButton.hide(); // Скрываем кнопку "Назад"
         }
 
@@ -113,8 +117,16 @@ document.addEventListener("DOMContentLoaded", () => {
         questionButton.addEventListener("click", () => {
             const question = questionInput.value.trim();
             if (question) {
-                alert(`Вопрос: ${question}`);
+                // Отображаем ответ в контейнере
+                questionResultsContainer.innerHTML = `
+                    <div class="gsc-webResult gsc-result">
+                        <div class="gs-title">Ответ на ваш вопрос:</div>
+                        <div class="gs-snippet">${question}</div>
+                    </div>
+                `;
+                questionResultsContainer.style.display = 'block'; // Показываем контейнер
                 questionInput.value = ''; // очищаем поле ввода
+                hideAll(); // Скрываем контейнеры ввода
             } else {
                 alert("Введите вопрос.");
             }
