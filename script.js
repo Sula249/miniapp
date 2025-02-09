@@ -11,6 +11,35 @@ document.addEventListener("DOMContentLoaded", () => {
         updateTheme();
         tg.onEvent("themeChanged", updateTheme);
 
+        // База данных вопросов и ответов
+        const qaPairs = {
+            "как дела": "Спасибо, у меня всё хорошо! Как у вас?",
+            "привет": "Здравствуйте! Чем могу помочь?",
+            "что ты умеешь": "Я могу отвечать на вопросы и помогать с поиском информации.",
+            "кто ты": "Я бот-помощник, созданный для ответов на ваши вопросы.",
+            "пока": "До свидания! Буду рад помочь вам снова!"
+        };
+
+        // Функция для получения ответа
+        function getAnswer(question) {
+            question = question.toLowerCase().trim();
+            
+            // Проверяем точное совпадение
+            if (qaPairs[question]) {
+                return qaPairs[question];
+            }
+            
+            // Проверяем частичное совпадение
+            for (let key in qaPairs) {
+                if (question.includes(key)) {
+                    return qaPairs[key];
+                }
+            }
+            
+            // Если ответ не найден
+            return "Извините, я не могу ответить на этот вопрос. Попробуйте переформулировать или задать другой вопрос.";
+        }
+
         // Все элементы управления
         const mainButton = document.getElementById("mainButton");
         const toggleSearchButton = document.getElementById("toggleSearchButton");
@@ -33,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
         function showSearch() {
             searchContainer.classList.add("visible");
             questionContainer.classList.remove("visible");
-            questionResults.classList.remove("visible"); // Скрываем результаты вопроса
+            questionResults.classList.remove("visible");
             overlay.classList.add("visible");
             queryInput.focus();
             toggleButtons();
@@ -69,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
         function hideAll() {
             searchContainer.classList.remove("visible");
             questionContainer.classList.remove("visible");
-            questionResults.classList.remove("visible"); // Скрываем результаты вопроса
+            questionResults.classList.remove("visible");
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
@@ -93,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!query) return;
 
             loader.classList.add('visible');
-            questionResults.classList.remove("visible"); // Скрываем результаты вопроса при поиске
+            questionResults.classList.remove("visible");
             
             try {
                 await logQueryToGoogleSheets(query);
@@ -119,10 +148,20 @@ document.addEventListener("DOMContentLoaded", () => {
         questionButton.addEventListener("click", () => {
             const question = questionInput.value.trim();
             if (question) {
-                questionResults.innerHTML = `<p><strong>Ваш вопрос:</strong> ${question}</p>`;
+                // Получаем ответ на вопрос
+                const answer = getAnswer(question);
+                
+                // Форматируем вывод с вопросом и ответом
+                questionResults.innerHTML = `
+                    <div class="qa-container" style="background: var(--tg-theme-secondary-bg-color, #f0f0f0); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <p style="margin: 0 0 10px 0;"><strong>Ваш вопрос:</strong> ${question}</p>
+                        <p style="margin: 0;"><strong>Ответ:</strong> ${answer}</p>
+                    </div>
+                `;
+                
                 questionResults.classList.add("visible");
                 questionInput.value = '';
-                hideAll(); // Скрываем все контейнеры ввода после отправки вопроса
+                hideAll();
             }
         });
 
