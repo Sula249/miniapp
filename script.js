@@ -63,117 +63,107 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 600);
         }
 
-// ======== ЗАМЕНИТЕ ВЕСЬ ЭТОТ БЛОК ========
-function hideAll() {
-    searchContainer.classList.remove("visible");
-    questionContainer.classList.remove("visible");
-    overlay.classList.remove("visible");
-    mainButton.classList.remove("hidden");
-    toggleSearchButton.classList.add("hidden");
-    
-    // Сбрасываем оба контейнера
-    if (resultsContainer) {
-        resultsContainer.style.display = 'none';
-    }
-    if (questionResults) {
-        questionResults.style.display = 'none';
-    }
-    
-    tg.BackButton.hide();
-}
+        function hideAll() {
+            searchContainer.classList.remove("visible");
+            questionContainer.classList.remove("visible");
+            overlay.classList.remove("visible");
+            mainButton.classList.remove("hidden");
+            toggleSearchButton.classList.add("hidden");
+            
+            // Сбрасываем оба контейнера
+            if (resultsContainer) resultsContainer.style.display = 'none';
+            if (questionResults) questionResults.style.display = 'none';
+            
+            tg.BackButton.hide();
+        }
 
         // Обработчики событий
         mainButton.addEventListener("click", showSearch);
         toggleSearchButton.addEventListener("click", showQuestion);
-        overlay.addEventListener("click", () => {
-            window.history.back();
+        overlay.addEventListener("click", () => window.history.back());
+
+        // Обработка поиска
+        searchForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const query = queryInput.value.trim();
+            if (!query) return;
+
+            loader.classList.add('visible');
+            
+            try {
+                await logQueryToGoogleSheets(query);
+                
+                // Сброс контейнера вопросов
+                if (questionResults) {
+                    questionResults.style.display = 'none';
+                    questionResults.innerHTML = '';
+                }
+
+                const searchElement = document.querySelector('input.gsc-input');
+                const searchButton = document.querySelector('button.gsc-search-button');
+                
+                if (searchElement && searchButton) {
+                    searchElement.value = query;
+                    searchButton.click();
+                    queryInput.value = '';
+                } else {
+                    throw new Error('Элементы поиска не найдены');
+                }
+            } catch (error) {
+                console.error('Ошибка поиска:', error);
+                alert('Произошла ошибка при выполнении поиска');
+            } finally {
+                setTimeout(() => loader.classList.remove('visible'), 1000);
+            }
         });
 
-// ======== ЗАМЕНИТЕ ВЕСЬ ЭТОТ БЛОК ========
-searchForm.addEventListener("submit", async function(event) {
-    event.preventDefault();
-    const query = queryInput.value.trim();
-    if (!query) return;
-
-    loader.classList.add('visible');
-    
-    try {
-        await logQueryToGoogleSheets(query);
-        
-        // Сброс состояния вопросов
-        if (questionResults) {
-            questionResults.style.display = 'none';
-        }
-
-        const searchElement = document.querySelector('input.gsc-input');
-        const searchButton = document.querySelector('button.gsc-search-button');
-        
-        if (searchElement && searchButton) {
-            searchElement.value = query;
-            searchButton.click();
-            queryInput.value = '';
-        } else {
-            throw new Error('Элементы поиска не найдены');
-        }
-    } catch (error) {
-        console.error('Ошибка поиска:', error);
-        alert('Произошла ошибка при выполнении поиска');
-    } finally {
-        setTimeout(() => loader.classList.remove('visible'), 1000);
-    }
-});
-
-// ======== ЗАМЕНИТЕ ВЕСЬ ЭТОТ БЛОК ========
-questionButton.addEventListener("click", () => {
-    const question = questionInput.value.trim();
-    if (question) {
-        loader.classList.add('visible');
-        
-        const result = document.createElement('div');
-        result.className = 'question-result';
-        
-        const title = document.createElement('div');
-        title.className = 'question-title';
-        title.textContent = 'Вопрос: ' + question;
-        
-        const content = document.createElement('div');
-        content.className = 'question-content';
-        content.textContent = 'Ответ: Здесь будет ответ на ваш вопрос...';
-        
-        result.appendChild(title);
-        result.appendChild(content);
-        
-        if (questionResults) {
-            questionResults.innerHTML = '';
-            questionResults.appendChild(result);
-            questionResults.style.display = 'block';
-            
-            // Принудительно скрываем поиск
-            if (resultsContainer) {
-                resultsContainer.style.display = 'none';
+        // Обработка вопросов
+        questionButton.addEventListener("click", () => {
+            const question = questionInput.value.trim();
+            if (question) {
+                loader.classList.add('visible');
+                
+                const result = document.createElement('div');
+                result.className = 'question-result';
+                
+                const title = document.createElement('div');
+                title.className = 'question-title';
+                title.textContent = 'Вопрос: ' + question;
+                
+                const content = document.createElement('div');
+                content.className = 'question-content';
+                content.textContent = 'Ответ: Здесь будет ответ на ваш вопрос...';
+                
+                result.appendChild(title);
+                result.appendChild(content);
+                
+                // Управление отображением
+                if (questionResults) {
+                    questionResults.innerHTML = '';
+                    questionResults.appendChild(result);
+                    questionResults.style.display = 'block';
+                    
+                    // Принудительно скрываем поиск
+                    if (resultsContainer) {
+                        resultsContainer.style.display = 'none';
+                        resultsContainer.innerHTML = '';
+                    }
+                }
+                
+                // Сброс интерфейса
+                searchContainer.classList.remove("visible");
+                questionContainer.classList.remove("visible");
+                overlay.classList.remove("visible");
+                mainButton.classList.remove("hidden");
+                toggleSearchButton.classList.add("hidden");
+                
+                questionInput.value = '';
+                
+                setTimeout(() => loader.classList.remove('visible'), 1000);
+            } else {
+                alert("Введите вопрос.");
             }
-            
-            // Управление z-index
-            questionResults.style.zIndex = "6";
-            if (resultsContainer) resultsContainer.style.zIndex = "5";
-        }
-        
-        // Сбрасываем интерфейс
-        searchContainer.classList.remove("visible");
-        questionContainer.classList.remove("visible");
-        overlay.classList.remove("visible");
-        mainButton.classList.remove("hidden");
-        toggleSearchButton.classList.add("hidden");
-        
-        questionInput.value = '';
-        
-        setTimeout(() => {
-            loader.classList.remove('visible');
-        }, 1000);
-    } else {
-        alert("Введите вопрос.");
-    }
-});
+        });
 
         // Открытие ссылок в новых вкладках
         const observer = new MutationObserver(mutations => {
@@ -190,29 +180,20 @@ questionButton.addEventListener("click", () => {
                     if (document.querySelector('.gsc-result') || document.querySelector('.gsc-no-results')) {
                         loader.classList.remove('visible');
                         hideAll();
-                        if (resultsContainer) {
-                            resultsContainer.style.display = 'block';
-                        }
+                        if (resultsContainer) resultsContainer.style.display = 'block';
                         tg.BackButton.show();
                     }
                 }
             });
         });
 
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+        observer.observe(document.body, {childList: true, subtree: true});
 
         // Обработка кнопки "Назад" в Telegram
-        tg.BackButton.onClick(() => {
-            window.history.back();
-        });
+        tg.BackButton.onClick(() => window.history.back());
 
-        // Добавляем обработку кнопки "Назад" браузера
-        window.addEventListener("popstate", (event) => {
-            hideAll();
-        });
+        // Обработка кнопки "Назад" браузера
+        window.addEventListener("popstate", () => hideAll());
 
     } else {
         console.warn("Telegram WebApp API недоступен!");
