@@ -167,9 +167,11 @@ body {
     overflow-y: auto;
     padding: 10px;
     background: var(--tg-theme-secondary-bg-color, #f0f0f0);
-    z-index: 5;
+    
+    z-index: 0 !important; /* Минимальный приоритет */
+    display: none; /* Скрыт по умолчанию */
+    
     max-height: calc(100vh - 220px);
-    display: none;
 }
 
 .gsc-control-cse {
@@ -263,10 +265,10 @@ body {
     overflow-y: auto;
     padding: 10px;
 
-    z-index: 1000 !important; /* Абсолютный приоритет */
-    position: fixed;
-    top: 100px !important; /* Переопределение позиции */
-    background: var(--tg-theme-bg-color) !important; /* Цвет фона */
+    z-index: 2147483647 !important; /* Максимальное значение */
+    position: fixed !important;
+    top: 100px !important;
+    background: var(--tg-theme-bg-color) !important;
     
     max-height: calc(100vh - 220px);
     display: none;
