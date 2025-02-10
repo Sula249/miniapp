@@ -37,7 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 content: resultsDiv.innerHTML,
                 searchVisible: searchContainer.classList.contains("show"),
                 questionVisible: questionContainer.classList.contains("show"),
-                buttonText: searchButton.innerText
+                buttonText: searchButton.innerText,
+                returnUrl: window.location.href // Сохраняем URL для возврата
             };
             localStorage.setItem('savedState', JSON.stringify(state));
 
@@ -60,8 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
             resultsDiv.innerHTML = '';
             resultsDiv.appendChild(externalContent);
 
-            // Автоматически переходим по ссылке
-            window.location.href = link.href;
+            // Автоматически переходим по ссылке через небольшую задержку
+            setTimeout(() => {
+                window.location.href = link.href;
+            }, 100);
             
             // Показываем кнопку "Назад"
             tg.BackButton.show();
@@ -74,15 +77,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const savedState = localStorage.getItem('savedState');
         if (savedState) {
             const state = JSON.parse(savedState);
-            resultsDiv.innerHTML = state.content;
-            if (state.searchVisible) {
-                searchContainer.classList.add("show");
+            // Возвращаемся на сохраненный URL
+            if (state.returnUrl) {
+                window.location.href = state.returnUrl;
+            } else {
+                window.location.href = window.location.origin + window.location.pathname;
             }
-            if (state.questionVisible) {
-                questionContainer.classList.add("show");
-            }
-            searchButton.innerText = state.buttonText;
-            localStorage.removeItem('savedState');
         } else {
             // Стандартное поведение для внутренних страниц
             searchContainer.classList.remove("show");
