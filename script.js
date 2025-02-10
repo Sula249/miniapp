@@ -5,11 +5,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchButton = document.getElementById("searchButton");
     const searchContainer = document.getElementById("searchContainer");
     const questionContainer = document.getElementById("questionContainer");
+    const resultsDiv = document.getElementById("results");
+
+    // Обработка стандартной кнопки "Назад"
+    window.addEventListener('popstate', () => {
+        // Очищаем результаты поиска
+        if (resultsDiv) {
+            resultsDiv.innerHTML = '';
+        }
+        // Скрываем контейнеры
+        searchContainer.classList.remove("show");
+        questionContainer.classList.remove("show");
+        // Сбрасываем текст кнопки
+        searchButton.innerText = "Начать поиск";
+        // Скрываем кнопку "Назад" в Telegram
+        tg.BackButton.hide();
+    });
 
     // Включаем кнопку "Назад" в Telegram
     tg.BackButton.onClick(() => {
+        // Очищаем результаты поиска
+        if (resultsDiv) {
+            resultsDiv.innerHTML = '';
+        }
         searchContainer.classList.remove("show");
         questionContainer.classList.remove("show");
+        searchButton.innerText = "Начать поиск";
         tg.BackButton.hide();
     });
 
