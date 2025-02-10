@@ -39,11 +39,11 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             localStorage.setItem('savedState', JSON.stringify(state));
 
-            // Добавляем текущий URL в историю
-            history.pushState({ returnUrl: window.location.href }, '', window.location.href);
+            // Включаем кнопку "Назад"
+            tg.BackButton.show();
             
-            // Переходим по ссылке
-            window.location.href = link.href;
+            // Открываем ссылку
+            tg.openLink(link.href);
         }
     });
 
