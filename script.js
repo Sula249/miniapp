@@ -10,18 +10,20 @@ document.addEventListener("DOMContentLoaded", () => {
             questionButton.classList.add("slide-out");
             searchButton.classList.remove("hidden");
             searchButton.classList.add("slide-in");
+            
             setTimeout(() => {
                 questionButton.classList.add("hidden");
                 questionButton.classList.remove("slide-out", "slide-in");
-            }, 500);
+            }, 400);
         } else {
             searchButton.classList.add("slide-out");
             questionButton.classList.remove("hidden");
             questionButton.classList.add("slide-in");
+
             setTimeout(() => {
                 searchButton.classList.add("hidden");
                 searchButton.classList.remove("slide-out", "slide-in");
-            }, 500);
+            }, 400);
         }
     }
 
