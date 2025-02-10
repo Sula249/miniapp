@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
             questionContainer.classList.add("show");
         }
         searchButton.innerText = state.buttonText;
-        localStorage.removeItem('savedState'); // Очищаем сохраненное состояние
+        localStorage.removeItem('savedState');
         tg.BackButton.show();
     }
 
@@ -41,49 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             localStorage.setItem('savedState', JSON.stringify(state));
 
-            // Создаем WebView для внешней страницы
-            const webview = document.createElement('div');
-            webview.style.position = 'fixed';
-            webview.style.top = '0';
-            webview.style.left = '0';
-            webview.style.width = '100%';
-            webview.style.height = '100%';
-            webview.style.backgroundColor = '#fff';
-            webview.style.zIndex = '1000';
-            
-            webview.innerHTML = `
-                <iframe src="${link.href}" style="width:100%; height:100%; border:none;"></iframe>
-            `;
-            
-            document.body.appendChild(webview);
-            
-            // Показываем кнопку "Назад"
-            tg.BackButton.show();
-            
-            // Обработчик для кнопки "Назад"
-            const handleBack = () => {
-                webview.remove();
-                const savedState = localStorage.getItem('savedState');
-                if (savedState) {
-                    const state = JSON.parse(savedState);
-                    resultsDiv.innerHTML = state.content;
-                    if (state.searchVisible) {
-                        searchContainer.classList.add("show");
-                    }
-                    if (state.questionVisible) {
-                        questionContainer.classList.add("show");
-                    }
-                    searchButton.innerText = state.buttonText;
-                    localStorage.removeItem('savedState');
-                }
-                tg.BackButton.offClick(handleBack);
-                if (!searchContainer.classList.contains("show") && 
-                    !questionContainer.classList.contains("show")) {
-                    tg.BackButton.hide();
-                }
-            };
-            
-            tg.BackButton.onClick(handleBack);
+            // Открываем ссылку в новом окне
+            window.open(link.href, '_blank');
         }
     });
 
