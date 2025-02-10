@@ -69,7 +69,23 @@ document.addEventListener("DOMContentLoaded", () => {
         questionActionButton.textContent = "Загрузка...";
         
         try {
-            // Отправляем запрос к OpenRouter API через HTTPS
+            // Проверяем доступность API
+            const checkResponse = await fetch('https://api.openrouter.ai/api/v1/auth/key_details', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer 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',
+                    'Content-Type': 'application/json'
+                }
+            }).catch(error => {
+                console.error('API Check Error:', error);
+                throw new Error('API недоступен. Пожалуйста, попробуйте позже.');
+            });
+
+            if (!checkResponse.ok) {
+                throw new Error('Проблема с доступом к API. Пожалуйста, проверьте ключ API.');
+            }
+
+            // Отправляем основной запрос
             const response = await fetch('https://api.openrouter.ai/api/v1/chat/completions', {
                 method: 'POST',
                 headers: {
@@ -78,7 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     'HTTP-Referer': 'https://github.com/OpenRouterTeam/openrouter',
                     'X-Title': 'Telegram Mini App'
                 },
-                mode: 'cors',
                 body: JSON.stringify({
                     model: 'mistralai/mistral-7b-instruct',
                     messages: [
@@ -88,33 +103,25 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     ],
                     max_tokens: 1000,
-                    temperature: 0.7,
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0'
-                    }
+                    temperature: 0.7
                 })
-            }).catch(error => {
-                if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-                    throw new Error('Не удалось подключиться к серверу. Пожалуйста, проверьте подключение к интернету.');
-                }
-                throw error;
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                console.error('API Response Error:', {
+                const errorData = await response.text();
+                console.error('API Error:', {
                     status: response.status,
                     statusText: response.statusText,
-                    body: errorText
+                    data: errorData
                 });
-                throw new Error(`Ошибка сервера: ${response.status} ${response.statusText}`);
+                throw new Error(`Ошибка при получении ответа: ${response.status}`);
             }
 
             const data = await response.json();
             
             if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-                console.error('Invalid API response:', data);
-                throw new Error('Некорректный формат ответа от API');
+                console.error('Invalid response format:', data);
+                throw new Error('Некорректный формат ответа');
             }
             
             // Создаем или обновляем элемент для ответа
@@ -132,11 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
             logQueryToGoogleSheets(question, 'question');
             
         } catch (error) {
-            console.error('Error details:', {
-                name: error.name,
-                message: error.message,
-                stack: error.stack
-            });
+            console.error('Full error details:', error);
             alert(`Ошибка: ${error.message}`);
         } finally {
             // Восстанавливаем кнопку
