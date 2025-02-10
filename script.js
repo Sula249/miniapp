@@ -12,38 +12,61 @@ document.addEventListener("DOMContentLoaded", () => {
         const link = e.target.closest('a');
         if (link && link.href && !link.href.startsWith(window.location.origin)) {
             e.preventDefault();
-            // Сохраняем текущее состояние перед переходом
-            history.pushState({ page: 'search' }, '', window.location.href);
-            // Открываем ссылку
-            window.open(link.href, '_blank');
+            
+            // Сохраняем текущее состояние и контент
+            const currentContent = resultsDiv.innerHTML;
+            history.pushState({ 
+                page: 'search',
+                content: currentContent,
+                searchVisible: searchContainer.classList.contains("show"),
+                questionVisible: questionContainer.classList.contains("show"),
+                buttonText: searchButton.innerText
+            }, '', window.location.href);
+
+            // Создаем iframe для отображения внешней страницы
+            resultsDiv.innerHTML = `<iframe src="${link.href}" style="width:100%; height:80vh; border:none;"></iframe>`;
+            
+            // Показываем кнопку "Назад" в Telegram
+            tg.BackButton.show();
         }
     });
 
     // Обработка стандартной кнопки "Назад"
-    window.addEventListener('popstate', () => {
-        // Очищаем результаты поиска
-        if (resultsDiv) {
+    window.addEventListener('popstate', (e) => {
+        if (e.state) {
+            // Восстанавливаем предыдущее состояние
+            resultsDiv.innerHTML = e.state.content;
+            if (e.state.searchVisible) {
+                searchContainer.classList.add("show");
+            } else {
+                searchContainer.classList.remove("show");
+            }
+            if (e.state.questionVisible) {
+                questionContainer.classList.add("show");
+            } else {
+                questionContainer.classList.remove("show");
+            }
+            searchButton.innerText = e.state.buttonText;
+        } else {
+            // Если нет сохраненного состояния, очищаем все
             resultsDiv.innerHTML = '';
+            searchContainer.classList.remove("show");
+            questionContainer.classList.remove("show");
+            searchButton.innerText = "Начать поиск";
         }
-        // Скрываем контейнеры
-        searchContainer.classList.remove("show");
-        questionContainer.classList.remove("show");
-        // Сбрасываем текст кнопки
-        searchButton.innerText = "Начать поиск";
-        // Скрываем кнопку "Назад" в Telegram
-        tg.BackButton.hide();
+        // Управляем кнопкой "Назад" в Telegram
+        if (searchContainer.classList.contains("show") || 
+            questionContainer.classList.contains("show") ||
+            resultsDiv.innerHTML !== '') {
+            tg.BackButton.show();
+        } else {
+            tg.BackButton.hide();
+        }
     });
 
     // Включаем кнопку "Назад" в Telegram
     tg.BackButton.onClick(() => {
-        // Очищаем результаты поиска
-        if (resultsDiv) {
-            resultsDiv.innerHTML = '';
-        }
-        searchContainer.classList.remove("show");
-        questionContainer.classList.remove("show");
-        searchButton.innerText = "Начать поиск";
-        tg.BackButton.hide();
+        history.back(); // Вызываем стандартную функцию "назад"
     });
 
     searchButton.addEventListener("click", () => {
