@@ -23,6 +23,8 @@ h1 {
     width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
+    height: 60px;
     overflow: hidden;
 }
 
@@ -37,23 +39,21 @@ h1 {
     width: 80%;
     max-width: 300px;
     position: absolute;
-    transition: transform 0.4s ease-in-out, opacity 0.4s;
+    transition: transform 0.4s ease-in-out;
 }
 
-/* Начальное состояние второй кнопки (невидима и слева за пределами экрана) */
-.hidden {
+/* Начальное состояние для второй кнопки */
+#questionButton {
     transform: translateX(-120%);
-    opacity: 0;
 }
 
-/* Анимация выезда вправо */
+/* Класс для анимации скрытия кнопки (уходит вправо) */
 .slide-out {
     transform: translateX(120%);
-    opacity: 0;
 }
 
-/* Анимация заезда слева */
+/* Класс для анимации появления кнопки (приезжает слева) */
 .slide-in {
     transform: translateX(0);
-    opacity: 1;
 }
+
