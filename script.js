@@ -7,30 +7,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleButtons() {
         if (searchButton.style.opacity === "1") {
-            // Первая кнопка уезжает вправо
+            // Первая кнопка уходит вправо
             searchButton.classList.add("slide-out");
             searchButton.classList.remove("slide-in");
 
-            // Вторая кнопка приезжает слева
+            // Вторая кнопка заезжает слева
             questionButton.classList.add("slide-in");
             questionButton.classList.remove("slide-out");
 
             setTimeout(() => {
                 searchButton.style.opacity = "0";
                 questionButton.style.opacity = "1";
+                searchButton.style.left = "100%";
+                questionButton.style.left = "0";
             }, 500);
         } else {
-            // Вторая кнопка уезжает вправо
+            // Вторая кнопка уходит вправо
             questionButton.classList.add("slide-out");
             questionButton.classList.remove("slide-in");
 
-            // Первая кнопка приезжает слева
+            // Первая кнопка заезжает слева
             searchButton.classList.add("slide-in");
             searchButton.classList.remove("slide-out");
 
             setTimeout(() => {
                 questionButton.style.opacity = "0";
                 searchButton.style.opacity = "1";
+                questionButton.style.left = "-100%";
+                searchButton.style.left = "0";
             }, 500);
         }
     }
