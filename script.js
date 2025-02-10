@@ -89,7 +89,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
             });
 
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('API Error:', errorData);
+                throw new Error(`API ответил с ошибкой: ${response.status} ${errorData.message || ''}`);
+            }
+
             const data = await response.json();
+            
+            if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                throw new Error('Некорректный формат ответа от API');
+            }
             
             // Создаем или обновляем элемент для ответа
             let answerElement = document.getElementById('aiAnswer');
@@ -106,8 +116,8 @@ document.addEventListener("DOMContentLoaded", () => {
             logQueryToGoogleSheets(question, 'question');
             
         } catch (error) {
-            console.error('Error getting AI response:', error);
-            alert('Произошла ошибка при получении ответа');
+            console.error('Детали ошибки:', error);
+            alert(`Ошибка: ${error.message}`);
         } finally {
             // Восстанавливаем кнопку
             questionActionButton.disabled = false;
