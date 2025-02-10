@@ -69,19 +69,19 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
-            if (resultsContainer) {
-                resultsContainer.style.display = 'none';
-            }
-            if (questionResults) {
-                questionResults.style.display = 'none';
-            }
-            tg.BackButton.hide();
+    
+        tg.BackButton.hide();
         }
 
         // Обработчики событий
         mainButton.addEventListener("click", showSearch);
         toggleSearchButton.addEventListener("click", showQuestion);
         overlay.addEventListener("click", () => {
+            searchContainer.classList.remove("visible");
+            questionContainer.classList.remove("visible");
+            overlay.classList.remove("visible");
+            mainButton.classList.remove("hidden");
+            toggleSearchButton.classList.add("hidden");
             window.history.back();
         });
 
