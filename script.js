@@ -7,23 +7,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleButtons() {
         if (searchButton.classList.contains("visible")) {
+            // Первая кнопка уезжает вправо
             searchButton.classList.add("slide-out");
-            questionButton.classList.remove("slide-out");
+            setTimeout(() => {
+                searchButton.classList.remove("visible", "slide-out");
+                searchButton.style.visibility = "hidden"; // Скрываем кнопку
+            }, 400);
+
+            // Вторая кнопка приезжает слева
+            questionButton.style.visibility = "visible"; // Показываем кнопку
             questionButton.classList.add("slide-in");
-
-            setTimeout(() => {
-                searchButton.classList.remove("visible");
-                questionButton.classList.add("visible");
-            }, 400);
+            questionButton.classList.add("visible");
         } else {
+            // Вторая кнопка уезжает вправо
             questionButton.classList.add("slide-out");
-            searchButton.classList.remove("slide-out");
-            searchButton.classList.add("slide-in");
-
             setTimeout(() => {
-                questionButton.classList.remove("visible");
-                searchButton.classList.add("visible");
+                questionButton.classList.remove("visible", "slide-out");
+                questionButton.style.visibility = "hidden"; // Скрываем кнопку
             }, 400);
+
+            // Первая кнопка приезжает слева
+            searchButton.style.visibility = "visible"; // Показываем кнопку
+            searchButton.classList.add("slide-in");
+            searchButton.classList.add("visible");
         }
     }
 
