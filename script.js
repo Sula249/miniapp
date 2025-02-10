@@ -41,17 +41,27 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             localStorage.setItem('savedState', JSON.stringify(state));
 
-            // Создаем и показываем фрейм с внешней страницей
-            const frame = document.createElement('iframe');
-            frame.src = link.href;
-            frame.style.width = '100%';
-            frame.style.height = '100vh';
-            frame.style.border = 'none';
+            // Создаем новый div для внешнего контента
+            const externalContent = document.createElement('div');
+            externalContent.style.width = '100%';
+            externalContent.style.height = '100vh';
+            externalContent.style.overflow = 'auto';
             
-            // Сохраняем текущий контент и добавляем фрейм
+            // Добавляем ссылку и переход на внешнюю страницу
+            externalContent.innerHTML = `
+                <div style="padding: 20px;">
+                    <h3>Переход на внешнюю страницу...</h3>
+                    <p>Нажмите для перехода: <a href="${link.href}" target="_self">${link.href}</a></p>
+                </div>
+            `;
+            
+            // Сохраняем текущий контент и показываем внешний
             const currentContent = resultsDiv.innerHTML;
             resultsDiv.innerHTML = '';
-            resultsDiv.appendChild(frame);
+            resultsDiv.appendChild(externalContent);
+
+            // Автоматически переходим по ссылке
+            window.location.href = link.href;
             
             // Показываем кнопку "Назад"
             tg.BackButton.show();
