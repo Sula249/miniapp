@@ -24,13 +24,13 @@ body {
     bottom: 0;
     background: rgba(0, 0, 0, 0);
     transition: background-color 0.3s ease;
-    pointer-events: none;
+    pointer-events: none; /* Клики проходят сквозь неактивный overlay */
     z-index: 1;
 }
 
 .overlay.visible {
+    pointer-events: auto; /* Клики работают только когда overlay виден */
     background: rgba(0, 0, 0, 0.5);
-    pointer-events: auto;
 }
 
 .container {
