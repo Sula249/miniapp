@@ -14,10 +14,13 @@ h1 {
     text-align: center;
     margin-top: 20px;
 }
- 
-
 
 .button-container {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
     perspective: 1000px; /* Улучшает 3D-эффект */
 }
 
@@ -35,7 +38,11 @@ button {
     transform-style: preserve-3d;
 }
 
+button:active {
+    transform: scale(0.95);
+}
+
 button.flipped {
     transform: rotateY(180deg);
-    opacity: 0; /* Скрываем текст на время анимации */
+    opacity: 0; /* Скрываем текст во время переворота */
 }
