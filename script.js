@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!question) return;
         
         // Новый API ключ
-        const API_KEY = 'sk-or-v1-b8d8d9bc1e8c4f91b88486c4cfec97d7';
+        const API_KEY = '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';
         
         // Показываем индикатор загрузки
         questionActionButton.disabled = true;
