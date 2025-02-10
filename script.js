@@ -41,16 +41,15 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             localStorage.setItem('savedState', JSON.stringify(state));
 
-            // Скрываем текущий контент
-            searchContainer.classList.remove("show");
-            questionContainer.classList.remove("show");
-            
             // Создаем и показываем фрейм с внешней страницей
             const frame = document.createElement('iframe');
             frame.src = link.href;
             frame.style.width = '100%';
             frame.style.height = '100vh';
             frame.style.border = 'none';
+            
+            // Сохраняем текущий контент и добавляем фрейм
+            const currentContent = resultsDiv.innerHTML;
             resultsDiv.innerHTML = '';
             resultsDiv.appendChild(frame);
             
