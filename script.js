@@ -69,13 +69,48 @@ document.addEventListener("DOMContentLoaded", () => {
         questionActionButton.textContent = "Загрузка...";
         
         try {
-            // Тестовый запрос к API
-            console.log('Отправка тестового запроса к API...');
-            const testResponse = await fetch('https://api.openrouter.ai/api/v1/chat/completions', {
+            console.log('Отправка запроса к API...');
+            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer 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',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'HTTP-Referer': window.location.origin,
+                    'X-Title': 'Telegram Mini App',
+                    'Origin': window.location.origin
+                },
+                mode: 'no-cors', // Пробуем режим no-cors
+                body: JSON.stringify({
+                    model: 'mistralai/mistral-7b-instruct',
+                    messages: [
+                        {
+                            role: 'user',
+                            content: question
+                        }
+                    ],
+                    max_tokens: 500
+                })
+            }).catch(error => {
+                console.error('Network Error Details:', {
+                    error: error,
+                    message: error.message,
+                    type: error.type
+                });
+                throw new Error('Не удалось подключиться к серверу AI. Пожалуйста, попробуйте позже.');
+            });
+
+            console.log('Получен ответ от сервера:', response);
+
+            // В режиме no-cors мы не можем прочитать тело ответа напрямую
+            // Поэтому делаем второй запрос для получения данных
+            const dataResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer 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',
+                    'Content-Type': 'application/json',
+                    'HTTP-Referer': window.location.origin,
+                    'X-Title': 'Telegram Mini App',
+                    'Origin': window.location.origin
                 },
                 body: JSON.stringify({
                     model: 'mistralai/mistral-7b-instruct',
@@ -84,27 +119,25 @@ document.addEventListener("DOMContentLoaded", () => {
                             role: 'user',
                             content: question
                         }
-                    ]
+                    ],
+                    max_tokens: 500
                 })
-            }).catch(error => {
-                console.error('Network Error:', error);
-                throw new Error('Проблема с подключением к серверу. Проверьте интернет-соединение.');
             });
 
-            console.log('Статус ответа:', testResponse.status);
-            
-            if (!testResponse.ok) {
-                const errorText = await testResponse.text();
-                console.error('API Response:', errorText);
-                throw new Error(`Ошибка сервера: ${testResponse.status}`);
+            if (!dataResponse.ok) {
+                console.error('API Error:', {
+                    status: dataResponse.status,
+                    statusText: dataResponse.statusText
+                });
+                throw new Error('Сервер вернул ошибку. Попробуйте позже.');
             }
 
-            const data = await testResponse.json();
-            console.log('Получен ответ от API:', data);
+            const data = await dataResponse.json();
+            console.log('Получены данные:', data);
             
             if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-                console.error('Неверный формат ответа:', data);
-                throw new Error('Некорректный формат ответа от сервера');
+                console.error('Неверный формат данных:', data);
+                throw new Error('Получен некорректный ответ от сервера');
             }
             
             // Создаем или обновляем элемент для ответа
@@ -122,7 +155,8 @@ document.addEventListener("DOMContentLoaded", () => {
             logQueryToGoogleSheets(question, 'question');
             
         } catch (error) {
-            console.error('Детали ошибки:', {
+            console.error('Полные детали ошибки:', {
+                name: error.name,
                 message: error.message,
                 stack: error.stack
             });
