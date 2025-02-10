@@ -46,3 +46,4 @@ button.flipped {
     transform: rotateY(180deg);
     opacity: 0; /* Скрываем текст во время переворота */
 }
+ 
