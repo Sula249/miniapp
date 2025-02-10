@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const questionContainer = document.getElementById("questionContainer");
     const resultsDiv = document.getElementById("results");
 
+    // Расширяем приложение на весь экран
+    tg.expand();
+
     // Проверяем, возвращаемся ли мы с внешней страницы
     const savedState = localStorage.getItem('savedState');
     if (savedState) {
@@ -34,16 +37,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 content: resultsDiv.innerHTML,
                 searchVisible: searchContainer.classList.contains("show"),
                 questionVisible: questionContainer.classList.contains("show"),
-                buttonText: searchButton.innerText,
-                timestamp: Date.now()
+                buttonText: searchButton.innerText
             };
             localStorage.setItem('savedState', JSON.stringify(state));
 
-            // Включаем кнопку "Назад"
-            tg.BackButton.show();
+            // Скрываем текущий контент
+            searchContainer.classList.remove("show");
+            questionContainer.classList.remove("show");
             
-            // Открываем ссылку
-            tg.openLink(link.href);
+            // Создаем и показываем фрейм с внешней страницей
+            const frame = document.createElement('iframe');
+            frame.src = link.href;
+            frame.style.width = '100%';
+            frame.style.height = '100vh';
+            frame.style.border = 'none';
+            resultsDiv.innerHTML = '';
+            resultsDiv.appendChild(frame);
+            
+            // Показываем кнопку "Назад"
+            tg.BackButton.show();
         }
     });
 
@@ -52,8 +64,16 @@ document.addEventListener("DOMContentLoaded", () => {
         // Проверяем, есть ли сохраненное состояние
         const savedState = localStorage.getItem('savedState');
         if (savedState) {
-            // Возвращаемся на главную страницу
-            window.location.href = window.location.origin + window.location.pathname;
+            const state = JSON.parse(savedState);
+            resultsDiv.innerHTML = state.content;
+            if (state.searchVisible) {
+                searchContainer.classList.add("show");
+            }
+            if (state.questionVisible) {
+                questionContainer.classList.add("show");
+            }
+            searchButton.innerText = state.buttonText;
+            localStorage.removeItem('savedState');
         } else {
             // Стандартное поведение для внутренних страниц
             searchContainer.classList.remove("show");
