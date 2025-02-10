@@ -64,8 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const question = questionInput.value.trim();
         if (!question) return;
         
-        // API ключ
-        const API_KEY = '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';
+        // Новый API ключ
+        const API_KEY = 'sk-or-v1-b8d8d9bc1e8c4f91b88486c4cfec97d7';
         
         // Показываем индикатор загрузки
         questionActionButton.disabled = true;
@@ -143,7 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
             // Формируем тело запроса
             const requestBody = {
                 model: "openai/gpt-3.5-turbo",
-                route: "openai",
                 messages: [
                     {
                         role: "user",
@@ -151,11 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 ],
                 max_tokens: 500,
-                temperature: 0.7,
-                headers: {
-                    "HTTP-Referer": "https://openrouter.ai/docs",
-                    "X-Title": "Telegram Mini App"
-                }
+                temperature: 0.7
             };
             
             console.log('Отправляемые данные:', requestBody);
