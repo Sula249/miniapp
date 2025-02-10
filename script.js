@@ -78,11 +78,13 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // Используем XMLHttpRequest
             const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'https://api.openai.com/v1/chat/completions', true);
+            xhr.open('POST', 'https://openrouter.ai/api/v1/chat/completions', true);
             
             // Устанавливаем заголовки
             xhr.setRequestHeader('Authorization', 'Bearer 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');
             xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('HTTP-Referer', 'https://openrouter.ai/');
+            xhr.setRequestHeader('X-Title', 'Telegram Mini App');
             
             // Обработка ответа
             xhr.onload = function() {
@@ -137,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // Формируем тело запроса
             const requestBody = {
-                model: "gpt-3.5-turbo",
+                model: "mistralai/mistral-7b-instruct",
                 messages: [
                     {
                         role: "user",
