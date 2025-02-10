@@ -72,84 +72,90 @@ document.addEventListener("DOMContentLoaded", () => {
         questionActionButton.textContent = "Загрузка...";
         
         try {
+            // Проверяем соединение
+            if (!navigator.onLine) {
+                throw new Error('Нет подключения к интернету');
+            }
+
             console.log('Отправка запроса к API...');
-            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${API_KEY}`,
-                    'Content-Type': 'application/json',
-                    'HTTP-Referer': 'https://openrouter.ai/docs',
-                    'X-Title': 'Telegram Mini App',
-                    'OR-Organization': 'org-123abc'
-                },
-                body: JSON.stringify({
-                    model: 'openai/gpt-3.5-turbo',  // Обновленный формат модели
-                    messages: [
-                        {
-                            role: 'system',
-                            content: 'You are a helpful assistant.'
-                        },
-                        {
-                            role: 'user',
-                            content: question
+            
+            // Используем XMLHttpRequest вместо fetch
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'https://openrouter.ai/api/v1/chat/completions', true);
+            
+            // Устанавливаем заголовки
+            xhr.setRequestHeader('Authorization', `Bearer ${API_KEY}`);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('HTTP-Referer', 'https://openrouter.ai/docs');
+            xhr.setRequestHeader('X-Title', 'Telegram Mini App');
+            
+            // Обработка ответа
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        console.log('Ответ от API:', data);
+                        
+                        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                            throw new Error('Некорректный формат ответа');
                         }
-                    ],
-                    max_tokens: 500,
-                    temperature: 0.7,
-                    stream: false
-                })
-            });
-
-            console.log('Статус ответа:', response.status);
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => null);
-                console.error('API Error Response:', {
-                    status: response.status,
-                    statusText: response.statusText,
-                    data: errorData
-                });
-                
-                if (response.status === 401) {
-                    throw new Error('Ошибка авторизации. API ключ недействителен или истек.');
-                } else if (response.status === 429) {
-                    throw new Error('Превышен лимит запросов. Попробуйте позже.');
+                        
+                        // Создаем или обновляем элемент для ответа
+                        let answerElement = document.getElementById('aiAnswer');
+                        if (!answerElement) {
+                            answerElement = document.createElement('div');
+                            answerElement.id = 'aiAnswer';
+                            questionContainer.appendChild(answerElement);
+                        }
+                        
+                        // Отображаем ответ
+                        answerElement.textContent = data.choices[0].message.content;
+                        
+                        // Логируем вопрос
+                        logQueryToGoogleSheets(question, 'question');
+                        
+                    } catch (error) {
+                        console.error('Ошибка обработки ответа:', error);
+                        alert('Ошибка при обработке ответа от сервера');
+                    }
                 } else {
-                    throw new Error(`Ошибка сервера (${response.status}). Попробуйте позже.`);
+                    console.error('API Error:', xhr.status, xhr.statusText);
+                    alert(`Ошибка сервера: ${xhr.status}`);
                 }
-            }
-
-            const data = await response.json();
-            console.log('Ответ от API:', data);
+                
+                // Восстанавливаем кнопку
+                questionActionButton.disabled = false;
+                questionActionButton.textContent = "Задать";
+            };
             
-            if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-                console.error('Неверный формат ответа:', data);
-                throw new Error('Получен некорректный ответ от сервера');
-            }
+            // Обработка ошибок сети
+            xhr.onerror = function() {
+                console.error('Network Error');
+                alert('Ошибка сети при отправке запроса');
+                questionActionButton.disabled = false;
+                questionActionButton.textContent = "Задать";
+            };
             
-            // Создаем или обновляем элемент для ответа
-            let answerElement = document.getElementById('aiAnswer');
-            if (!answerElement) {
-                answerElement = document.createElement('div');
-                answerElement.id = 'aiAnswer';
-                questionContainer.appendChild(answerElement);
-            }
-            
-            // Отображаем ответ
-            answerElement.textContent = data.choices[0].message.content;
-            
-            // Логируем вопрос
-            logQueryToGoogleSheets(question, 'question');
+            // Отправляем запрос
+            xhr.send(JSON.stringify({
+                model: 'openai/gpt-3.5-turbo',
+                messages: [
+                    {
+                        role: 'system',
+                        content: 'You are a helpful assistant.'
+                    },
+                    {
+                        role: 'user',
+                        content: question
+                    }
+                ],
+                max_tokens: 500,
+                temperature: 0.7
+            }));
             
         } catch (error) {
-            console.error('Полные детали ошибки:', {
-                name: error.name,
-                message: error.message,
-                stack: error.stack
-            });
+            console.error('Error details:', error);
             alert(`Ошибка: ${error.message}`);
-        } finally {
-            // Восстанавливаем кнопку
             questionActionButton.disabled = false;
             questionActionButton.textContent = "Задать";
         }
