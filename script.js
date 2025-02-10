@@ -6,30 +6,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const questionButton = document.getElementById("questionButton");
 
     function toggleButtons() {
-        if (searchButton.classList.contains("visible")) {
+        if (searchButton.style.opacity === "1") {
             // Первая кнопка уезжает вправо
             searchButton.classList.add("slide-out");
-            setTimeout(() => {
-                searchButton.classList.remove("visible", "slide-out");
-                searchButton.style.visibility = "hidden"; // Скрываем кнопку
-            }, 400);
+            searchButton.classList.remove("slide-in");
 
             // Вторая кнопка приезжает слева
-            questionButton.style.visibility = "visible"; // Показываем кнопку
             questionButton.classList.add("slide-in");
-            questionButton.classList.add("visible");
+            questionButton.classList.remove("slide-out");
+
+            setTimeout(() => {
+                searchButton.style.opacity = "0";
+                questionButton.style.opacity = "1";
+            }, 500);
         } else {
             // Вторая кнопка уезжает вправо
             questionButton.classList.add("slide-out");
-            setTimeout(() => {
-                questionButton.classList.remove("visible", "slide-out");
-                questionButton.style.visibility = "hidden"; // Скрываем кнопку
-            }, 400);
+            questionButton.classList.remove("slide-in");
 
             // Первая кнопка приезжает слева
-            searchButton.style.visibility = "visible"; // Показываем кнопку
             searchButton.classList.add("slide-in");
-            searchButton.classList.add("visible");
+            searchButton.classList.remove("slide-out");
+
+            setTimeout(() => {
+                questionButton.style.opacity = "0";
+                searchButton.style.opacity = "1";
+            }, 500);
         }
     }
 
