@@ -37,61 +37,59 @@ document.addEventListener("DOMContentLoaded", () => {
                 content: resultsDiv.innerHTML,
                 searchVisible: searchContainer.classList.contains("show"),
                 questionVisible: questionContainer.classList.contains("show"),
-                buttonText: searchButton.innerText,
-                miniAppUrl: 'https://t.me/Live_Radio_Bot/app' // Замените на ваш URL Mini App
+                buttonText: searchButton.innerText
             };
             localStorage.setItem('savedState', JSON.stringify(state));
 
-            // Создаем новый div для внешнего контента
-            const externalContent = document.createElement('div');
-            externalContent.style.width = '100%';
-            externalContent.style.height = '100vh';
-            externalContent.style.overflow = 'auto';
+            // Создаем WebView для внешней страницы
+            const webview = document.createElement('div');
+            webview.style.position = 'fixed';
+            webview.style.top = '0';
+            webview.style.left = '0';
+            webview.style.width = '100%';
+            webview.style.height = '100%';
+            webview.style.backgroundColor = '#fff';
+            webview.style.zIndex = '1000';
             
-            // Добавляем ссылку и переход на внешнюю страницу
-            externalContent.innerHTML = `
-                <div style="padding: 20px;">
-                    <h3>Переход на внешнюю страницу...</h3>
-                    <p>Нажмите для перехода: <a href="${link.href}" target="_self">${link.href}</a></p>
-                </div>
+            webview.innerHTML = `
+                <iframe src="${link.href}" style="width:100%; height:100%; border:none;"></iframe>
             `;
             
-            // Сохраняем текущий контент и показываем внешний
-            const currentContent = resultsDiv.innerHTML;
-            resultsDiv.innerHTML = '';
-            resultsDiv.appendChild(externalContent);
-
-            // Автоматически переходим по ссылке через небольшую задержку
-            setTimeout(() => {
-                window.location.href = link.href;
-            }, 100);
+            document.body.appendChild(webview);
             
             // Показываем кнопку "Назад"
             tg.BackButton.show();
+            
+            // Обработчик для кнопки "Назад"
+            const handleBack = () => {
+                webview.remove();
+                const savedState = localStorage.getItem('savedState');
+                if (savedState) {
+                    const state = JSON.parse(savedState);
+                    resultsDiv.innerHTML = state.content;
+                    if (state.searchVisible) {
+                        searchContainer.classList.add("show");
+                    }
+                    if (state.questionVisible) {
+                        questionContainer.classList.add("show");
+                    }
+                    searchButton.innerText = state.buttonText;
+                    localStorage.removeItem('savedState');
+                }
+                tg.BackButton.offClick(handleBack);
+                if (!searchContainer.classList.contains("show") && 
+                    !questionContainer.classList.contains("show")) {
+                    tg.BackButton.hide();
+                }
+            };
+            
+            tg.BackButton.onClick(handleBack);
         }
     });
 
-    // Включаем кнопку "Назад" в Telegram
-    tg.BackButton.onClick(() => {
-        // Проверяем, есть ли сохраненное состояние
-        const savedState = localStorage.getItem('savedState');
-        if (savedState) {
-            const state = JSON.parse(savedState);
-            // Возвращаемся в Mini App
-            if (state.miniAppUrl) {
-                window.location.href = state.miniAppUrl;
-            } else {
-                // Если URL Mini App не сохранен, используем текущий домен
-                window.location.href = window.location.origin;
-            }
-        } else {
-            // Стандартное поведение для внутренних страниц
-            searchContainer.classList.remove("show");
-            questionContainer.classList.remove("show");
-            resultsDiv.innerHTML = '';
-            searchButton.innerText = "Начать поиск";
-            tg.BackButton.hide();
-        }
+    // Обработка изменений viewport
+    window.Telegram.WebApp.onEvent('viewportChanged', () => {
+        tg.expand();
     });
 
     // Обработка события beforeunload
