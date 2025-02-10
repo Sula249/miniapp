@@ -45,6 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 mainButton.classList.remove("flip");
                 toggleSearchButton.classList.remove("flipBack");
             }, 600);
+            questionResults.style.display = 'none'; // Скрываем блок с вопросами
+            if (resultsContainer) {
+                resultsContainer.style.display = 'block'; // Показываем поисковые результаты
+            }
         }
 
         function showQuestion() {
@@ -61,6 +65,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 toggleSearchButton.classList.remove("flip");
                 mainButton.classList.remove("flipBack");
             }, 600);
+            if (resultsContainer) {
+            resultsContainer.style.display = 'none'; // Скрываем поисковые результаты
+            }
+            questionResults.style.display = 'block'; // Показываем блок с вопросами
         }
 
         function hideAll() {
@@ -69,8 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("visible");
             mainButton.classList.remove("hidden");
             toggleSearchButton.classList.add("hidden");
+            questionResults.style.display = 'none';
             if (resultsContainer) {
                 resultsContainer.style.display = 'none';
+                
             }
             if (questionResults) {
                 questionResults.style.display = 'none';
@@ -106,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     throw new Error('Элементы поиска не найдены');
                 }
+                questionResults.style.display = 'none'; // Скрываем блок с вопросами
             } catch (error) {
                 console.error('Ошибка поиска:', error);
                 alert('Произошла ошибка при выполнении поиска');
@@ -134,6 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
         result.appendChild(content);
         
         if (questionResults) {
+            resultsContainer.style.display = 'none'; // Скрываем поисковые результаты
             questionResults.innerHTML = '';
             questionResults.appendChild(result);
             questionResults.style.display = 'block'; // Показываем контейнер
