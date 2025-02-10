@@ -75,68 +75,50 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: {
                     'Authorization': 'Bearer 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',
                     'Content-Type': 'application/json',
-                    'HTTP-Referer': window.location.origin,
-                    'X-Title': 'Telegram Mini App',
-                    'Origin': window.location.origin
+                    'HTTP-Referer': 'https://openrouter.ai/',
+                    'X-Title': 'Telegram Mini App'
                 },
-                mode: 'no-cors', // Пробуем режим no-cors
                 body: JSON.stringify({
-                    model: 'mistralai/mistral-7b-instruct',
+                    model: 'gpt-3.5-turbo',  // Попробуем другую модель
                     messages: [
+                        {
+                            role: 'system',
+                            content: 'You are a helpful assistant.'
+                        },
                         {
                             role: 'user',
                             content: question
                         }
                     ],
-                    max_tokens: 500
-                })
-            }).catch(error => {
-                console.error('Network Error Details:', {
-                    error: error,
-                    message: error.message,
-                    type: error.type
-                });
-                throw new Error('Не удалось подключиться к серверу AI. Пожалуйста, попробуйте позже.');
-            });
-
-            console.log('Получен ответ от сервера:', response);
-
-            // В режиме no-cors мы не можем прочитать тело ответа напрямую
-            // Поэтому делаем второй запрос для получения данных
-            const dataResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer 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',
-                    'Content-Type': 'application/json',
-                    'HTTP-Referer': window.location.origin,
-                    'X-Title': 'Telegram Mini App',
-                    'Origin': window.location.origin
-                },
-                body: JSON.stringify({
-                    model: 'mistralai/mistral-7b-instruct',
-                    messages: [
-                        {
-                            role: 'user',
-                            content: question
-                        }
-                    ],
-                    max_tokens: 500
+                    max_tokens: 500,
+                    temperature: 0.7
                 })
             });
 
-            if (!dataResponse.ok) {
-                console.error('API Error:', {
-                    status: dataResponse.status,
-                    statusText: dataResponse.statusText
+            console.log('Статус ответа:', response.status);
+
+            if (!response.ok) {
+                const errorData = await response.text();
+                console.error('API Error Response:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    data: errorData
                 });
-                throw new Error('Сервер вернул ошибку. Попробуйте позже.');
+                
+                if (response.status === 401) {
+                    throw new Error('Ошибка авторизации. Проверьте API ключ.');
+                } else if (response.status === 429) {
+                    throw new Error('Превышен лимит запросов. Попробуйте позже.');
+                } else {
+                    throw new Error(`Ошибка сервера (${response.status}). Попробуйте позже.`);
+                }
             }
 
-            const data = await dataResponse.json();
-            console.log('Получены данные:', data);
+            const data = await response.json();
+            console.log('Ответ от API:', data);
             
             if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-                console.error('Неверный формат данных:', data);
+                console.error('Неверный формат ответа:', data);
                 throw new Error('Получен некорректный ответ от сервера');
             }
             
