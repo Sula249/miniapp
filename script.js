@@ -64,9 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const question = questionInput.value.trim();
         if (!question) return;
         
-        // Новый API ключ
-        const API_KEY = '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';
-        
         // Показываем индикатор загрузки
         questionActionButton.disabled = true;
         questionActionButton.textContent = "Загрузка...";
@@ -81,13 +78,11 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // Используем XMLHttpRequest
             const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'https://openrouter.ai/api/v1/chat/completions', true);
+            xhr.open('POST', 'https://api.openai.com/v1/chat/completions', true);
             
             // Устанавливаем заголовки
-            xhr.setRequestHeader('Authorization', `Bearer ${API_KEY}`);
+            xhr.setRequestHeader('Authorization', 'Bearer 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');
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('HTTP-Referer', 'https://openrouter.ai/docs');
-            xhr.setRequestHeader('X-Title', 'Telegram Mini App');
             
             // Обработка ответа
             xhr.onload = function() {
@@ -142,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // Формируем тело запроса
             const requestBody = {
-                model: "openai/gpt-3.5-turbo",
+                model: "gpt-3.5-turbo",
                 messages: [
                     {
                         role: "user",
