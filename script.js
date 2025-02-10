@@ -69,22 +69,16 @@ document.addEventListener("DOMContentLoaded", () => {
         questionActionButton.textContent = "Загрузка...";
         
         try {
-            // Отправляем запрос к OpenRouter API
-            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            // Отправляем запрос к OpenRouter API через HTTPS
+            const response = await fetch('https://api.openrouter.ai/api/v1/chat/completions', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer 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',
                     'Content-Type': 'application/json',
                     'HTTP-Referer': 'https://github.com/OpenRouterTeam/openrouter',
-                    'X-Title': 'Telegram Mini App',
-                    'OpenAI-Organization': 'org-123abc',
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+                    'X-Title': 'Telegram Mini App'
                 },
-                mode: 'cors', // Явно указываем режим CORS
-                cache: 'no-cache', // Отключаем кеширование
-                credentials: 'same-origin',
+                mode: 'cors',
                 body: JSON.stringify({
                     model: 'mistralai/mistral-7b-instruct',
                     messages: [
@@ -94,17 +88,26 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     ],
                     max_tokens: 1000,
-                    temperature: 0.7
+                    temperature: 0.7,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0'
+                    }
                 })
             }).catch(error => {
-                console.error('Fetch error:', error);
-                throw new Error('Ошибка сети при отправке запроса');
+                if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                    throw new Error('Не удалось подключиться к серверу. Пожалуйста, проверьте подключение к интернету.');
+                }
+                throw error;
             });
 
             if (!response.ok) {
-                const errorText = await response.text(); // Используем text() вместо json() для отладки
-                console.error('API Response:', errorText);
-                throw new Error(`Ошибка сервера: ${response.status}`);
+                const errorText = await response.text();
+                console.error('API Response Error:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    body: errorText
+                });
+                throw new Error(`Ошибка сервера: ${response.status} ${response.statusText}`);
             }
 
             const data = await response.json();
@@ -129,7 +132,11 @@ document.addEventListener("DOMContentLoaded", () => {
             logQueryToGoogleSheets(question, 'question');
             
         } catch (error) {
-            console.error('Полные детали ошибки:', error);
+            console.error('Error details:', {
+                name: error.name,
+                message: error.message,
+                stack: error.stack
+            });
             alert(`Ошибка: ${error.message}`);
         } finally {
             // Восстанавливаем кнопку
