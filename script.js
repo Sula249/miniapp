@@ -6,23 +6,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const questionButton = document.getElementById("questionButton");
 
     function toggleButtons() {
-        if (searchButton.classList.contains("hidden")) {
-            questionButton.classList.add("slide-out");
-            searchButton.classList.remove("hidden");
-            searchButton.classList.add("slide-in");
-            
-            setTimeout(() => {
-                questionButton.classList.add("hidden");
-                questionButton.classList.remove("slide-out", "slide-in");
-            }, 400);
-        } else {
+        if (searchButton.classList.contains("visible")) {
             searchButton.classList.add("slide-out");
-            questionButton.classList.remove("hidden");
+            questionButton.classList.remove("slide-out");
             questionButton.classList.add("slide-in");
 
             setTimeout(() => {
-                searchButton.classList.add("hidden");
-                searchButton.classList.remove("slide-out", "slide-in");
+                searchButton.classList.remove("visible");
+                questionButton.classList.add("visible");
+            }, 400);
+        } else {
+            questionButton.classList.add("slide-out");
+            searchButton.classList.remove("slide-out");
+            searchButton.classList.add("slide-in");
+
+            setTimeout(() => {
+                questionButton.classList.remove("visible");
+                searchButton.classList.add("visible");
             }, 400);
         }
     }
