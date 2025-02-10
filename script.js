@@ -35,11 +35,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 searchVisible: searchContainer.classList.contains("show"),
                 questionVisible: questionContainer.classList.contains("show"),
                 buttonText: searchButton.innerText,
-                timestamp: Date.now() // Добавляем временную метку
+                timestamp: Date.now()
             };
             localStorage.setItem('savedState', JSON.stringify(state));
 
-            // Переходим по ссылке в текущем окне
+            // Добавляем текущий URL в историю
+            history.pushState({ returnUrl: window.location.href }, '', window.location.href);
+            
+            // Переходим по ссылке
             window.location.href = link.href;
         }
     });
@@ -58,6 +61,15 @@ document.addEventListener("DOMContentLoaded", () => {
             resultsDiv.innerHTML = '';
             searchButton.innerText = "Начать поиск";
             tg.BackButton.hide();
+        }
+    });
+
+    // Обработка события beforeunload
+    window.addEventListener('beforeunload', () => {
+        // Если есть сохраненное состояние и мы переходим по внешней ссылке
+        if (localStorage.getItem('savedState')) {
+            // Добавляем текущий URL в историю
+            history.pushState({ returnUrl: window.location.href }, '', window.location.href);
         }
     });
 
