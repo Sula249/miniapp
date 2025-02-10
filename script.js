@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 searchVisible: searchContainer.classList.contains("show"),
                 questionVisible: questionContainer.classList.contains("show"),
                 buttonText: searchButton.innerText,
-                returnUrl: window.location.href // Сохраняем URL для возврата
+                miniAppUrl: 'https://t.me/Live_Radio_Bot/app' // Замените на ваш URL Mini App
             };
             localStorage.setItem('savedState', JSON.stringify(state));
 
@@ -77,11 +77,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const savedState = localStorage.getItem('savedState');
         if (savedState) {
             const state = JSON.parse(savedState);
-            // Возвращаемся на сохраненный URL
-            if (state.returnUrl) {
-                window.location.href = state.returnUrl;
+            // Возвращаемся в Mini App
+            if (state.miniAppUrl) {
+                window.location.href = state.miniAppUrl;
             } else {
-                window.location.href = window.location.origin + window.location.pathname;
+                // Если URL Mini App не сохранен, используем текущий домен
+                window.location.href = window.location.origin;
             }
         } else {
             // Стандартное поведение для внутренних страниц
