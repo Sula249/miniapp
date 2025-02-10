@@ -15,4 +15,3 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 300); // Меняем текст после половины анимации (0.3s)
     });
 });
-
