@@ -64,6 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const question = questionInput.value.trim();
         if (!question) return;
         
+        // API ключ
+        const API_KEY = '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';
+        
         // Показываем индикатор загрузки
         questionActionButton.disabled = true;
         questionActionButton.textContent = "Загрузка...";
@@ -73,13 +76,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Bearer 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',
+                    'Authorization': `Bearer ${API_KEY}`,
                     'Content-Type': 'application/json',
-                    'HTTP-Referer': 'https://openrouter.ai/',
-                    'X-Title': 'Telegram Mini App'
+                    'HTTP-Referer': 'https://openrouter.ai/docs',
+                    'X-Title': 'Telegram Mini App',
+                    'OR-Organization': 'org-123abc'
                 },
                 body: JSON.stringify({
-                    model: 'gpt-3.5-turbo',  // Попробуем другую модель
+                    model: 'openai/gpt-3.5-turbo',  // Обновленный формат модели
                     messages: [
                         {
                             role: 'system',
@@ -91,14 +95,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     ],
                     max_tokens: 500,
-                    temperature: 0.7
+                    temperature: 0.7,
+                    stream: false
                 })
             });
 
             console.log('Статус ответа:', response.status);
 
             if (!response.ok) {
-                const errorData = await response.text();
+                const errorData = await response.json().catch(() => null);
                 console.error('API Error Response:', {
                     status: response.status,
                     statusText: response.statusText,
@@ -106,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 
                 if (response.status === 401) {
-                    throw new Error('Ошибка авторизации. Проверьте API ключ.');
+                    throw new Error('Ошибка авторизации. API ключ недействителен или истек.');
                 } else if (response.status === 429) {
                     throw new Error('Превышен лимит запросов. Попробуйте позже.');
                 } else {
