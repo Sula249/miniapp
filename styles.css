@@ -14,3 +14,28 @@ h1 {
     text-align: center;
     margin-top: 20px;
 }
+
+.button-container {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+button {
+    background-color: var(--tg-theme-button-color, #0088cc);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    padding: 15px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 80%;
+    max-width: 300px;
+    transition: transform 0.3s;
+}
+
+button:active {
+    transform: scale(0.95);
+}
