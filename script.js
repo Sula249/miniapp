@@ -1,7 +1,4 @@
 let tg = window.Telegram.WebApp;
-tg.expand(); // Разворачивает приложение на весь экран
- 
-let tg = window.Telegram.WebApp;
 tg.expand();
 
 document.addEventListener("DOMContentLoaded", () => {
