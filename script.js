@@ -7,6 +7,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const questionContainer = document.getElementById("questionContainer");
     const resultsDiv = document.getElementById("results");
 
+    // Обработка внешних ссылок
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (link && link.href && !link.href.startsWith(window.location.origin)) {
+            e.preventDefault();
+            // Сохраняем текущее состояние перед переходом
+            history.pushState({ page: 'search' }, '', window.location.href);
+            // Открываем ссылку
+            window.open(link.href, '_blank');
+        }
+    });
+
     // Обработка стандартной кнопки "Назад"
     window.addEventListener('popstate', () => {
         // Очищаем результаты поиска
