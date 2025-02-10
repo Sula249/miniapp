@@ -78,7 +78,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     'HTTP-Referer': 'https://github.com/OpenRouterTeam/openrouter',
                     'X-Title': 'Telegram Mini App',
                     'OpenAI-Organization': 'org-123abc',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
                 },
+                mode: 'cors', // Явно указываем режим CORS
+                cache: 'no-cache', // Отключаем кеширование
+                credentials: 'same-origin',
                 body: JSON.stringify({
                     model: 'mistralai/mistral-7b-instruct',
                     messages: [
@@ -90,17 +96,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     max_tokens: 1000,
                     temperature: 0.7
                 })
+            }).catch(error => {
+                console.error('Fetch error:', error);
+                throw new Error('Ошибка сети при отправке запроса');
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                console.error('API Error:', errorData);
-                throw new Error(`API ответил с ошибкой: ${response.status} ${errorData.message || ''}`);
+                const errorText = await response.text(); // Используем text() вместо json() для отладки
+                console.error('API Response:', errorText);
+                throw new Error(`Ошибка сервера: ${response.status}`);
             }
 
             const data = await response.json();
             
             if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                console.error('Invalid API response:', data);
                 throw new Error('Некорректный формат ответа от API');
             }
             
@@ -119,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
             logQueryToGoogleSheets(question, 'question');
             
         } catch (error) {
-            console.error('Детали ошибки:', error);
+            console.error('Полные детали ошибки:', error);
             alert(`Ошибка: ${error.message}`);
         } finally {
             // Восстанавливаем кнопку
