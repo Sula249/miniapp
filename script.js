@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tg.BackButton.onClick(() => {
         searchContainer.classList.remove("show");
         questionContainer.classList.remove("show");
-        tg.BackButton.hide(); // Скрываем кнопку "Назад"
+        tg.BackButton.hide();
     });
 
     searchButton.addEventListener("click", () => {
@@ -38,12 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 300);
     });
 
-    // Add event listeners for search and question action buttons
+    // Обработчики для поиска и вопросов
     const searchActionButton = document.getElementById("searchActionButton");
     const questionActionButton = document.getElementById("questionActionButton");
     const searchInput = document.getElementById("searchInput");
     const questionInput = document.getElementById("questionInput");
 
+    // Обработчик поиска
     searchActionButton.addEventListener("click", (e) => {
         e.preventDefault();
         const query = searchInput.value.trim();
@@ -60,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Обработчик вопросов к AI
     questionActionButton.addEventListener("click", async () => {
         const question = questionInput.value.trim();
         if (!question) return;
@@ -163,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Function to log queries to Google Sheets
+    // Функция логирования запросов
     async function logQueryToGoogleSheets(text, type) {
         const scriptUrl = 'https://script.google.com/macros/s/AKfycbypBtYb0Y8XiGYlEpRyzJq_yqCrE5ieiFwXT92MPsSF29EIFQLmOcp0gZZXasgQb3S9/exec';
         try {
@@ -175,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify({ 
                     query: text,
-                    type: type // 'search' or 'question'
+                    type: type
                 })
             });
         } catch (error) {
