@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>Mini App!</h1>
+
+    <div class="button-container">
+        <button id="searchButton">Начать поиск</button>
+    </div>
+
+    <!-- Всплывающий блок для Поиска -->
+    <div class="input-container" id="searchContainer">
+        <input type="text" id="searchInput" placeholder="Введите запрос...">
+        <button id="searchActionButton">Поиск</button>
+    </div>
+
+    <!-- Всплывающий блок для Вопроса -->
+    <div class="input-container" id="questionContainer">
+        <input type="text" id="questionInput" placeholder="Введите вопрос...">
+        <button id="questionActionButton">Задать</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
