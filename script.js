@@ -23,25 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 buttonText: searchButton.innerText
             }, '', window.location.href);
 
-            // Загружаем содержимое страницы через fetch
-            fetch(link.href)
-                .then(response => response.text())
-                .then(html => {
-                    // Отображаем содержимое в результатах
-                    resultsDiv.innerHTML = `
-                        <div style="padding: 20px;">
-                            <div style="margin-bottom: 20px;">
-                                <h3>${link.href}</h3>
-                            </div>
-                            ${html}
-                        </div>
-                    `;
-                })
-                .catch(error => {
-                    console.error('Error loading page:', error);
-                    // Если не удалось загрузить через fetch, открываем в новой вкладке
-                    window.open(link.href, '_blank');
-                });
+            // Переходим по ссылке в текущем окне
+            window.location.href = link.href;
             
             // Показываем кнопку "Назад" в Telegram
             tg.BackButton.show();
