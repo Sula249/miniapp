@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             console.log('Отправка запроса к API...');
             
-            // Используем XMLHttpRequest вместо fetch
+            // Используем XMLHttpRequest
             const xhr = new XMLHttpRequest();
             xhr.open('POST', 'https://openrouter.ai/api/v1/chat/completions', true);
             
@@ -119,8 +119,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         alert('Ошибка при обработке ответа от сервера');
                     }
                 } else {
-                    console.error('API Error:', xhr.status, xhr.statusText);
-                    alert(`Ошибка сервера: ${xhr.status}`);
+                    console.error('API Error:', xhr.status, xhr.responseText);
+                    if (xhr.status === 401) {
+                        alert('Ошибка авторизации. Пожалуйста, проверьте API ключ.');
+                    } else {
+                        alert(`Ошибка сервера: ${xhr.status}`);
+                    }
                 }
                 
                 // Восстанавливаем кнопку
@@ -136,22 +140,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 questionActionButton.textContent = "Задать";
             };
             
-            // Отправляем запрос
-            xhr.send(JSON.stringify({
-                model: 'openai/gpt-3.5-turbo',
+            // Формируем тело запроса
+            const requestBody = {
+                model: "openai/gpt-3.5-turbo",
+                route: "openai",
                 messages: [
                     {
-                        role: 'system',
-                        content: 'You are a helpful assistant.'
-                    },
-                    {
-                        role: 'user',
+                        role: "user",
                         content: question
                     }
                 ],
                 max_tokens: 500,
-                temperature: 0.7
-            }));
+                temperature: 0.7,
+                headers: {
+                    "HTTP-Referer": "https://openrouter.ai/docs",
+                    "X-Title": "Telegram Mini App"
+                }
+            };
+            
+            console.log('Отправляемые данные:', requestBody);
+            
+            // Отправляем запрос
+            xhr.send(JSON.stringify(requestBody));
             
         } catch (error) {
             console.error('Error details:', error);
