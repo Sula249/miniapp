@@ -47,10 +47,10 @@ button.flipped {
     opacity: 0;
 }
 
-/* Всплывающий контейнер */
+/* Всплывающие контейнеры */
 .input-container {
     position: fixed;
-    bottom: -100px; /* Прячем контейнер за пределами экрана */
+    bottom: -100px;
     left: 50%;
     transform: translateX(-50%);
     width: 80%;
@@ -65,7 +65,7 @@ button.flipped {
     transition: bottom 0.4s ease-out, opacity 0.4s ease-out;
 }
 
-/* Показываем контейнер */
+/* Показываем активный контейнер */
 .input-container.show {
     bottom: 80px;
     opacity: 1;
@@ -88,4 +88,3 @@ button.flipped {
     color: var(--tg-theme-button-text-color, #ffffff);
     cursor: pointer;
 }
- 
