@@ -3,45 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram MiniApp</title>
+    <title>Telegram Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script async src="https://cse.google.com/cse.js?cx=e58c2408882ae476e"></script>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1 id="title">Поисковая система</h1>
-    <div class="overlay"></div>
-    <div class="loader"></div>
-
-    <!-- Контейнеры для ввода -->
-    <div id="searchContainer" class="inputContainer">
-        <form id="searchForm" class="wrapper">
-            <input type="text" 
-                   placeholder="Введите запрос" 
-                   id="query" 
-                   required
-                   autocomplete="off">
-            <button type="submit" id="searchButton">🔎 Поиск</button>
-        </form>
-    </div>
-
-    <div id="questionContainer" class="inputContainer">
-        <div class="wrapper">
-            <input type="text" placeholder="Введите вопрос" id="questionInput" />
-            <button id="questionButton">💭 Задать</button>
-        </div>
-    </div>
-
-    <!-- Кнопки переключения -->
-    <div class="container">
-        <button id="mainButton" class="toggleButton">🔎 Начать поиск</button>
-        <button id="toggleSearchButton" class="toggleButton hidden">💭 Задать вопрос</button>
-    </div>
-
-    <!-- Контейнеры для результатов -->
-    <div class="gcse-searchresults-only" id="results"></div>
-    <div class="question-results" id="questionResults"></div>
-
-    <script src="script.js"></script>
+    <h1>Привет, Telegram Mini App!</h1>
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand(); // Разворачивает приложение на весь экран
+    </script>
 </body>
 </html>
