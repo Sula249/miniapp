@@ -75,8 +75,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: {
                     'Authorization': 'Bearer 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',
                     'Content-Type': 'application/json',
-                    'HTTP-Referer': window.location.href,
-                    'X-Title': 'Telegram Mini App'
+                    'HTTP-Referer': 'https://github.com/OpenRouterTeam/openrouter',
+                    'X-Title': 'Telegram Mini App',
+                    'OpenAI-Organization': 'org-123abc',
                 },
                 body: JSON.stringify({
                     model: 'mistralai/mistral-7b-instruct',
@@ -85,7 +86,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             role: 'user',
                             content: question
                         }
-                    ]
+                    ],
+                    max_tokens: 1000,
+                    temperature: 0.7
                 })
             });
 
