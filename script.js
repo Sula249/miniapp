@@ -7,27 +7,40 @@ document.addEventListener("DOMContentLoaded", () => {
     const questionContainer = document.getElementById("questionContainer");
     const resultsDiv = document.getElementById("results");
 
+    // Проверяем, возвращаемся ли мы с внешней страницы
+    const savedState = localStorage.getItem('savedState');
+    if (savedState) {
+        const state = JSON.parse(savedState);
+        resultsDiv.innerHTML = state.content;
+        if (state.searchVisible) {
+            searchContainer.classList.add("show");
+        }
+        if (state.questionVisible) {
+            questionContainer.classList.add("show");
+        }
+        searchButton.innerText = state.buttonText;
+        localStorage.removeItem('savedState'); // Очищаем сохраненное состояние
+        tg.BackButton.show();
+    }
+
     // Обработка внешних ссылок
     document.addEventListener('click', (e) => {
         const link = e.target.closest('a');
         if (link && link.href && !link.href.startsWith(window.location.origin)) {
             e.preventDefault();
             
-            // Сохраняем текущее состояние и контент
-            const currentContent = resultsDiv.innerHTML;
-            history.pushState({ 
-                page: 'search',
-                content: currentContent,
+            // Сохраняем состояние в localStorage
+            const state = {
+                content: resultsDiv.innerHTML,
                 searchVisible: searchContainer.classList.contains("show"),
                 questionVisible: questionContainer.classList.contains("show"),
-                buttonText: searchButton.innerText
-            }, '', window.location.href);
+                buttonText: searchButton.innerText,
+                timestamp: Date.now() // Добавляем временную метку
+            };
+            localStorage.setItem('savedState', JSON.stringify(state));
 
             // Переходим по ссылке в текущем окне
             window.location.href = link.href;
-            
-            // Показываем кнопку "Назад" в Telegram
-            tg.BackButton.show();
         }
     });
 
@@ -66,7 +79,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Включаем кнопку "Назад" в Telegram
     tg.BackButton.onClick(() => {
-        history.back(); // Вызываем стандартную функцию "назад"
+        if (document.referrer.startsWith(window.location.origin)) {
+            history.back();
+        } else {
+            // Возвращаемся на главную страницу
+            window.location.href = window.location.origin + window.location.pathname;
+        }
     });
 
     searchButton.addEventListener("click", () => {
