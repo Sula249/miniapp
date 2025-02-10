@@ -44,46 +44,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Обработка стандартной кнопки "Назад"
-    window.addEventListener('popstate', (e) => {
-        if (e.state) {
-            // Восстанавливаем предыдущее состояние
-            resultsDiv.innerHTML = e.state.content;
-            if (e.state.searchVisible) {
-                searchContainer.classList.add("show");
-            } else {
-                searchContainer.classList.remove("show");
-            }
-            if (e.state.questionVisible) {
-                questionContainer.classList.add("show");
-            } else {
-                questionContainer.classList.remove("show");
-            }
-            searchButton.innerText = e.state.buttonText;
-        } else {
-            // Если нет сохраненного состояния, очищаем все
-            resultsDiv.innerHTML = '';
-            searchContainer.classList.remove("show");
-            questionContainer.classList.remove("show");
-            searchButton.innerText = "Начать поиск";
-        }
-        // Управляем кнопкой "Назад" в Telegram
-        if (searchContainer.classList.contains("show") || 
-            questionContainer.classList.contains("show") ||
-            resultsDiv.innerHTML !== '') {
-            tg.BackButton.show();
-        } else {
-            tg.BackButton.hide();
-        }
-    });
-
     // Включаем кнопку "Назад" в Telegram
     tg.BackButton.onClick(() => {
-        if (document.referrer.startsWith(window.location.origin)) {
-            history.back();
-        } else {
+        // Проверяем, есть ли сохраненное состояние
+        const savedState = localStorage.getItem('savedState');
+        if (savedState) {
             // Возвращаемся на главную страницу
             window.location.href = window.location.origin + window.location.pathname;
+        } else {
+            // Стандартное поведение для внутренних страниц
+            searchContainer.classList.remove("show");
+            questionContainer.classList.remove("show");
+            resultsDiv.innerHTML = '';
+            searchButton.innerText = "Начать поиск";
+            tg.BackButton.hide();
         }
     });
 
