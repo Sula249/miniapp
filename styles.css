@@ -71,12 +71,14 @@ button.flipped {
     z-index: 900;
     max-height: 80vh;
     overflow-y: auto;
+    pointer-events: none; /* Отключаем взаимодействие для скрытого контейнера */
 }
 
 /* Показываем контейнер */
 .input-container.show {
     bottom: 80px;
     opacity: 1;
+    pointer-events: auto; /* Включаем взаимодействие для видимого контейнера */
 }
 
 .input-container input {
