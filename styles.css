@@ -217,3 +217,18 @@ button.flipped {
 .gs-snippet em {
     font-style: italic !important;
 }
+
+/* Контейнер для поля ввода вопроса */
+#questionContainer {
+    /* MANUAL: Настройте отображение элементов в контейнере */
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+}
+
+#questionInput {
+    /* MANUAL: Настройте минимальную ширину поля ввода */
+    min-width: 120px;
+    flex: 1;
+}
