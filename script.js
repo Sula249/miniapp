@@ -47,18 +47,43 @@ document.addEventListener("DOMContentLoaded", () => {
     // Обработчик поиска
     document.getElementById('search-form').addEventListener('submit', (e) => {
         e.preventDefault();
+        console.log('Форма поиска отправлена');
+        
         const query = searchInput.value.trim();
         if (!query) return;
+        
+        console.log('Поисковый запрос:', query);
         
         // Логируем запрос
         logQueryToGoogleSheets(query, 'search');
         
+        // Проверяем наличие объекта google
+        console.log('Проверка объекта google:', !!window.google);
+        if (window.google) {
+            console.log('Проверка google.search:', !!google.search);
+            console.log('Проверка google.search.cse:', !!google.search.cse);
+        }
+        
         // Ждем инициализации Google CSE
+        let attempts = 0;
+        const maxAttempts = 50; // 5 секунд максимум
+        
         const waitForGCSE = setInterval(() => {
-            if (google && google.search && google.search.cse) {
+            attempts++;
+            console.log(`Попытка ${attempts} инициализации GCSE`);
+            
+            if (google && google.search && google.search.cse && google.search.cse.element) {
                 clearInterval(waitForGCSE);
-                // Выполняем поиск
-                google.search.cse.element.getElement('results').execute(query);
+                console.log('GCSE инициализирован, выполняем поиск');
+                const element = google.search.cse.element.getElement('results');
+                if (element) {
+                    element.execute(query);
+                } else {
+                    console.error('Элемент results не найден');
+                }
+            } else if (attempts >= maxAttempts) {
+                clearInterval(waitForGCSE);
+                console.error('Не удалось инициализировать GCSE после', attempts, 'попыток');
             }
         }, 100);
     });
