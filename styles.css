@@ -246,7 +246,8 @@ button.flipped {
 #aiAnswer {
     margin-top: 8px;
     padding: 10px;
-    background: var(--tg-theme-bg-color, #ffffff);
+    /* MANUAL: Настройте цвет фона под ваши нужды */
+    background: var(--tg-theme-secondary-bg-color, #f9f9f9);
     border-radius: 8px;
     width: 100%;
 }
