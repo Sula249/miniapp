@@ -55,7 +55,7 @@ button.flipped {
     left: 50%;
     transform: translateX(-50%);
     /* MANUAL: Настройте ширину и отступы под ваши нужды */
-    width: calc(93% - 30px); /* Ширина на весь экран с отступами по 10px */
+    width: calc(100% - 30px); /* Ширина на весь экран с отступами по 10px */
     max-width: none; /* Убираем ограничение максимальной ширины */
     display: flex;
     flex-direction: column;
