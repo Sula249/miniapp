@@ -221,7 +221,7 @@ button.flipped {
     padding-top: 16px !important;
 }
 
-/* Стили для поля ввода вопросов */
+/* Отступ для поля ввода вопросов */
 #questionInput {
     margin-bottom: 16px !important;
     border: 1px solid var(--tg-theme-hint-color, #cccccc) !important;
