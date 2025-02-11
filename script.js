@@ -10,6 +10,13 @@ document.addEventListener("DOMContentLoaded", () => {
     tg.BackButton.onClick(() => {
         searchContainer.classList.remove("show");
         questionContainer.classList.remove("show");
+        // Очищаем результаты поиска
+        const resultsDiv = document.getElementById('results');
+        if (resultsDiv) {
+            resultsDiv.innerHTML = '';
+        }
+        // Очищаем поле ввода
+        searchInput.value = '';
         tg.BackButton.hide();
     });
 
@@ -25,6 +32,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 searchButton.innerText = "Начать поиск";
                 questionContainer.classList.add("show");
                 searchContainer.classList.remove("show");
+                // Очищаем результаты поиска при переключении
+                const resultsDiv = document.getElementById('results');
+                if (resultsDiv) {
+                    resultsDiv.innerHTML = '';
+                }
+                // Очищаем поле ввода
+                searchInput.value = '';
             }
 
             searchButton.classList.remove("flipped");
