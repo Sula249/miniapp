@@ -166,23 +166,48 @@ button.flipped {
     font-family: var(--tg-theme-text-font, sans-serif) !important;
     background-color: var(--tg-theme-bg-color, #ffffff) !important;
     border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
+/* Убираем лишние обертки */
+.gsc-control-wrapper-cse,
+.gsc-results-wrapper-nooverlay {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Основной контейнер с результатами */
+.gsc-results {
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Стили для элементов результатов */
 .gs-title {
     color: var(--tg-theme-link-color, #2481cc) !important;
+    margin: 0 !important;
+    padding: 8px 0 !important;
 }
 
 .gs-snippet {
     color: var(--tg-theme-text-color, #000000) !important;
+    margin: 0 !important;
+    padding: 4px 0 !important;
 }
 
 .gs-visibleUrl {
     color: var(--tg-theme-hint-color, #999999) !important;
+    margin: 0 !important;
+    padding: 4px 0 !important;
 }
 
+/* Стили для поискового поля */
 .gsc-input-box {
     border-color: var(--tg-theme-hint-color, #cccccc) !important;
     background: var(--tg-theme-bg-color, #ffffff) !important;
+    margin: 0 !important;
 }
 
 .gsc-input {
