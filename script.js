@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const questionInput = document.getElementById("questionInput");
 
     // Обработчик поиска
-    searchActionButton.addEventListener("click", (e) => {
+    document.getElementById('search-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const query = searchInput.value.trim();
         if (!query) return;
@@ -53,12 +53,14 @@ document.addEventListener("DOMContentLoaded", () => {
         // Логируем запрос
         logQueryToGoogleSheets(query, 'search');
         
-        // Выполняем поиск через Google CSE
-        const searchElement = document.querySelector('input.gsc-input');
-        if (searchElement) {
-            searchElement.value = query;
-            document.querySelector('button.gsc-search-button').click();
-        }
+        // Ждем инициализации Google CSE
+        const waitForGCSE = setInterval(() => {
+            if (google && google.search && google.search.cse) {
+                clearInterval(waitForGCSE);
+                // Выполняем поиск
+                google.search.cse.element.getElement('results').execute(query);
+            }
+        }, 100);
     });
 
     // Обработчик вопросов к AI
