@@ -56,15 +56,29 @@ document.addEventListener("DOMContentLoaded", () => {
         const query = searchInput.value.trim();
         if (!query) return;
         
+        // Показываем индикатор загрузки
+        searchActionButton.disabled = true;
+        searchActionButton.textContent = "Загрузка...";
+        
         // Логируем запрос
         logQueryToGoogleSheets(query, 'search');
         
-        // Выполняем поиск через Google CSE
-        const searchElement = document.querySelector('input.gsc-input');
-        if (searchElement) {
-            searchElement.value = query;
-            document.querySelector('button.gsc-search-button').click();
-        }
+        // Переинициализируем поисковый элемент
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '<div class="gcse-searchresults-only"></div>';
+        
+        // Ждем инициализации Google CSE
+        setTimeout(() => {
+            const searchElement = document.querySelector('input.gsc-input');
+            if (searchElement) {
+                searchElement.value = query;
+                document.querySelector('button.gsc-search-button').click();
+            }
+            
+            // Восстанавливаем кнопку
+            searchActionButton.disabled = false;
+            searchActionButton.textContent = "Поиск";
+        }, 1000);
     });
 
     // Обработчик вопросов к AI
