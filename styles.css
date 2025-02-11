@@ -153,32 +153,21 @@ button.flipped {
     margin: 0 !important;
 }
 
-/* Переопределяем стили Google CSE для корректного отображения */
-.gsc-control-cse * {
-    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
+/* Убираем разделители между результатами */
+.gsc-webResult.gsc-result {
     border: none !important;
-    box-shadow: none !important;
-}
-
-/* Стили для элементов результатов */
-.gs-title {
-    color: var(--tg-theme-link-color, #2481cc) !important;
-    margin: 0 !important;
     padding: 8px 0 !important;
+    margin: 0 !important;
+}
+
+.gsc-above-wrapper-area {
     border: none !important;
 }
 
-.gs-snippet {
-    color: var(--tg-theme-text-color, #000000) !important;
-    margin: 0 !important;
-    padding: 4px 0 !important;
-    border: none !important;
-}
-
-.gs-visibleUrl {
-    color: var(--tg-theme-hint-color, #999999) !important;
-    margin: 0 !important;
-    padding: 4px 0 !important;
+.gsc-table-result, 
+.gsc-thumbnail-inside, 
+.gsc-url-top {
+    padding: 0 !important;
     border: none !important;
 }
 
