@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
     tg.BackButton.onClick(() => {
         searchContainer.classList.remove("show");
         questionContainer.classList.remove("show");
+        // Очищаем результаты поиска
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
         tg.BackButton.hide();
     });
 
@@ -21,6 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 searchButton.innerText = "Задать вопрос";
                 searchContainer.classList.add("show");
                 questionContainer.classList.remove("show");
+                // Очищаем результаты при переключении на вопросы
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = '';
             } else {
                 searchButton.innerText = "Начать поиск";
                 questionContainer.classList.add("show");
