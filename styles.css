@@ -144,7 +144,10 @@ button.flipped {
 .gsc-results {
     opacity: 1 !important;
     visibility: visible !important;
-    background-color: var(--tg-theme-bg-color, #ffffff) !important;
+    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 /* Контейнер для результатов поиска */
@@ -153,35 +156,14 @@ button.flipped {
     width: 100%;
     opacity: 1 !important;
     visibility: visible !important;
-    background-color: var(--tg-theme-bg-color, #ffffff) !important;
+    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
 }
 
 /* Переопределяем стили Google CSE для корректного отображения */
 .gsc-control-cse * {
-    background-color: var(--tg-theme-bg-color, #ffffff) !important;
-}
-
-/* Стили Telegram для поисковой выдачи */
-.gsc-control-cse {
-    font-family: var(--tg-theme-text-font, sans-serif) !important;
-    background-color: var(--tg-theme-bg-color, #ffffff) !important;
+    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
     border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-/* Убираем лишние обертки */
-.gsc-control-wrapper-cse,
-.gsc-results-wrapper-nooverlay {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* Основной контейнер с результатами */
-.gsc-results {
-    width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
+    box-shadow: none !important;
 }
 
 /* Стили для элементов результатов */
@@ -189,23 +171,26 @@ button.flipped {
     color: var(--tg-theme-link-color, #2481cc) !important;
     margin: 0 !important;
     padding: 8px 0 !important;
+    border: none !important;
 }
 
 .gs-snippet {
     color: var(--tg-theme-text-color, #000000) !important;
     margin: 0 !important;
     padding: 4px 0 !important;
+    border: none !important;
 }
 
 .gs-visibleUrl {
     color: var(--tg-theme-hint-color, #999999) !important;
     margin: 0 !important;
     padding: 4px 0 !important;
+    border: none !important;
 }
 
 /* Стили для поискового поля */
 .gsc-input-box {
-    border-color: var(--tg-theme-hint-color, #cccccc) !important;
+    border: 1px solid var(--tg-theme-hint-color, #cccccc) !important;
     background: var(--tg-theme-bg-color, #ffffff) !important;
     margin: 0 !important;
 }
