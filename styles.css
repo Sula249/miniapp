@@ -154,14 +154,17 @@ button.flipped {
 }
 
 /* Результаты поиска */
-#results {
+#results,
+.results-container {
     margin-top: 10px;
-    width: calc(100% - 40px) !important; /* Ширина на весь экран с отступами по 20px */
+    width: calc(100% - 40px) !important;
     max-width: none !important;
     opacity: 1 !important;
     visibility: visible !important;
     background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
     margin: 10px auto 0 !important;
+    padding: 8px 0 !important;
+    border: none !important;
 }
 
 /* Стили Telegram для поисковой выдачи */
@@ -235,7 +238,6 @@ button.flipped {
 
 /* Контейнер для поля ввода вопроса */
 #questionContainer {
-    /* MANUAL: Настройте отображение элементов в контейнере */
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -243,18 +245,5 @@ button.flipped {
 
 /* Стили для контейнера ответа */
 #aiAnswer {
-    margin-top: 10px;
-    width: calc(100% - 40px) !important;
-    max-width: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
-    margin: 10px auto 0 !important;
-    padding: 8px 0 !important;
-    border: none !important;
     color: var(--tg-theme-text-color, #000000) !important;
-    box-sizing: border-box;
-    position: relative;
-    left: 0;
-    right: 0;
 }
