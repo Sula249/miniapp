@@ -23,7 +23,7 @@ h1 {
     display: flex;
     justify-content: center;
     perspective: 1000px;
-    z-index: 1000; /* Перемещаем кнопку выше */
+    z-index: 1000;
 }
 
 button {
@@ -36,10 +36,7 @@ button {
     cursor: pointer;
     width: 90%;
     max-width: 320px;
-    transition: transform 0.6s, opacity 0.3s;
-    transform-style: preserve-3d;
-    position: relative;
-    z-index: 1000; /* Гарантируем, что кнопка поверх */
+    transition: transform 0.6s;
 }
 
 button:active {
@@ -65,7 +62,6 @@ button.flipped {
     background: var(--tg-theme-secondary-bg-color, #f9f9f9);
     padding: 12px;
     border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     opacity: 0;
     transition: bottom 0.4s ease-out, opacity 0.4s ease-out;
     z-index: 900;
@@ -80,7 +76,6 @@ button.flipped {
 }
 
 .input-container input {
-    flex: 1;
     padding: 12px;
     border: 1px solid var(--tg-theme-hint-color, #ccc);
     border-radius: 8px;
