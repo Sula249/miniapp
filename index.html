@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script async src="https://cse.google.com/cse.js?cx="></script>
+    <script src="config.js"></script>
     <script>
-        window.onload = function() {
-            const script = document.querySelector('script[src^="https://cse.google.com/cse.js"]');
-            script.src = `https://cse.google.com/cse.js?cx=${CONFIG.GOOGLE_CSE_ID}`;
-        }
+        // Инициализируем поиск после загрузки конфига
+        (function() {
+            const gcseScript = document.createElement('script');
+            gcseScript.type = 'text/javascript';
+            gcseScript.async = true;
+            gcseScript.src = `https://cse.google.com/cse.js?cx=${CONFIG.GOOGLE_CSE_ID}`;
+            document.head.appendChild(gcseScript);
+        })();
     </script>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -37,7 +41,6 @@
         <button id="questionActionButton">Задать</button>
     </div>
 
-    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
