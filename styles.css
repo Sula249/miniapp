@@ -140,3 +140,15 @@ button.flipped {
     margin-top: 10px;
     width: 100%;
 }
+
+/* Добавляем стили для Google поисковой выдачи */
+.gsc-control-cse, 
+.gsc-results-wrapper-visible {
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+}
+
+.gsc-control-cse[style*="display: ''"], 
+.gsc-results-wrapper-visible[style*="display: ''"] {
+    opacity: 1;
+}
