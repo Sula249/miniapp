@@ -134,9 +134,12 @@ button.flipped {
 #results {
     margin-top: 10px;
     width: 100%;
+    opacity: 1 !important;
+    visibility: visible !important;
+    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
 }
 
-/* Добавляем стили для Google поисковой выдачи */
+/* Стили Telegram для поисковой выдачи */
 .gsc-control-cse, 
 .gsc-results-wrapper-visible,
 .gsc-results-wrapper-overlay,
@@ -144,31 +147,17 @@ button.flipped {
 .gsc-results {
     opacity: 1 !important;
     visibility: visible !important;
-    background-color: var(--tg-theme-bg-color, #ffffff) !important;
+    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
     border: none !important;
     padding: 0 !important;
     margin: 0 !important;
 }
 
-/* Убираем разделители между результатами */
-.gsc-webResult.gsc-result {
+/* Переопределяем стили Google CSE для корректного отображения */
+.gsc-control-cse * {
+    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
     border: none !important;
-    padding: 8px 0 !important;
-    margin: 0 !important;
-    background-color: var(--tg-theme-bg-color, #ffffff) !important;
-}
-
-.gsc-above-wrapper-area {
-    border: none !important;
-    background-color: var(--tg-theme-bg-color, #ffffff) !important;
-}
-
-.gsc-table-result, 
-.gsc-thumbnail-inside, 
-.gsc-url-top {
-    padding: 0 !important;
-    border: none !important;
-    background-color: var(--tg-theme-bg-color, #ffffff) !important;
+    box-shadow: none !important;
 }
 
 /* Стили для элементов результатов */
@@ -176,21 +165,21 @@ button.flipped {
     color: var(--tg-theme-link-color, #2481cc) !important;
     margin: 0 !important;
     padding: 8px 0 !important;
-    background-color: var(--tg-theme-bg-color, #ffffff) !important;
+    border: none !important;
 }
 
 .gs-snippet {
     color: var(--tg-theme-text-color, #000000) !important;
     margin: 0 !important;
     padding: 4px 0 !important;
-    background-color: var(--tg-theme-bg-color, #ffffff) !important;
+    border: none !important;
 }
 
 .gs-visibleUrl {
     color: var(--tg-theme-hint-color, #999999) !important;
     margin: 0 !important;
     padding: 4px 0 !important;
-    background-color: var(--tg-theme-bg-color, #ffffff) !important;
+    border: none !important;
 }
 
 /* Стили для поискового поля */
