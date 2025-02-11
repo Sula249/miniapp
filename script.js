@@ -194,9 +194,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // Добавляем обработчик для результатов поиска
     document.addEventListener('click', (e) => {
         // Проверяем, является ли клик по ссылке в результатах поиска
-        if (e.target.closest('.gs-title a, .gs-visibleUrl a')) {
+        // Исключаем кнопку поиска из обработки
+        const isSearchResult = e.target.closest('.gs-title a, .gs-visibleUrl a');
+        const isSearchButton = e.target.closest('.gsc-search-button');
+        
+        if (isSearchResult && !isSearchButton) {
             e.preventDefault();
-            const url = e.target.href;
+            const url = e.target.closest('a').href;
             if (url) {
                 // Открываем ссылку во встроенном браузере Telegram
                 tg.openLink(url);
@@ -204,4 +208,3 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
- 
