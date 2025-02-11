@@ -10,9 +10,13 @@ document.addEventListener("DOMContentLoaded", () => {
     tg.BackButton.onClick(() => {
         searchContainer.classList.remove("show");
         questionContainer.classList.remove("show");
-        // Скрываем элементы поиска Google при возврате
+        // Скрываем все элементы при возврате
         const searchElements = document.querySelectorAll('.gsc-control-cse, .gsc-results-wrapper-visible');
+        const aiElements = document.querySelectorAll('#aiAnswer, #questionInput');
         searchElements.forEach(el => {
+            if (el) el.style.display = 'none';
+        });
+        aiElements.forEach(el => {
             if (el) el.style.display = 'none';
         });
         tg.BackButton.hide();
@@ -26,19 +30,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 searchButton.innerText = "Задать вопрос";
                 searchContainer.classList.add("show");
                 questionContainer.classList.remove("show");
-                // Показываем элементы поиска Google
+                // Показываем элементы поиска Google и скрываем элементы AI
                 const searchElements = document.querySelectorAll('.gsc-control-cse, .gsc-results-wrapper-visible');
+                const aiElements = document.querySelectorAll('#aiAnswer, #questionInput');
                 searchElements.forEach(el => {
                     if (el) el.style.display = '';
+                });
+                aiElements.forEach(el => {
+                    if (el) el.style.display = 'none';
                 });
             } else {
                 searchButton.innerText = "Начать поиск";
                 questionContainer.classList.add("show");
                 searchContainer.classList.remove("show");
-                // Скрываем элементы поиска Google
+                // Скрываем элементы поиска Google и показываем элементы AI
                 const searchElements = document.querySelectorAll('.gsc-control-cse, .gsc-results-wrapper-visible');
+                const aiElements = document.querySelectorAll('#aiAnswer, #questionInput');
                 searchElements.forEach(el => {
                     if (el) el.style.display = 'none';
+                });
+                aiElements.forEach(el => {
+                    if (el) el.style.display = '';
                 });
             }
 
