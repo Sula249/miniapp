@@ -98,7 +98,7 @@ button.flipped {
     background-color: var(--tg-theme-button-color, #0088cc);
     color: var(--tg-theme-button-text-color, #ffffff);
     cursor: pointer;
-    min-width: 80px;
+    min-width: 60px;
 }
 
 /* Адаптация для маленьких экранов */
@@ -131,6 +131,12 @@ button.flipped {
     display: flex;
     gap: 8px;
     width: 100%;
+}
+
+#searchInput {
+    /* MANUAL: Настройте минимальную ширину поля ввода */
+    min-width: 120px;
+    flex: 1;
 }
 
 #results {
