@@ -6,13 +6,43 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchContainer = document.getElementById("searchContainer");
     const questionContainer = document.getElementById("questionContainer");
 
+    // Добавляем начальное состояние в историю
+    window.history.pushState({ page: 'main' }, '', window.location.href);
+
     // Включаем кнопку "Назад" в Telegram
     tg.BackButton.onClick(() => {
         searchContainer.classList.remove("show");
         questionContainer.classList.remove("show");
-        tg.BackButton.hide(); // Скрываем кнопку "Назад"
+        tg.BackButton.hide();
     });
 
+    // Обработчик для перехватывания кликов по ссылкам в результатах поиска
+    document.getElementById('results').addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+            e.preventDefault();
+            const url = e.target.href;
+            
+            // Добавляем новое состояние в историю перед переходом
+            window.history.pushState({ page: 'link', url: url }, '', url);
+            
+            // Открываем ссылку в текущем окне
+            window.location.href = url;
+        }
+    });
+
+    // Обрабатываем нажатие кнопки назад в браузере
+    window.onpopstate = function(event) {
+        if (event.state) {
+            if (event.state.page === 'main') {
+                searchContainer.classList.remove("show");
+                questionContainer.classList.remove("show");
+                tg.BackButton.hide();
+                searchButton.innerText = "Начать поиск";
+            }
+        }
+    };
+
+    // Обновляем обработчик кнопки "Начать поиск"
     searchButton.addEventListener("click", () => {
         searchButton.classList.add("flipped");
 
@@ -21,10 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 searchButton.innerText = "Задать вопрос";
                 searchContainer.classList.add("show");
                 questionContainer.classList.remove("show");
+                // Добавляем состояние в историю
+                window.history.pushState({ page: 'search' }, '', window.location.href);
             } else {
                 searchButton.innerText = "Начать поиск";
                 questionContainer.classList.add("show");
                 searchContainer.classList.remove("show");
+                // Добавляем состояние в историю
+                window.history.pushState({ page: 'question' }, '', window.location.href);
             }
 
             searchButton.classList.remove("flipped");
@@ -38,12 +72,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 300);
     });
 
-    // Add event listeners for search and question action buttons
+    // Обработчики для поиска и вопросов
     const searchActionButton = document.getElementById("searchActionButton");
     const questionActionButton = document.getElementById("questionActionButton");
     const searchInput = document.getElementById("searchInput");
     const questionInput = document.getElementById("questionInput");
 
+    // Обработчик поиска
     searchActionButton.addEventListener("click", (e) => {
         e.preventDefault();
         const query = searchInput.value.trim();
@@ -60,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Обработчик вопросов к AI
     questionActionButton.addEventListener("click", async () => {
         const question = questionInput.value.trim();
         if (!question) return;
@@ -163,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Function to log queries to Google Sheets
+    // Функция логирования запросов
     async function logQueryToGoogleSheets(text, type) {
         const scriptUrl = 'https://script.google.com/macros/s/AKfycbypBtYb0Y8XiGYlEpRyzJq_yqCrE5ieiFwXT92MPsSF29EIFQLmOcp0gZZXasgQb3S9/exec';
         try {
@@ -175,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify({ 
                     query: text,
-                    type: type // 'search' or 'question'
+                    type: type
                 })
             });
         } catch (error) {
