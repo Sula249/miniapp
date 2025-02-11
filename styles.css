@@ -99,6 +99,8 @@ button.flipped {
     color: var(--tg-theme-button-text-color, #ffffff);
     cursor: pointer;
     min-width: 60px;
+    /* MANUAL: Настройте максимальную ширину кнопок */
+    max-width: 80px; /* Добавляем ограничение максимальной ширины */
 }
 
 /* Адаптация для маленьких экранов */
