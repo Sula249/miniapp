@@ -1,0 +1,209 @@
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+    font-family: var(--tg-theme-text-font, sans-serif);
+    background-color: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Основная кнопка */
+.button-container {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    perspective: 1000px;
+    z-index: 1000;
+}
+
+button {
+    background-color: var(--tg-theme-button-color, #0088cc);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    padding: 15px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 90%;
+    max-width: 320px;
+    transition: transform 0.6s;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button.flipped {
+    transform: rotateY(180deg);
+    opacity: 0;
+}
+
+/* Всплывающие контейнеры */
+.input-container {
+    position: fixed;
+    bottom: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--tg-theme-secondary-bg-color, #f9f9f9);
+    padding: 12px;
+    border-radius: 12px;
+    opacity: 0;
+    transition: bottom 0.4s ease-out, opacity 0.4s ease-out;
+    z-index: 900;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* Показываем контейнер */
+.input-container.show {
+    bottom: 80px;
+    opacity: 1;
+}
+
+.input-container input {
+    padding: 12px;
+    border: 1px solid var(--tg-theme-hint-color, #ccc);
+    border-radius: 8px;
+    font-size: 16px;
+    background: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+}
+
+.input-container input::placeholder {
+    color: var(--tg-theme-hint-color, #888);
+}
+
+/* Кнопки внутри всплывающих строк */
+.input-container button {
+    padding: 12px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--tg-theme-button-color, #0088cc);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    cursor: pointer;
+    min-width: 80px;
+}
+
+/* Адаптация для маленьких экранов */
+@media (max-width: 400px) {
+    .input-container {
+        width: 95%;
+        padding: 10px;
+        gap: 5px;
+    }
+    
+    .input-container input {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .input-container button {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 12px;
+        width: 95%;
+    }
+}
+
+#search-form {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+#results {
+    margin-top: 10px;
+    width: 100%;
+    opacity: 1 !important;
+    visibility: visible !important;
+    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
+}
+
+/* Стили Telegram для поисковой выдачи */
+.gsc-control-cse, 
+.gsc-results-wrapper-visible,
+.gsc-results-wrapper-overlay,
+.gsc-results-wrapper-nooverlay,
+.gsc-results,
+.gsc-webResult.gsc-result,
+.gsc-results .gsc-imageResult,
+.gsc-webResult.gsc-result:hover,
+.gsc-imageResult:hover {
+    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Убираем разделители между результатами */
+.gsc-webResult.gsc-result {
+    border: none !important;
+    padding: 8px 0 !important;
+    margin: 0 !important;
+}
+
+.gsc-above-wrapper-area {
+    border: none !important;
+    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
+}
+
+.gsc-table-result, 
+.gsc-thumbnail-inside, 
+.gsc-url-top {
+    padding: 0 !important;
+    border: none !important;
+    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
+}
+
+/* Стили для поискового поля */
+.gsc-input-box {
+    border: 1px solid var(--tg-theme-hint-color, #cccccc) !important;
+    background: var(--tg-theme-bg-color, #ffffff) !important;
+    margin: 0 !important;
+}
+
+.gsc-input {
+    color: var(--tg-theme-text-color, #000000) !important;
+    background: var(--tg-theme-bg-color, #ffffff) !important;
+}
+
+.gsc-search-button-v2 {
+    background-color: var(--tg-theme-button-color, #0088cc) !important;
+    border-color: var(--tg-theme-button-color, #0088cc) !important;
+}
+
+/* Стили для сниппетов в результатах поиска */
+.gs-snippet,
+.gs-snippet b,
+.gs-snippet em {
+    color: var(--tg-theme-text-color, #000000) !important;
+}
+
+/* Подсветка совпадений в сниппетах */
+.gs-snippet b {
+    font-weight: bold !important;
+}
+
+.gs-snippet em {
+    font-style: italic !important;
+}
