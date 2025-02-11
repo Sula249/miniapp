@@ -185,7 +185,7 @@ button.flipped {
 .gsc-input-box {
     border: 1px solid var(--tg-theme-hint-color, #cccccc) !important;
     background: var(--tg-theme-bg-color, #ffffff) !important;
-    margin: 0 !important;
+    margin: 0 0 16px 0 !important;  /* Добавляем отступ снизу */
 }
 
 .gsc-input {
@@ -212,4 +212,24 @@ button.flipped {
 
 .gs-snippet em {
     font-style: italic !important;
+}
+
+/* Отступ для контейнера с результатами */
+.gsc-results-wrapper-visible {
+    margin-top: 16px !important;
+    border-top: 1px solid var(--tg-theme-hint-color, #cccccc) !important;
+    padding-top: 16px !important;
+}
+
+/* Стили для поля ввода вопросов */
+#questionInput {
+    margin-bottom: 16px !important;
+    border: 1px solid var(--tg-theme-hint-color, #cccccc) !important;
+}
+
+/* Отступ для контейнера с ответом AI */
+#aiAnswer {
+    margin-top: 16px !important;
+    border-top: 1px solid var(--tg-theme-hint-color, #cccccc) !important;
+    padding-top: 16px !important;
 }
