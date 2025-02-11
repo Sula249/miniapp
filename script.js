@@ -63,9 +63,18 @@ document.addEventListener("DOMContentLoaded", () => {
         // Логируем запрос
         logQueryToGoogleSheets(query, 'search');
         
-        // Переинициализируем поисковый элемент
+        // Переинициализируем поисковый элемент с сохранением ID
         const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = '<div class="gcse-searchresults-only"></div>';
+        resultsDiv.innerHTML = '<div class="gcse-searchresults-only" id="results"></div>';
+        
+        // Переинициализируем Google CSE
+        if (typeof google !== 'undefined') {
+            google.search.cse.element.render({
+                div: 'results',
+                tag: 'searchresults-only',
+                gname: 'gsearch'
+            });
+        }
         
         // Ждем инициализации Google CSE
         setTimeout(() => {
