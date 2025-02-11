@@ -144,7 +144,7 @@ button.flipped {
 .gsc-results {
     opacity: 1 !important;
     visibility: visible !important;
-    background-color: transparent !important;
+    background-color: var(--tg-theme-bg-color, #ffffff) !important;
 }
 
 /* Контейнер для результатов поиска */
@@ -153,12 +153,12 @@ button.flipped {
     width: 100%;
     opacity: 1 !important;
     visibility: visible !important;
+    background-color: var(--tg-theme-bg-color, #ffffff) !important;
 }
 
 /* Переопределяем стили Google CSE для корректного отображения */
 .gsc-control-cse * {
-    opacity: 1 !important;
-    visibility: visible !important;
+    background-color: var(--tg-theme-bg-color, #ffffff) !important;
 }
 
 /* Стили Telegram для поисковой выдачи */
@@ -212,6 +212,7 @@ button.flipped {
 
 .gsc-input {
     color: var(--tg-theme-text-color, #000000) !important;
+    background: var(--tg-theme-bg-color, #ffffff) !important;
 }
 
 .gsc-search-button-v2 {
