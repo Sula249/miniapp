@@ -198,4 +198,22 @@ button.flipped {
     background-color: var(--tg-theme-button-color, #0088cc) !important;
     border-color: var(--tg-theme-button-color, #0088cc) !important;
 }
- 
+
+/* Стили для изображений в результатах */
+.gs-image-box {
+    border: 1px solid var(--tg-theme-hint-color, #cccccc) !important;
+    padding: 2px !important;
+}
+
+.gs-image {
+    border: none !important;
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Контейнер изображения */
+.gs-image-box.gs-web-image-box {
+    border: 1px solid var(--tg-theme-hint-color, #cccccc) !important;
+    padding: 2px !important;
+    background-color: var(--tg-theme-bg-color, #ffffff) !important;
+}
