@@ -24,6 +24,8 @@ h1 {
     justify-content: center;
     perspective: 1000px;
     z-index: 1000;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 button {
@@ -34,8 +36,8 @@ button {
     font-size: 16px;
     border-radius: 10px;
     cursor: pointer;
-    width: 90%;
-    max-width: 320px;
+    width: 100%;
+    max-width: none;
     transition: transform 0.6s;
 }
 
@@ -135,8 +137,8 @@ button.flipped {
 #search-form,
 .question-input-wrapper {
     /* MANUAL: Настройте ширину под размер главной кнопки */
-    width: 90%;
-    max-width: 320px;
+    width: calc(100% - 40px); /* Ширина на весь экран с отступами по 20px */
+    max-width: none;
     margin: 0 auto;
     display: flex;
     gap: 8px;
@@ -152,8 +154,8 @@ button.flipped {
 /* Результаты поиска */
 #results {
     margin-top: 10px;
-    width: 90% !important;
-    max-width: 320px !important;
+    width: calc(100% - 40px) !important; /* Ширина на весь экран с отступами по 20px */
+    max-width: none !important;
     opacity: 1 !important;
     visibility: visible !important;
     background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
@@ -244,8 +246,8 @@ button.flipped {
     /* MANUAL: Настройте цвет фона и выравнивание под ваши нужды */
     background: var(--tg-theme-secondary-bg-color, #f9f9f9);
     border-radius: 8px;
-    width: 90%;
-    max-width: 320px;
+    width: calc(100% - 40px);
+    max-width: none;
     box-sizing: border-box; /* Учитываем padding в общей ширине */
     position: relative; /* Фиксируем позицию */
     left: 0; /* Привязываем к левому краю контейнера */
