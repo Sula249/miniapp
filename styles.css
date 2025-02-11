@@ -143,12 +143,25 @@ button.flipped {
 
 /* Добавляем стили для Google поисковой выдачи */
 .gsc-control-cse, 
-.gsc-results-wrapper-visible {
-    opacity: 0;
-    transition: opacity 0.4s ease-out;
+.gsc-results-wrapper-visible,
+.gsc-results-wrapper-overlay,
+.gsc-results-wrapper-nooverlay,
+.gsc-results {
+    opacity: 1 !important;
+    visibility: visible !important;
+    background-color: transparent !important;
 }
 
-.gsc-control-cse[style*="display: ''"], 
-.gsc-results-wrapper-visible[style*="display: ''"] {
-    opacity: 1;
+/* Контейнер для результатов поиска */
+#results {
+    margin-top: 10px;
+    width: 100%;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Переопределяем стили Google CSE для корректного отображения */
+.gsc-control-cse * {
+    opacity: 1 !important;
+    visibility: visible !important;
 }
