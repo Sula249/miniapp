@@ -54,8 +54,9 @@ button.flipped {
     bottom: -120px;
     left: 50%;
     transform: translateX(-50%);
-    width: 94%;
-    max-width: 350px;
+    /* MANUAL: Настройте ширину и отступы под ваши нужды */
+    width: calc(100% - 20px); /* Ширина на весь экран с отступами по 10px */
+    max-width: none; /* Убираем ограничение максимальной ширины */
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -103,7 +104,8 @@ button.flipped {
 /* Адаптация для маленьких экранов */
 @media (max-width: 400px) {
     .input-container {
-        width: 95%;
+        /* MANUAL: Настройте ширину и отступы под ваши нужды */
+        width: calc(100% - 20px);
         padding: 10px;
         gap: 5px;
     }
