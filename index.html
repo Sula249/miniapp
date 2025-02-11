@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script async src="https://cse.google.com/cse.js?cx="></script>
+    <script>
+        window.onload = function() {
+            const script = document.querySelector('script[src^="https://cse.google.com/cse.js"]');
+            script.src = `https://cse.google.com/cse.js?cx=${CONFIG.GOOGLE_CSE_ID}`;
+        }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>Mini App!</h1>
+
+    <div class="button-container">
+        <button id="searchButton">Начать поиск</button>
+    </div>
+
+    <!-- Всплывающий блок для Поиска -->
+    <div class="input-container" id="searchContainer">
+        <form id="search-form">
+            <input type="text" id="searchInput" placeholder="Введите запрос...">
+            <button type="submit" id="searchActionButton">Поиск</button>
+        </form>
+        <div class="gcse-searchresults-only" id="results"></div>
+    </div>
+
+    <!-- Всплывающий блок для Вопроса -->
+    <div class="input-container" id="questionContainer">
+        <input type="text" id="questionInput" placeholder="Введите вопрос...">
+        <button id="questionActionButton">Задать</button>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
