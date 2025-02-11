@@ -72,7 +72,8 @@ button.flipped {
 
 /* Показываем контейнер */
 .input-container.show {
-    bottom: 80px;
+    /* MANUAL: Настройте высоту всплывающего контейнера */
+    bottom: 100px; /* Унифицированная высота для обоих контейнеров */
     opacity: 1;
 }
 
@@ -133,6 +134,7 @@ button.flipped {
     display: flex;
     gap: 8px;
     width: 100%;
+    align-items: center; /* Выравниваем элементы по центру */
 }
 
 #searchInput {
