@@ -224,6 +224,13 @@ button.flipped {
 #questionContainer {
     /* MANUAL: Настройте отображение элементов в контейнере */
     display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Обертка для поля ввода и кнопки */
+.question-input-wrapper {
+    display: flex;
     flex-direction: row;
     gap: 8px;
     align-items: center;
@@ -233,4 +240,13 @@ button.flipped {
     /* MANUAL: Настройте минимальную ширину поля ввода */
     min-width: 120px;
     flex: 1;
+}
+
+/* Стили для контейнера ответа */
+#aiAnswer {
+    margin-top: 8px;
+    padding: 10px;
+    background: var(--tg-theme-bg-color, #ffffff);
+    border-radius: 8px;
+    width: 100%;
 }
