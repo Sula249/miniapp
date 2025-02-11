@@ -24,7 +24,7 @@ h1 {
     justify-content: center;
     perspective: 1000px;
     z-index: 1000;
-    padding: 0 20px;
+    padding: 0 15px;
     box-sizing: border-box;
 }
 
@@ -129,7 +129,7 @@ button.flipped {
     button {
         font-size: 14px;
         padding: 12px;
-        width: 95%;
+        width: 100%;
     }
 }
 
