@@ -10,10 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
     tg.BackButton.onClick(() => {
         searchContainer.classList.remove("show");
         questionContainer.classList.remove("show");
-        // Очищаем результаты поиска
-        const resultsDiv = document.getElementById('results');
-        if (resultsDiv) {
-            resultsDiv.innerHTML = '';
+        // Очищаем только результаты поиска, сохраняя поисковый элемент
+        const searchResults = document.querySelector('.gsc-results-wrapper-visible');
+        if (searchResults) {
+            searchResults.style.display = 'none';
         }
         // Очищаем поле ввода
         searchInput.value = '';
@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 searchButton.innerText = "Начать поиск";
                 questionContainer.classList.add("show");
                 searchContainer.classList.remove("show");
-                // Очищаем результаты поиска при переключении
-                const resultsDiv = document.getElementById('results');
-                if (resultsDiv) {
-                    resultsDiv.innerHTML = '';
+                // Скрываем только результаты поиска
+                const searchResults = document.querySelector('.gsc-results-wrapper-visible');
+                if (searchResults) {
+                    searchResults.style.display = 'none';
                 }
                 // Очищаем поле ввода
                 searchInput.value = '';
