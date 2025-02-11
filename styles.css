@@ -48,10 +48,10 @@ button.flipped {
     opacity: 0;
 }
 
-/* Всплывающие контейнеры */
+/* Контейнер для полей ввода */
 .input-container {
     position: fixed;
-    bottom: -120px;
+    bottom: 80px; /* Позиционируем над основной кнопкой */
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
@@ -62,11 +62,31 @@ button.flipped {
     background: var(--tg-theme-secondary-bg-color, #f9f9f9);
     padding: 12px;
     border-radius: 12px;
-    opacity: 0;
-    transition: bottom 0.4s ease-out, opacity 0.4s ease-out;
     z-index: 900;
-    max-height: 80vh;
+}
+
+/* Контейнеры для результатов */
+#results,
+#aiAnswer {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 350px;
+    max-height: calc(100vh - 200px); /* Оставляем место для полей ввода и кнопки */
     overflow-y: auto;
+    background: var(--tg-theme-secondary-bg-color, #f9f9f9);
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 160px; /* Добавляем отступ снизу */
+}
+
+/* Форма поиска */
+#search-form {
+    display: flex;
+    gap: 8px;
+    width: 100%;
 }
 
 /* Показываем контейнер */
@@ -123,20 +143,6 @@ button.flipped {
         padding: 12px;
         width: 95%;
     }
-}
-
-#search-form {
-    display: flex;
-    gap: 8px;
-    width: 100%;
-}
-
-#results {
-    margin-top: 10px;
-    width: 100%;
-    opacity: 1 !important;
-    visibility: visible !important;
-    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
 }
 
 /* Стили Telegram для поисковой выдачи */
