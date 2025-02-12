@@ -82,7 +82,7 @@ button.flipped {
     z-index: 900;
     max-height: 80vh;
     overflow-y: auto;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Показываем контейнер */
@@ -90,7 +90,7 @@ button.flipped {
     bottom: 80px;
     opacity: 1;
     animation: float 3s ease-in-out infinite;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
 .input-container input {
