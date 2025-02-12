@@ -278,7 +278,7 @@ button.flipped {
 .gs-title *,
 .gsc-result .gs-title,
 .gsc-result .gs-title * {
-    color: var(--tg-theme-link-color, #50a7ea) !important;
+    color: var(--tg-theme-link-color, #768fe9) !important;
     text-decoration: none !important;
 }
 
