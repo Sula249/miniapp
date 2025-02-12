@@ -14,6 +14,7 @@ h1 {
     text-align: center;
     margin-top: 20px;
     transition: transform 0.6s;
+    animation: titleFloat 3s ease-in-out infinite;
 }
 
 /* Основная кнопка */
@@ -340,5 +341,19 @@ h1 {
 /* Стили для анимации заголовка */
 h1.flipped {
     transform: rotateY(180deg);
-    transition: transform 0.6s;
+    /* Сохраняем анимацию парения даже при перевороте */
+    animation: titleFloat 3s ease-in-out infinite;
+}
+
+/* Анимация парения для заголовка */
+@keyframes titleFloat {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
 }
