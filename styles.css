@@ -337,7 +337,7 @@ button.flipped {
 h1.flipped {
     animation: 
         titleFloat 3s ease-in-out infinite,
-        titleFlip 0.6s ease-in-out forwards;
+        titleFlip 0.3s ease-in-out forwards;
 }
 
 /* Анимация парения */
