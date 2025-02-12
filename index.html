@@ -82,7 +82,7 @@
         }
 
         async function playSelectedAudio() {
-            const botToken = '7805441948:AAHkHoE1A5WQoUkn1IT8LAjC8f8pft_ezec';
+            const botToken = 'YOUR_BOT_TOKEN';
             const fileId = document.getElementById("audioList").value;
             
             if (!fileId) return;
@@ -92,6 +92,11 @@
             try {
                 const response = await fetch(fileUrl);
                 const data = await response.json();
+                if (!data.result || !data.result.file_path) {
+                    console.error("Ошибка: file_path не найден");
+                    return;
+                }
+                
                 const filePath = data.result.file_path;
                 const audioUrl = `https://api.telegram.org/file/bot${botToken}/${filePath}`;
                 
