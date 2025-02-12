@@ -24,7 +24,7 @@ h1 {
     justify-content: center;
     perspective: 1000px;
     z-index: 1000;
-    padding: 0 7px;
+    padding: 0 5px;
     box-sizing: border-box;
 }
 
@@ -117,12 +117,12 @@ button.flipped {
     }
     
     .input-container input {
-        font-size: 14px;
+        font-size: 16px;
         padding: 10px;
     }
 
     .input-container button {
-        font-size: 14px;
+        font-size: 16px;
         padding: 10px;
     }
 
@@ -151,6 +151,7 @@ button.flipped {
     /* MANUAL: Настройте минимальную ширину поля ввода */
     min-width: 120px;
     flex: 1;
+    font-size: 16px;
 }
 
 /* Результаты поиска */
