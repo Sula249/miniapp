@@ -288,7 +288,7 @@ button.flipped {
 }
 
 /* URL в результатах */
-.gs-visibleUrl,
-.gs-visibleUrl * {
-    color: var(--tg-theme-hint-color, #666666) !important;
-}
+/*.gs-visibleUrl,*/
+/*.gs-visibleUrl * {*/
+/*    color: var(--tg-theme-hint-color, #666666) !important;*/
+/*}*/
