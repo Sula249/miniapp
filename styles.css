@@ -110,7 +110,6 @@ button.flipped {
 /* Адаптация для маленьких экранов */
 @media (max-width: 400px) {
     .input-container {
-        /* MANUAL: Настройте ширину и отступы под ваши нужды */
         width: calc(100% - 20px);
         padding: 10px;
         gap: 5px;
@@ -127,7 +126,7 @@ button.flipped {
     }
 
     button {
-        font-size: 14px;
+        font-size: 18px;
         padding: 12px;
         width: 100%;
     }
