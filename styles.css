@@ -85,9 +85,8 @@ button.flipped {
     left: 50%;
     transform: translateX(-50%);
     
-    /* Ширина контейнера = ширина экрана минус отступы по бокам (7px * 2 = 14px) */
-    width: calc(95% - 14px);
-    max-width: none;  /* Отключаем ограничение максимальной ширины */
+    /* Ширина контейнера и отступы от краев экрана */
+    width: calc(95% - 14px);  /* Общая ширина контейнера */
     
     /* Настройка flex-контейнера */
     display: flex;
@@ -97,6 +96,8 @@ button.flipped {
     
     /* Внешний вид */
     background: var(--tg-theme-secondary-bg-color, #f9f9f9);
+    
+    /* Внутренние отступы контента от краев контейнера */
     padding: 12px;          /* Внутренние отступы */
     border-radius: 12px;    /* Скругление углов */
     
@@ -153,9 +154,9 @@ button.flipped {
 /* Адаптация для маленьких экранов */
 @media (max-width: 400px) {
     .input-container {
-        width: calc(100% - 14px); /* Обновляем и здесь для соответствия */
-        padding: 10px;
-        gap: 5px;
+        width: calc(100% - 14px);  /* Ширина на мобильных */
+        padding: 10px;             /* Уменьшенные внутренние отступы */
+        gap: 5px;                  /* Уменьшенный отступ между элементами */
     }
     
     .input-container input {
@@ -178,12 +179,9 @@ button.flipped {
 /* Формы ввода */
 #search-form,
 #question-form {
-    width: 100%; /* Меняем на 100% так как отступы уже есть у родителя */
-    max-width: none;
-    margin: 0;
-    display: flex;
-    gap: 8px;
-    align-items: center;
+    width: 100%;     /* Ширина формы */
+    margin: 0;       /* Внешние отступы */
+    gap: 8px;        /* Отступ между полем ввода и кнопкой */
 }
 
 /* Поля ввода */
@@ -198,15 +196,9 @@ button.flipped {
 /* Результаты поиска */
 #results,
 .results-container {
-    margin-top: 10px;
-    width: calc(100% - 14px) !important; /* Меняем с 20px на 14px для соответствия */
-    max-width: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
-    margin: 10px auto 0 !important;
-    padding: 8px 0 !important;
-    border: none !important;
+    width: calc(100% - 14px) !important;  /* Ширина блока результатов */
+    margin: 10px auto 0 !important;       /* Отступ сверху */
+    padding: 8px 0 !important;            /* Внутренние отступы */
 }
 
 /* Стили Telegram для поисковой выдачи */
