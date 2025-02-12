@@ -86,7 +86,7 @@ button.flipped {
     transform: translateX(-50%);
     
     /* Ширина контейнера = ширина экрана минус отступы по бокам (7px * 2 = 14px) */
-    width: calc(97% - 14px);
+    width: calc(96% - 10px);
     max-width: none;  /* Отключаем ограничение максимальной ширины */
     
     /* Настройка flex-контейнера */
@@ -97,7 +97,7 @@ button.flipped {
     
     /* Внешний вид */
     background: var(--tg-theme-secondary-bg-color, #f9f9f9);
-    padding: 8px;          /* Внутренние отступы */
+    padding: 9px;          /* Внутренние отступы */
     border-radius: 12px;    /* Скругление углов */
     
     /* Настройки появления/исчезновения */
@@ -198,12 +198,12 @@ button.flipped {
 #results,
 .results-container {
     margin-top: 10px;
-    width: calc(100% - 10px) !important; /* Меняем с 20px на 14px для соответствия */
+    width: calc(100% - 14px) !important; /* Меняем с 20px на 14px для соответствия */
     max-width: none !important;
     opacity: 1 !important;
     visibility: visible !important;
     background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
-    margin: 5px auto 0 !important;
+    margin: 10px auto 0 !important;
     padding: 8px 0 !important;
     border: none !important;
 }
