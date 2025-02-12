@@ -54,23 +54,29 @@
         const tg = window.Telegram.WebApp;
         tg.expand(); // Разворачиваем мини-приложение
 
-        const botToken = '7805441948:AAHkHoE1A5WQoUkn1IT8LAjC8f8pft_ezec';
-        const chatId = '-"channel_8080"'; // ID вашего канала
+        const botToken = '7805441948:AAHkHoE1A5WQoUkn1IT8LAjC8f8pft_ezec'; // 🔥 Укажите ваш реальный bot token
+        const chatId = '-217202971'; // 🔥 Укажите ID вашего канала
 
         async function loadAudioFiles() {
-            const apiUrl = `https://api.telegram.org/bot${botToken}/getUpdates?allowed_updates=["message"]`;
-            
+            const apiUrl = `https://api.telegram.org/bot${botToken}/getUpdates`;
+
             try {
                 const response = await fetch(apiUrl);
                 const data = await response.json();
+
+                if (!data.result || data.result.length === 0) {
+                    console.error("Нет аудиофайлов в канале.");
+                    return;
+                }
+
                 const audioList = document.getElementById("audioList");
                 audioList.innerHTML = '<option value="">Выберите аудиофайл</option>';
-                
+
                 data.result.forEach(update => {
                     if (update.message && update.message.audio) {
                         const fileId = update.message.audio.file_id;
                         const fileName = update.message.audio.file_name || "Аудиофайл";
-                        
+
                         const option = document.createElement("option");
                         option.value = fileId;
                         option.textContent = fileName;
@@ -85,15 +91,19 @@
         async function playSelectedAudio() {
             const fileId = document.getElementById("audioList").value;
             
-            if (!fileId) return;
+            if (!fileId) {
+                console.error("Файл не выбран.");
+                return;
+            }
             
             const fileUrl = `https://api.telegram.org/bot${botToken}/getFile?file_id=${fileId}`;
             
             try {
                 const response = await fetch(fileUrl);
                 const data = await response.json();
+
                 if (!data.result || !data.result.file_path) {
-                    console.error("Ошибка: file_path не найден");
+                    console.error("Ошибка: file_path не найден.");
                     return;
                 }
                 
