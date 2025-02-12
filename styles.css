@@ -75,24 +75,41 @@ button.flipped {
 
 /* Всплывающие контейнеры */
 .input-container {
+    /* Фиксированное позиционирование относительно viewport */
     position: fixed;
+    
+    /* Начальная позиция контейнера (скрыт за пределами экрана) */
     bottom: -120px;
+    
+    /* Центрирование по горизонтали */
     left: 50%;
     transform: translateX(-50%);
-    width: calc(100% - 14px);
-    max-width: none;
+    
+    /* Ширина контейнера = ширина экрана минус отступы по бокам (7px * 2 = 14px) */
+    width: calc(95% - 14px);
+    max-width: none;  /* Отключаем ограничение максимальной ширины */
+    
+    /* Настройка flex-контейнера */
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;  /* Элементы располагаются вертикально */
+    align-items: center;     /* Центрирование содержимого по горизонтали */
+    gap: 8px;               /* Отступ между элементами */
+    
+    /* Внешний вид */
     background: var(--tg-theme-secondary-bg-color, #f9f9f9);
-    padding: 12px;
-    border-radius: 12px;
-    opacity: 0;
-    transition: bottom 0.4s ease-out;
-    z-index: 900;
-    max-height: 80vh;
-    overflow-y: auto;
+    padding: 12px;          /* Внутренние отступы */
+    border-radius: 12px;    /* Скругление углов */
+    
+    /* Настройки появления/исчезновения */
+    opacity: 0;             /* Начально невидим */
+    transition: bottom 0.4s ease-out;  /* Анимация движения */
+    
+    /* Слой и прокрутка */
+    z-index: 900;          /* Положение в стеке элементов */
+    max-height: 80vh;      /* Максимальная высота = 80% высоты экрана */
+    overflow-y: auto;      /* Добавляем прокрутку при необходимости */
+    
+    /* Тень */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
