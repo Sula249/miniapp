@@ -98,7 +98,7 @@ button.flipped {
     background: var(--tg-theme-secondary-bg-color, #f9f9f9);
     
     /* Внутренние отступы контента от краев контейнера */
-    padding: 5px;          /* Внутренние отступы */
+    padding: 8px;          /* Внутренние отступы */
     border-radius: 12px;    /* Скругление углов */
     
     /* Настройки появления/исчезновения */
