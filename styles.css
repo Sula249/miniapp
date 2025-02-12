@@ -56,12 +56,11 @@ button.flipped {
     bottom: -120px;
     left: 50%;
     transform: translateX(-50%);
-    /* MANUAL: Настройте ширину и отступы под ваши нужды */
-    width: calc(100% - 20px); /* Ширина на весь экран с отступами по 10px */
-    max-width: none; /* Убираем ограничение максимальной ширины */
+    width: calc(100% - 14px); /* Меняем с 20px на 14px чтобы соответствовать ширине главной кнопки (7px * 2) */
+    max-width: none;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Центрируем содержимое */
+    align-items: center;
     gap: 8px;
     background: var(--tg-theme-secondary-bg-color, #f9f9f9);
     padding: 12px;
@@ -135,10 +134,9 @@ button.flipped {
 /* Формы ввода */
 #search-form,
 #question-form {
-    /* MANUAL: Настройте ширину и отступы под размер главной кнопки */
-    width: calc(100% - 20px); /* Ширина на весь экран с отступами по 10px */
+    width: calc(100% - 14px); /* Меняем с 20px на 14px для соответствия */
     max-width: none;
-    margin: 0px auto 0; /* Добавляем отступ сверху */
+    margin: 0px auto 0;
     display: flex;
     gap: 8px;
     align-items: center;
@@ -157,7 +155,7 @@ button.flipped {
 #results,
 .results-container {
     margin-top: 10px;
-    width: calc(100% - 20px) !important; /* Ширина на весь экран с отступами по 10px */
+    width: calc(100% - 14px) !important; /* Меняем с 20px на 14px для соответствия */
     max-width: none !important;
     opacity: 1 !important;
     visibility: visible !important;
