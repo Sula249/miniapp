@@ -16,6 +16,9 @@ h1 {
     transform-style: preserve-3d;
     backface-visibility: hidden;
     position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
     animation: titleFloat 3s ease-in-out infinite;
 }
 
@@ -322,9 +325,10 @@ button.flipped {
 .user-info {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 15px;
-    position: relative; /* Добавляем для абсолютного позиционирования h1 */
+    position: relative;
+    padding-left: 20px;
 }
 
 .user-photo {
@@ -334,6 +338,14 @@ button.flipped {
     background-size: cover;
     background-position: center;
     background-color: var(--tg-theme-hint-color, #ccc);
+    flex-shrink: 0;
+}
+
+/* Контейнер для заголовков */
+.title-container {
+    position: relative;
+    height: 40px;
+    flex: 1;
 }
 
 /* Комбинируем анимации для перевернутого состояния */
