@@ -2,6 +2,12 @@ let tg = window.Telegram.WebApp;
 tg.expand();
 
 document.addEventListener("DOMContentLoaded", () => {
+    const mainTitle = document.querySelector('h1');
+    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+        const userName = tg.initDataUnsafe.user.first_name;
+        mainTitle.textContent = `Привет, ${userName}!`;
+    }
+
     const searchButton = document.getElementById("searchButton");
     const searchContainer = document.getElementById("searchContainer");
     const questionContainer = document.getElementById("questionContainer");
