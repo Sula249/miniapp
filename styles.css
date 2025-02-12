@@ -11,9 +11,9 @@ body {
 }
 
 h1 {
-    text-align: center;
-    margin-top: 20px;
-    transition: transform 0.6s;
+    margin: 0;
+    text-align: left;
+    transform-style: preserve-3d;
     animation: titleFloat 3s ease-in-out infinite;
 }
 
@@ -333,19 +333,14 @@ button.flipped {
     background-color: var(--tg-theme-hint-color, #ccc);
 }
 
-h1 {
-    margin: 0;
-    text-align: left;
-}
-
-/* Стили для анимации заголовка */
+/* Комбинируем анимации для перевернутого состояния */
 h1.flipped {
-    transform: rotateY(180deg);
-    /* Сохраняем анимацию парения даже при перевороте */
-    animation: titleFloat 3s ease-in-out infinite;
+    animation: 
+        titleFloat 3s ease-in-out infinite,
+        titleFlip 0.6s ease-in-out forwards;
 }
 
-/* Анимация парения для заголовка */
+/* Анимация парения */
 @keyframes titleFloat {
     0% {
         transform: translateY(0px);
@@ -355,5 +350,15 @@ h1.flipped {
     }
     100% {
         transform: translateY(0px);
+    }
+}
+
+/* Отдельная анимация для переворота */
+@keyframes titleFlip {
+    from {
+        transform: rotateY(0);
+    }
+    to {
+        transform: rotateY(180deg);
     }
 }
