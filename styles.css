@@ -150,7 +150,7 @@ button.flipped {
 }
 
 /* Адаптация для маленьких экранов */
-@media (max-width: 400px) {
+@media (max-width: 350px) {
     .input-container {
         width: calc(100% - 14px); /* Обновляем и здесь для соответствия */
         padding: 10px;
