@@ -109,7 +109,7 @@ button.flipped {
 /* Адаптация для маленьких экранов */
 @media (max-width: 400px) {
     .input-container {
-        width: calc(100% - 20px);
+        width: calc(100% - 14px);  /* Меняем с 20px на 14px для соответствия ширине главной кнопки */
         padding: 10px;
         gap: 5px;
     }
