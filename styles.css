@@ -177,9 +177,9 @@ button.flipped {
 /* Формы ввода */
 #search-form,
 #question-form {
-    width: calc(100% - 18px); /* Уменьшаем ширину формы, добавляя отступы */
+    width: 100%; /* Меняем на 100% так как отступы уже есть у родителя */
     max-width: none;
-    margin: 0 auto; /* Центрируем форму */
+    margin: 0;
     display: flex;
     gap: 8px;
     align-items: center;
@@ -198,7 +198,7 @@ button.flipped {
 #results,
 .results-container {
     margin-top: 10px;
-    width: calc(100% - 18px) !important; /* Такая же ширина как у форм */
+    width: calc(100% - 14px) !important; /* Меняем с 20px на 14px для соответствия */
     max-width: none !important;
     opacity: 1 !important;
     visibility: visible !important;
@@ -209,8 +209,19 @@ button.flipped {
 }
 
 /* Стили Telegram для поисковой выдачи */
-.gsc-control-cse {
-    padding: 0 9px !important; /* Добавляем отступы для выравнивания с формой */
+.gsc-control-cse, 
+.gsc-results-wrapper-visible,
+.gsc-results-wrapper-overlay,
+.gsc-results-wrapper-nooverlay,
+.gsc-results,
+.gsc-webResult.gsc-result,
+.gsc-results .gsc-imageResult,
+.gsc-webResult.gsc-result:hover,
+.gsc-imageResult:hover {
+    background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 /* Убираем разделители между результатами */
