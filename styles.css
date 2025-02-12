@@ -139,7 +139,7 @@ button.flipped {
     /* MANUAL: Настройте ширину и отступы под размер главной кнопки */
     width: calc(100% - 20px); /* Ширина на весь экран с отступами по 10px */
     max-width: none;
-    margin: 8px auto 0; /* Добавляем отступ сверху */
+    margin: 0px auto 0; /* Добавляем отступ сверху */
     display: flex;
     gap: 8px;
     align-items: center;
