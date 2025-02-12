@@ -3,119 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Audio Player</title>
+    <title>Telegram Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-        .player {
-            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            background: var(--tg-theme-button-color, #0088cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-        }
-    </style>
+    <script async src="https://cse.google.com/cse.js?cx=e58c2408882ae476e"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <h2>Аудиоплеер</h2>
-    <div class="player">
-        <select id="audioList" onchange="playSelectedAudio()">
-            <option value="">Выберите аудиофайл</option>
-        </select>
-        <audio id="audioPlayer" controls>
-            <source id="audioSource" src="" type="audio/mpeg">
-            Ваш браузер не поддерживает аудио.
-        </audio>
-        <br>
-        <button onclick="loadAudioFiles()">Загрузить аудио</button>
+    <h1>Mini App!</h1>
+
+    <div class="button-container">
+        <button id="searchButton">Начать поиск</button>
     </div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand(); // Разворачиваем мини-приложение
+    <!-- Всплывающий блок для Поиска -->
+    <div class="input-container" id="searchContainer">
+        <form id="search-form">
+            <input type="text" id="searchInput" placeholder="Введите запрос...">
+            <button type="submit" id="searchActionButton">Поиск</button>
+        </form>
+        <div class="gcse-searchresults-only" id="results"></div>
+    </div>
 
-        const botToken = '7417252869:AAGoYo2qx3ENNwwmRXo7nZ4u4Q1zpkvomhU'; // 🔥 Укажите ваш реальный bot token
-        const chatId = '-1002442706773'; // 🔥 Укажите ID вашего канала
+    <!-- Всплывающий блок для Вопроса -->
+    <div class="input-container" id="questionContainer">
+        <form id="question-form">
+            <input type="text" id="questionInput" placeholder="Введите вопрос...">
+            <button type="submit" id="questionActionButton">Задать</button>
+        </form>
+        <div class="results-container" id="aiAnswer"></div>
+    </div>
 
-        async function loadAudioFiles() {
-            const apiUrl = `https://api.telegram.org/bot${botToken}/getUpdates`;
-
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-
-                if (!data.result || data.result.length === 0) {
-                    console.error("Нет аудиофайлов в канале.");
-                    return;
-                }
-
-                const audioList = document.getElementById("audioList");
-                audioList.innerHTML = '<option value="">Выберите аудиофайл</option>';
-
-                data.result.forEach(update => {
-                    if (update.message && update.message.audio) {
-                        const fileId = update.message.audio.file_id;
-                        const fileName = update.message.audio.file_name || "Аудиофайл";
-
-                        const option = document.createElement("option");
-                        option.value = fileId;
-                        option.textContent = fileName;
-                        audioList.appendChild(option);
-                    }
-                });
-            } catch (error) {
-                console.error("Ошибка загрузки аудиофайлов", error);
-            }
-        }
-
-        async function playSelectedAudio() {
-            const fileId = document.getElementById("audioList").value;
-            
-            if (!fileId) {
-                console.error("Файл не выбран.");
-                return;
-            }
-            
-            const fileUrl = `https://api.telegram.org/bot${botToken}/getFile?file_id=${fileId}`;
-            
-            try {
-                const response = await fetch(fileUrl);
-                const data = await response.json();
-
-                if (!data.result || !data.result.file_path) {
-                    console.error("Ошибка: file_path не найден.");
-                    return;
-                }
-                
-                const filePath = data.result.file_path;
-                const audioUrl = `https://api.telegram.org/file/bot${botToken}/${filePath}`;
-                
-                document.getElementById("audioSource").src = audioUrl;
-                document.getElementById("audioPlayer").load();
-            } catch (error) {
-                console.error("Ошибка получения файла", error);
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
