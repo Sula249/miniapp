@@ -37,10 +37,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     searchButton.addEventListener("click", () => {
         searchButton.classList.add("flipped");
+        const mainTitle = document.querySelector('h1');
+        mainTitle.classList.add("flipped");
 
         setTimeout(() => {
             if (searchButton.innerText === "Начать поиск") {
                 searchButton.innerText = "Задать вопрос";
+                mainTitle.textContent = "Mini App!";
                 searchContainer.classList.add("show");
                 questionContainer.classList.remove("show");
                 // Показываем элементы поиска Google и скрываем элементы AI
@@ -54,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             } else {
                 searchButton.innerText = "Начать поиск";
+                mainTitle.textContent = "Mini App!";
                 questionContainer.classList.add("show");
                 searchContainer.classList.remove("show");
                 // Скрываем элементы поиска Google и показываем элементы AI
@@ -68,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             searchButton.classList.remove("flipped");
+            mainTitle.classList.remove("flipped");
 
             // Показываем кнопку "Назад", если есть активное поле ввода
             if (searchContainer.classList.contains("show") || questionContainer.classList.contains("show")) {
