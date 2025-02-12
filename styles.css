@@ -272,3 +272,23 @@ button.flipped {
 #aiAnswer {
     color: var(--tg-theme-text-color, #000000) !important;
 }
+
+/* Стили для заголовков результатов поиска */
+.gs-title,
+.gs-title *,
+.gsc-result .gs-title,
+.gsc-result .gs-title * {
+    color: var(--tg-theme-link-color, #768fe9) !important;
+    text-decoration: none !important;
+}
+
+.gs-title:hover,
+.gs-title *:hover {
+    text-decoration: underline !important;
+}
+
+/* URL в результатах */
+.gs-visibleUrl,
+.gs-visibleUrl * {
+    color: var(--tg-theme-hint-color, #666666) !important;
+}
