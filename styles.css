@@ -146,7 +146,6 @@ button.flipped {
     color: var(--tg-theme-button-text-color, #ffffff);
     cursor: pointer;
     min-width: 60px;
-    /* MANUAL: Настройте максимальную ширину кнопок */
     max-width: 100px; /* Увеличиваем ограничение максимальной ширины */
 }
 
@@ -199,12 +198,12 @@ button.flipped {
 #results,
 .results-container {
     margin-top: 10px;
-    width: calc(100% - 14px) !important; /* Меняем с 20px на 14px для соответствия */
+    width: calc(100% - 10px) !important; /* Меняем с 20px на 14px для соответствия */
     max-width: none !important;
     opacity: 1 !important;
     visibility: visible !important;
     background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
-    margin: 10px auto 0 !important;
+    margin: 5px auto 0 !important;
     padding: 8px 0 !important;
     border: none !important;
 }
