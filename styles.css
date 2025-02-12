@@ -63,7 +63,7 @@ button.flipped {
     align-items: center;
     gap: 8px;
     background: var(--tg-theme-secondary-bg-color, #f9f9f9);
-    padding: 12px;
+    padding: 12px 7px; /* Уменьшаем боковые отступы внутри контейнера */
     border-radius: 12px;
     opacity: 0;
     transition: bottom 0.4s ease-out, opacity 0.4s ease-out;
@@ -110,7 +110,7 @@ button.flipped {
 @media (max-width: 400px) {
     .input-container {
         width: calc(100% - 14px); /* Соответствует ширине главной кнопки */
-        padding: 10px;
+        padding: 10px 7px;
         gap: 5px;
     }
     
@@ -134,9 +134,9 @@ button.flipped {
 /* Формы ввода */
 #search-form,
 #question-form {
-    width: calc(100% - 20px);
+    width: 100%; /* Занимает всю ширину контейнера */
     max-width: none;
-    margin: 0px auto 0;
+    margin: 0;
     display: flex;
     gap: 8px;
     align-items: center;
@@ -154,14 +154,14 @@ button.flipped {
 /* Результаты поиска */
 #results,
 .results-container {
+    width: 100% !important; /* Занимает всю ширину контейнера */
+    padding: 8px 0 !important;
     margin-top: 10px;
-    width: calc(100% - 20px) !important;
     max-width: none !important;
     opacity: 1 !important;
     visibility: visible !important;
     background-color: var(--tg-theme-secondary-bg-color, #f9f9f9) !important;
     margin: 10px auto 0 !important;
-    padding: 8px 0 !important;
     border: none !important;
 }
 
