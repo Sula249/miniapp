@@ -24,7 +24,7 @@ h1 {
     justify-content: center;
     perspective: 1000px;
     z-index: 1000;
-    padding: 0 15px;
+    padding: 0 10px;
     box-sizing: border-box;
 }
 
@@ -137,7 +137,7 @@ button.flipped {
 #search-form,
 #question-form {
     /* MANUAL: Настройте ширину под размер главной кнопки */
-    width: calc(100% - 40px); /* Ширина на весь экран с отступами по 20px */
+    width: calc(100% - 20px); /* Ширина на весь экран с отступами по 10px */
     max-width: none;
     margin: 0 auto;
     display: flex;
@@ -157,7 +157,7 @@ button.flipped {
 #results,
 .results-container {
     margin-top: 10px;
-    width: calc(100% - 40px) !important;
+    width: calc(100% - 20px) !important; /* Ширина на весь экран с отступами по 10px */
     max-width: none !important;
     opacity: 1 !important;
     visibility: visible !important;
@@ -247,4 +247,3 @@ button.flipped {
 #aiAnswer {
     color: var(--tg-theme-text-color, #000000) !important;
 }
- 
