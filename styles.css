@@ -50,13 +50,25 @@ button.flipped {
     opacity: 0;
 }
 
+@keyframes float {
+    0% {
+        transform: translateX(-50%) translateY(0px);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-5px);
+    }
+    100% {
+        transform: translateX(-50%) translateY(0px);
+    }
+}
+
 /* Всплывающие контейнеры */
 .input-container {
     position: fixed;
     bottom: -120px;
     left: 50%;
     transform: translateX(-50%);
-    width: calc(100% - 14px); /* Соответствует ширине главной кнопки */
+    width: calc(100% - 14px);
     max-width: none;
     display: flex;
     flex-direction: column;
@@ -74,9 +86,9 @@ button.flipped {
 
 /* Показываем контейнер */
 .input-container.show {
-    /* MANUAL: Настройте высоту всплывающего контейнера */
-    bottom: 80px; /* Унифицированная высота для обоих контейнеров */
+    bottom: 80px;
     opacity: 1;
+    animation: float 3s ease-in-out infinite;
 }
 
 .input-container input {
