@@ -54,10 +54,11 @@
         const tg = window.Telegram.WebApp;
         tg.expand(); // Разворачиваем мини-приложение
 
+        const botToken = '7805441948:AAHkHoE1A5WQoUkn1IT8LAjC8f8pft_ezec';
+        const chatId = '-"channel_8080"'; // ID вашего канала
+
         async function loadAudioFiles() {
-            const botToken = '7805441948:AAHkHoE1A5WQoUkn1IT8LAjC8f8pft_ezec';
-            const chatId = '@channel_8080';
-            const apiUrl = `https://api.telegram.org/bot${botToken}/getUpdates`;
+            const apiUrl = `https://api.telegram.org/bot${botToken}/getUpdates?allowed_updates=["message"]`;
             
             try {
                 const response = await fetch(apiUrl);
@@ -82,7 +83,6 @@
         }
 
         async function playSelectedAudio() {
-            const botToken = 'YOUR_BOT_TOKEN';
             const fileId = document.getElementById("audioList").value;
             
             if (!fileId) return;
