@@ -136,10 +136,10 @@ button.flipped {
 /* Формы ввода */
 #search-form,
 #question-form {
-    /* MANUAL: Настройте ширину под размер главной кнопки */
+    /* MANUAL: Настройте ширину и отступы под размер главной кнопки */
     width: calc(100% - 20px); /* Ширина на весь экран с отступами по 10px */
     max-width: none;
-    margin: 0 auto;
+    margin: 8px auto 0; /* Добавляем отступ сверху */
     display: flex;
     gap: 8px;
     align-items: center;
