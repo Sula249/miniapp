@@ -77,6 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const query = searchInput.value.trim();
         if (!query) return;
         
+        // Показываем индикатор загрузки
+        searchActionButton.disabled = true;
+        searchActionButton.textContent = "Загрузка...";
+        
         // Логируем запрос
         logQueryToGoogleSheets(query, 'search');
         
@@ -84,7 +88,31 @@ document.addEventListener("DOMContentLoaded", () => {
         const searchElement = document.querySelector('input.gsc-input');
         if (searchElement) {
             searchElement.value = query;
-            document.querySelector('button.gsc-search-button').click();
+            const searchButton = document.querySelector('button.gsc-search-button');
+            searchButton.click();
+            
+            // Добавляем обработчик для восстановления кнопки после загрузки результатов
+            const observer = new MutationObserver((mutations, obs) => {
+                const results = document.querySelector('.gsc-results-wrapper-visible');
+                if (results) {
+                    searchActionButton.disabled = false;
+                    searchActionButton.textContent = "Поиск";
+                    obs.disconnect(); // Прекращаем наблюдение после восстановления кнопки
+                }
+            });
+
+            // Начинаем наблюдение за появлением результатов
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+            
+            // Таймаут на случай, если результаты не загрузятся
+            setTimeout(() => {
+                searchActionButton.disabled = false;
+                searchActionButton.textContent = "Поиск";
+                observer.disconnect();
+            }, 5000); // 5 секунд таймаут
         }
     });
 
