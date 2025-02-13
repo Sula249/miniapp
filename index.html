@@ -18,16 +18,28 @@
             margin: 0 auto;
         }
         .audio-item {
-            padding: 10px;
+            padding: 15px;
             margin: 10px 0;
             border-radius: 8px;
             background-color: var(--tg-theme-secondary-bg-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .audio-title {
             margin-bottom: 10px;
         }
+        .audio-performer {
+            font-size: 0.9em;
+            color: var(--tg-theme-hint-color);
+            margin-bottom: 5px;
+        }
         audio {
             width: 100%;
+            margin-top: 10px;
+        }
+        p {
+            text-align: center;
+            padding: 20px;
+            color: var(--tg-theme-hint-color);
         }
     </style>
 </head>
@@ -41,20 +53,46 @@
         tg.expand();
 
         // URL вашего Google Apps Script веб-приложения
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypGX6W23qRfjOiVkYQ5ELqxRXpByxFgBduug7egjpPV9NOvK3oimeKak0R6gRmkXx36A/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6dA3kyx_4v5LixGs8DrApyY7Dbx4KlCfsVjz1JebjE7kbxYjF1F4Ue8hTjfRt2FJ09A/exec';
 
         async function loadAudioFiles() {
             try {
-                const response = await fetch(SCRIPT_URL);
+                console.log('Начало загрузки аудиофайлов');
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const audioFiles = await response.json();
+                console.log('Получены аудиофайлы:', audioFiles);
+                
+                if (!audioFiles || audioFiles.length === 0) {
+                    document.getElementById('audioList').innerHTML = '<p>Аудиофайлы не найдены</p>';
+                    return;
+                }
                 
                 const audioList = document.getElementById('audioList');
+                audioList.innerHTML = ''; // Очищаем список перед добавлением
+                
                 audioFiles.forEach(audio => {
+                    if (!audio.file_url) {
+                        console.warn('Пропущен аудиофайл без URL:', audio);
+                        return;
+                    }
+                    
                     const audioDiv = document.createElement('div');
                     audioDiv.className = 'audio-item';
                     
                     audioDiv.innerHTML = `
-                        <div class="audio-title">${audio.title}</div>
+                        <div class="audio-title">${audio.title || 'Без названия'}</div>
+                        <div class="audio-performer">${audio.performer || ''}</div>
                         <audio controls>
                             <source src="${audio.file_url}" type="audio/mpeg">
                             Ваш браузер не поддерживает аудио элемент.
@@ -65,10 +103,14 @@
                 });
             } catch (error) {
                 console.error('Ошибка загрузки аудио файлов:', error);
+                document.getElementById('audioList').innerHTML = `
+                    <p>Произошла ошибка при загрузке аудиофайлов: ${error.message}</p>
+                `;
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadAudioFiles);
+        // Загружаем файлы при загрузке страницы
+        loadAudioFiles();
     </script>
 </body>
 </html> 
