@@ -52,34 +52,34 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        // URL вашего Google Apps Script веб-приложения
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6dA3kyx_4v5LixGs8DrApyY7Dbx4KlCfsVjz1JebjE7kbxYjF1F4Ue8hTjfRt2FJ09A/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxClqixhJVaV1IW2C4tpPBLlQSxU90eQ78jfgMxVWBPHuJB-9KBl77o9PmZH5MNnjgdIw/exec';
 
         async function loadAudioFiles() {
             try {
                 console.log('Начало загрузки аудиофайлов');
                 const response = await fetch(SCRIPT_URL, {
                     method: 'GET',
-                    mode: 'cors',
                     headers: {
                         'Accept': 'application/json'
-                    }
+                    },
+                    mode: 'no-cors'
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                console.log('Ответ получен:', response);
+                
+                if (response.type === 'opaque') {
+                    throw new Error('Ответ недоступен из-за CORS политики');
                 }
                 
                 const audioFiles = await response.json();
                 console.log('Получены аудиофайлы:', audioFiles);
                 
                 if (!audioFiles || audioFiles.length === 0) {
-                    document.getElementById('audioList').innerHTML = '<p>Аудиофайлы не найдены</p>';
-                    return;
+                    throw new Error('Аудиофайлы не найдены');
                 }
                 
                 const audioList = document.getElementById('audioList');
-                audioList.innerHTML = ''; // Очищаем список перед добавлением
+                audioList.innerHTML = '';
                 
                 audioFiles.forEach(audio => {
                     if (!audio.file_url) {
@@ -105,6 +105,7 @@
                 console.error('Ошибка загрузки аудио файлов:', error);
                 document.getElementById('audioList').innerHTML = `
                     <p>Произошла ошибка при загрузке аудиофайлов: ${error.message}</p>
+                    <p>Пожалуйста, проверьте консоль разработчика для деталей.</p>
                 `;
             }
         }
