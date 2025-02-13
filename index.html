@@ -52,7 +52,7 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyh4MhPfjNJ8DGsCTAh3t2AjF4TurdmYDPJoyLsjcFuKnE3_JHXD1Ju3M3I21QcH_5k5A/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyPrE7Jpm_xHD-PWc6odE1uI52y-rNnjMf-hmujHrS-AS4cBKq4UI1TAEUUayqDVa5DDA/exec';
 
         async function loadAudioFiles() {
             try {
@@ -60,9 +60,9 @@
                 const response = await fetch(SCRIPT_URL, {
                     method: 'GET',
                     headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'omit'
                 });
                 
                 console.log('Ответ получен:', response);
@@ -71,7 +71,10 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
-                const audioFiles = await response.json();
+                const text = await response.text(); // Сначала получаем текст
+                console.log('Полученный текст:', text);
+                
+                const audioFiles = JSON.parse(text); // Затем парсим его
                 console.log('Получены аудиофайлы:', audioFiles);
                 
                 if (!audioFiles || audioFiles.length === 0) {
