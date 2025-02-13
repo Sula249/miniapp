@@ -52,65 +52,79 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_U7GzHxWX_Us3a1j-phVhIynL7u07yQHaGsZ5DKNjLRyxLiltUva6GznZdCLckcfjug/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwkXNQXGbCgFtvvFLrFka0lvtN38jMgFV_TtPbBtgQhpOaWGdws3CZDj88N75fzHZwQnQ/exec';
 
-        async function loadAudioFiles() {
-            try {
-                console.log('Начало загрузки аудиофайлов');
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    },
-                    credentials: 'omit'
-                });
-                
-                console.log('Ответ получен:', response);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const text = await response.text(); // Сначала получаем текст
-                console.log('Полученный текст:', text);
-                
-                const audioFiles = JSON.parse(text); // Затем парсим его
-                console.log('Получены аудиофайлы:', audioFiles);
-                
-                if (!audioFiles || audioFiles.length === 0) {
-                    throw new Error('Аудиофайлы не найдены');
-                }
-                
-                const audioList = document.getElementById('audioList');
-                audioList.innerHTML = '';
-                
-                audioFiles.forEach(audio => {
-                    if (!audio.file_url) {
-                        console.warn('Пропущен аудиофайл без URL:', audio);
-                        return;
+        function loadAudioFiles() {
+            console.log('Начало загрузки аудиофайлов');
+            
+            // Создаем уникальное имя функции обратного вызова
+            const callbackName = 'jsonpCallback' + Date.now();
+            
+            // Создаем глобальную функцию обратного вызова
+            window[callbackName] = function(data) {
+                try {
+                    console.log('Получены данные:', data);
+                    
+                    if (!data || (data.error && data.error.length > 0)) {
+                        throw new Error(data.error || 'Неизвестная ошибка');
                     }
                     
-                    const audioDiv = document.createElement('div');
-                    audioDiv.className = 'audio-item';
+                    if (!Array.isArray(data) || data.length === 0) {
+                        throw new Error('Аудиофайлы не найдены');
+                    }
                     
-                    audioDiv.innerHTML = `
-                        <div class="audio-title">${audio.title || 'Без названия'}</div>
-                        <div class="audio-performer">${audio.performer || ''}</div>
-                        <audio controls>
-                            <source src="${audio.file_url}" type="audio/mpeg">
-                            Ваш браузер не поддерживает аудио элемент.
-                        </audio>
+                    const audioList = document.getElementById('audioList');
+                    audioList.innerHTML = '';
+                    
+                    data.forEach(audio => {
+                        if (!audio.file_url) {
+                            console.warn('Пропущен аудиофайл без URL:', audio);
+                            return;
+                        }
+                        
+                        const audioDiv = document.createElement('div');
+                        audioDiv.className = 'audio-item';
+                        
+                        audioDiv.innerHTML = `
+                            <div class="audio-title">${audio.title || 'Без названия'}</div>
+                            <div class="audio-performer">${audio.performer || ''}</div>
+                            <audio controls>
+                                <source src="${audio.file_url}" type="audio/mpeg">
+                                Ваш браузер не поддерживает аудио элемент.
+                            </audio>
+                        `;
+                        
+                        audioList.appendChild(audioDiv);
+                    });
+                } catch (error) {
+                    console.error('Ошибка обработки данных:', error);
+                    document.getElementById('audioList').innerHTML = `
+                        <p>Произошла ошибка при загрузке аудиофайлов: ${error.message}</p>
+                        <p>Пожалуйста, проверьте консоль разработчика для деталей.</p>
                     `;
-                    
-                    audioList.appendChild(audioDiv);
-                });
-            } catch (error) {
-                console.error('Ошибка загрузки аудио файлов:', error);
+                } finally {
+                    // Удаляем скрипт и функцию обратного вызова
+                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
+                    if (script) script.remove();
+                    delete window[callbackName];
+                }
+            };
+            
+            // Создаем и добавляем скрипт
+            const script = document.createElement('script');
+            script.src = `${SCRIPT_URL}?callback=${callbackName}`;
+            script.dataset.callback = callbackName;
+            script.onerror = function() {
+                console.error('Ошибка загрузки скрипта');
                 document.getElementById('audioList').innerHTML = `
-                    <p>Произошла ошибка при загрузке аудиофайлов: ${error.message}</p>
+                    <p>Произошла ошибка при загрузке аудиофайлов</p>
                     <p>Пожалуйста, проверьте консоль разработчика для деталей.</p>
                 `;
-            }
+                delete window[callbackName];
+                script.remove();
+            };
+            
+            document.body.appendChild(script);
         }
 
         // Загружаем файлы при загрузке страницы
