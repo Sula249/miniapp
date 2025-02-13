@@ -52,7 +52,7 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxClqixhJVaV1IW2C4tpPBLlQSxU90eQ78jfgMxVWBPHuJB-9KBl77o9PmZH5MNnjgdIw/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyh4MhPfjNJ8DGsCTAh3t2AjF4TurdmYDPJoyLsjcFuKnE3_JHXD1Ju3M3I21QcH_5k5A/exec';
 
         async function loadAudioFiles() {
             try {
@@ -60,15 +60,15 @@
                 const response = await fetch(SCRIPT_URL, {
                     method: 'GET',
                     headers: {
-                        'Accept': 'application/json'
-                    },
-                    mode: 'no-cors'
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
                 });
                 
                 console.log('Ответ получен:', response);
                 
-                if (response.type === 'opaque') {
-                    throw new Error('Ответ недоступен из-за CORS политики');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
                 const audioFiles = await response.json();
