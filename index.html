@@ -183,7 +183,7 @@
         const trackInfo = document.getElementById('track-info');
         
         // Замените URL на адрес вашего радиопотока
-        const streamUrl = 'https://radiorecord.hostingradio.ru/phonk96.aacp';
+        const streamUrl = '';
         audio.src = streamUrl;
 
         let isPlaying = false;
@@ -324,34 +324,6 @@
                 const duration = audio.duration;
                 bufferProgress.style.width = `${(bufferedEnd / duration) * 100}%`;
             }
-        });
-
-        // Улучшенное отображение метаданных
-        let metadataCheck;
-
-        function updateMetadata() {
-            if (audio.src) {
-                fetch(`https://api.example.com/metadata?url=${encodeURIComponent(audio.src)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.title) {
-                            trackInfo.textContent = data.title;
-                        }
-                    })
-                    .catch(() => {
-                        trackInfo.textContent = 'Информация недоступна';
-                    });
-            }
-        }
-
-        // Обновление метаданных каждые 30 секунд
-        audio.addEventListener('play', () => {
-            updateMetadata();
-            metadataCheck = setInterval(updateMetadata, 30000);
-        });
-
-        audio.addEventListener('pause', () => {
-            clearInterval(metadataCheck);
         });
     </script>
 </body>
