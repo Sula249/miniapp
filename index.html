@@ -3,42 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Mini App</title>
+    <title>Telegram Radio Player</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script async src="https://cse.google.com/cse.js?cx=e58c2408882ae476e"></script>
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <style>
+        :root {
+            --tg-theme-bg-color: var(--tg-theme-bg-color, #ffffff);
+            --tg-theme-text-color: var(--tg-theme-text-color, #000000);
+            --tg-theme-hint-color: var(--tg-theme-hint-color, #999999);
+            --tg-theme-button-color: var(--tg-theme-button-color, #40a7e3);
+            --tg-theme-button-text-color: var(--tg-theme-button-text-color, #ffffff);
+        }
 
+        body {
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 16px;
+        }
+
+        .player-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .station-info {
+            margin: 20px 0;
+        }
+
+        .station-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .now-playing {
+            color: var(--tg-theme-hint-color);
+            font-size: 16px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 24px 0;
+        }
+
+        .play-button {
+            background-color: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border: none;
+            border-radius: 50%;
+            width: 64px;
+            height: 64px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .volume-control {
+            width: 200px;
+        }
+
+        .volume-slider {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            background: var(--tg-theme-hint-color);
+            border-radius: 2px;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--tg-theme-button-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Добавляем стили для списка станций */
+        .stations-list {
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 0 16px;
+        }
+
+        .station-button {
+            background-color: var(--tg-theme-bg-color);
+            border: 2px solid var(--tg-theme-button-color);
+            color: var(--tg-theme-text-color);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .station-button.active {
+            background-color: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+        }
+
+        /* Стили для визуализации */
+        .visualizer-container {
+            margin: 20px auto;
+            width: 300px;
+            height: 100px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Стили для индикатора буферизации */
+        .buffer-indicator {
+            width: 100%;
+            height: 4px;
+            background-color: var(--tg-theme-hint-color);
+            margin: 10px 0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .buffer-progress {
+            height: 100%;
+            background-color: var(--tg-theme-button-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
 <body>
-    <div class="header">
-        <div class="user-info">
-            <div class="user-photo" id="userPhoto"></div>
-            <h1>Mini App!</h1>
+    <div class="player-container">
+        <!-- Добавляем список радиостанций -->
+        <div class="stations-list" id="stationsList">
+            <!-- Станции будут добавлены через JavaScript -->
+        </div>
+
+        <div class="station-info">
+            <div class="station-name" id="stationName">Онлайн Радио</div>
+            <div class="now-playing">Сейчас играет: <span id="track-info">Загрузка...</span></div>
+        </div>
+        
+        <!-- Добавляем индикатор буферизации -->
+        <div class="buffer-indicator">
+            <div class="buffer-progress" id="bufferProgress"></div>
+        </div>
+
+        <!-- Добавляем визуализатор -->
+        <div class="visualizer-container">
+            <canvas id="visualizer"></canvas>
+        </div>
+        
+        <div class="controls">
+            <button class="play-button" id="playButton">▶</button>
+            <div class="volume-control">
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="100">
+            </div>
         </div>
     </div>
 
-    <div class="button-container">
-        <button id="searchButton">Начать поиск</button>
-    </div>
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        
+        const audio = new Audio();
+        const playButton = document.getElementById('playButton');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const trackInfo = document.getElementById('track-info');
+        
+        // Замените URL на адрес вашего радиопотока
+        const streamUrl = 'https://radiorecord.hostingradio.ru/phonk96.aacp';
+        audio.src = streamUrl;
 
-    <!-- Всплывающий блок для Поиска -->
-    <div class="input-container" id="searchContainer">
-        <form id="search-form">
-            <input type="text" id="searchInput" placeholder="Введите запрос...">
-            <button type="submit" id="searchActionButton">Поиск</button>
-        </form>
-        <div class="gcse-searchresults-only" id="results"></div>
-    </div>
+        let isPlaying = false;
 
-    <!-- Всплывающий блок для Вопроса -->
-    <div class="input-container" id="questionContainer">
-        <form id="question-form">
-            <input type="text" id="questionInput" placeholder="Введите вопрос...">
-            <button type="submit" id="questionActionButton">Задать</button>
-        </form>
-        <div class="results-container" id="aiAnswer"></div>
-    </div>
+        playButton.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                playButton.textContent = '▶';
+            } else {
+                audio.play();
+                playButton.textContent = '⏸';
+            }
+            isPlaying = !isPlaying;
+        });
 
-    <script src="script.js"></script>
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value / 100;
+        });
+
+        // Обработка ошибок
+        audio.addEventListener('error', () => {
+            trackInfo.textContent = 'Ошибка воспроизведения';
+            playButton.textContent = '▶';
+            isPlaying = false;
+        });
+
+        // Обновление метаданных
+        audio.addEventListener('loadedmetadata', () => {
+            trackInfo.textContent = 'Радиопоток загружен';
+        });
+
+        // Если радиопоток поддерживает метаданные
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('play', () => {
+                audio.play();
+                playButton.textContent = '⏸';
+                isPlaying = true;
+            });
+            
+            navigator.mediaSession.setActionHandler('pause', () => {
+                audio.pause();
+                playButton.textContent = '▶';
+                isPlaying = false;
+            });
+        }
+
+        // Список радиостанций
+        const stations = [
+            { name: 'Chill-Out', url: 'https://radiorecord.hostingradio.ru/chil96.aacp' },
+            { name: 'Phonk', url: 'https://radiorecord.hostingradio.ru/phonk96.aacp' },
+            { name: 'Techno', url: 'https://radiorecord.hostingradio.ru/techno96.aacp' },
+            { name: 'Trap', url: 'https://radiorecord.hostingradio.ru/trap96.aacp' },
+            { name: 'Dubstep', url: 'https://radiorecord.hostingradio.ru/dub96.aacp' },
+            { name: 'Deep', url: 'https://radiorecord.hostingradio.ru/deep96.aacp' },
+            { name: 'Hypnotic', url: 'https://radiorecord.hostingradio.ru/hypno96.aacp' },
+            { name: 'D'n'B Classics', url: 'https://radiorecord.hostingradio.ru/drumhits96.aacp' },
+            { name: 'Dream Dance', url: 'https://radiorecord.hostingradio.ru/dream96.aacp' },
+            { name: 'Electro', url: 'https://radiorecord.hostingradio.ru/elect96.aacp' },
+            { name: 'Future Rave', url: 'https://radiorecord.hostingradio.ru/futurerave96.aacp' }
+           
+        ];
+
+        // Создаем список радиостанций
+        const stationsList = document.getElementById('stationsList');
+        const stationName = document.getElementById('stationName');
+
+        stations.forEach(station => {
+            const button = document.createElement('button');
+            button.className = 'station-button';
+            button.textContent = station.name;
+            button.addEventListener('click', () => {
+                isPlaying = false;
+                audio.src = station.url;
+                stationName.textContent = station.name;
+                document.querySelectorAll('.station-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                audio.play();
+                playButton.textContent = '⏸';
+                isPlaying = true;
+            });
+            stationsList.appendChild(button);
+        });
+
+        // Настройка визуализатора
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const analyser = audioContext.createAnalyser();
+        const source = audioContext.createMediaElementSource(audio);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+
+        const canvas = document.getElementById('visualizer');
+        const canvasCtx = canvas.getContext('2d');
+        analyser.fftSize = 256;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        function drawVisualizer() {
+            requestAnimationFrame(drawVisualizer);
+            analyser.getByteFrequencyData(dataArray);
+
+            canvasCtx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const barWidth = (canvas.width / bufferLength) * 2.5;
+            let barHeight;
+            let x = 0;
+
+            for(let i = 0; i < bufferLength; i++) {
+                barHeight = dataArray[i] / 2;
+                canvasCtx.fillStyle = `rgb(${barHeight + 100}, 50, 50)`;
+                canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1;
+            }
+        }
+
+        drawVisualizer();
+
+        // Обработка буферизации
+        const bufferProgress = document.getElementById('bufferProgress');
+        audio.addEventListener('progress', () => {
+            if (audio.buffered.length > 0) {
+                const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
+                const duration = audio.duration;
+                bufferProgress.style.width = `${(bufferedEnd / duration) * 100}%`;
+            }
+        });
+
+        // Улучшенное отображение метаданных
+        let metadataCheck;
+
+        function updateMetadata() {
+            if (audio.src) {
+                fetch(`https://api.example.com/metadata?url=${encodeURIComponent(audio.src)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.title) {
+                            trackInfo.textContent = data.title;
+                        }
+                    })
+                    .catch(() => {
+                        trackInfo.textContent = 'Информация недоступна';
+                    });
+            }
+        }
+
+        // Обновление метаданных каждые 30 секунд
+        audio.addEventListener('play', () => {
+            updateMetadata();
+            metadataCheck = setInterval(updateMetadata, 30000);
+        });
+
+        audio.addEventListener('pause', () => {
+            clearInterval(metadataCheck);
+        });
+    </script>
 </body>
 </html>
