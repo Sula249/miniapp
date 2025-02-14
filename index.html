@@ -239,33 +239,37 @@
             { name: 'Dubstep', url: 'https://radiorecord.hostingradio.ru/dub96.aacp' },
             { name: 'Deep', url: 'https://radiorecord.hostingradio.ru/deep96.aacp' },
             { name: 'Hypnotic', url: 'https://radiorecord.hostingradio.ru/hypno96.aacp' },
-            { name: 'D'n'B Classics', url: 'https://radiorecord.hostingradio.ru/drumhits96.aacp' },
+            { name: 'D\'n\'B Classics', url: 'https://radiorecord.hostingradio.ru/drumhits96.aacp' },
             { name: 'Dream Dance', url: 'https://radiorecord.hostingradio.ru/dream96.aacp' },
             { name: 'Electro', url: 'https://radiorecord.hostingradio.ru/elect96.aacp' },
             { name: 'Future Rave', url: 'https://radiorecord.hostingradio.ru/futurerave96.aacp' }
-           
         ];
 
         // Создаем список радиостанций
         const stationsList = document.getElementById('stationsList');
         const stationName = document.getElementById('stationName');
 
-        stations.forEach(station => {
-            const button = document.createElement('button');
-            button.className = 'station-button';
-            button.textContent = station.name;
-            button.addEventListener('click', () => {
-                isPlaying = false;
-                audio.src = station.url;
-                stationName.textContent = station.name;
-                document.querySelectorAll('.station-button').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                audio.play();
-                playButton.textContent = '⏸';
-                isPlaying = true;
+        // Проверяем, что stationsList существует
+        if (stationsList) {
+            stations.forEach(station => {
+                const button = document.createElement('button');
+                button.className = 'station-button';
+                button.textContent = station.name;
+                button.addEventListener('click', () => {
+                    isPlaying = false;
+                    audio.src = station.url;
+                    stationName.textContent = station.name;
+                    document.querySelectorAll('.station-button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    audio.play();
+                    playButton.textContent = '⏸';
+                    isPlaying = true;
+                });
+                stationsList.appendChild(button);
             });
-            stationsList.appendChild(button);
-        });
+        } else {
+            console.error('Элемент stationsList не найден');
+        }
 
         // Настройка визуализатора
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
