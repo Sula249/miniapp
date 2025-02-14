@@ -49,8 +49,8 @@
             color: var(--tg-theme-text-color, #000000);
         }
         .station-list {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin-top: 10px;
             opacity: 0;
@@ -63,14 +63,13 @@
             max-height: 500px;
         }
         .station {
-            padding: 15px;
+            padding: 10px;
             border-radius: 10px;
             border: 1px solid var(--tg-theme-button-color, #0088cc);
             cursor: pointer;
-            text-align: left;
+            text-align: center;
             background: var(--tg-theme-bg-color, #ffffff);
             transition: background 0.2s;
-            width: 100%;
             box-sizing: border-box;
         }
         .station.active, .station:hover {
