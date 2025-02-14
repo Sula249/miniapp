@@ -131,10 +131,10 @@
             }
             if (isPlaying) {
                 radio.pause();
-                playButton.textContent = '▶️';
+                playButton.textContent = '▶';
             } else {
                 radio.play().then(() => {
-                    playButton.textContent = '⏸';
+                    playButton.textContent = '◼';
                 }).catch(error => {
                     console.error('Ошибка воспроизведения:', error);
                     alert('Ошибка воспроизведения. Попробуйте другую станцию или проверьте подключение.');
