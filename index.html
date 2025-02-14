@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -25,10 +25,6 @@
             align-items: center;
             justify-content: flex-start;
             gap: 10px;
-            position: relative;
-            margin-left: -11px;
-            margin-right: -11px;
-
         }
         .play-button {
             background: var(--tg-theme-button-color, #0088cc);
@@ -84,7 +80,8 @@
             border-radius: 8px;
         }
         .station-button {
-            width: 100%;
+            width: calc(100% - 22px);
+            margin: 0 11px;
             padding: 10px 20px;
             border-radius: 8px;
             background: var(--tg-theme-button-color, #0088cc);
