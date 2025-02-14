@@ -14,7 +14,7 @@
             padding: 10px;
         }
         .radio-container {
-            margin: 0 -23px;
+            margin: 0 -10px;
             padding: 0 10px;
         }
         .player-container {
@@ -35,8 +35,8 @@
             background: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
             border: none;
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             font-size: 22px;
             border-radius: 50%;
             cursor: pointer;
@@ -48,7 +48,7 @@
             background: var(--tg-theme-button-color, #0077b3);
         }
         .now-playing {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
             color: var(--tg-theme-text-color, #000000);
         }
@@ -93,6 +93,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .station-button::after {
             content: "▼";
@@ -134,7 +135,7 @@
                 playButton.textContent = '▶️';
             } else {
                 radio.play().then(() => {
-                    playButton.textContent = '⏸️';
+                    playButton.textContent = '⏸';
                 }).catch(error => {
                     console.error('Ошибка воспроизведения:', error);
                     alert('Ошибка воспроизведения. Попробуйте другую станцию или проверьте подключение.');
