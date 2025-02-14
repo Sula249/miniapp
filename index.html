@@ -18,6 +18,86 @@
     </div>
 
 
+
+
+
+
+
+
+
+
+
+<div class="radio-container">
+    <div class="player-container">
+        <button class="play-button" onclick="toggleRadio()">▶️</button>
+        <span class="now-playing" id="nowPlaying">Chill-Out</span>
+    </div>
+    <audio id="radio" preload="auto" crossorigin="anonymous"></audio>
+    <button class="station-button" onclick="toggleStationList()">Выбрать станцию</button>
+    <div id="stationList" class="station-list">
+        <div class="station" data-url="https://radiorecord.hostingradio.ru/chil96.aacp">Chill-Out</div>
+        <div class="station" data-url="https://radiorecord.hostingradio.ru/phonk96.aacp">Phonk</div>
+        <div class="station" data-url="https://radiorecord.hostingradio.ru/deep96.aacp">Deep</div>
+        <div class="station" data-url="https://radiorecord.hostingradio.ru/trap96.aacp">Trap</div>
+    </div>
+</div>
+
+
+body {
+    background-color: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 10px;
+}
+
+.player-container {
+    background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 15px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
+}
+
+.play-button {
+    background: var(--tg-theme-button-color, #0088cc);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    width: 60px;
+    height: 60px;
+    font-size: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.station-list {
+    display: none;
+    margin-top: 10px;
+}
+
+.station {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--tg-theme-button-color, #0088cc);
+    cursor: pointer;
+    text-align: center;
+}
+
+
 <script>
     let isPlaying = false;
     const radio = document.getElementById('radio');
@@ -63,6 +143,16 @@
     });
 </script>
 
+
+
+
+
+
+
+
+
+
+    
 
 
     
