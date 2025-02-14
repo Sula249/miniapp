@@ -32,7 +32,7 @@
             border: none;
             width: 65px;
             height: 65px;
-            font-size: 18px;
+            font-size: 22px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -79,6 +79,16 @@
             margin-top: 15px;
             border-radius: 8px;
         }
+        .station-button {
+            width: 100%;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -89,7 +99,7 @@
     </div>
     <audio id="radio" preload="auto" crossorigin="anonymous"></audio>
     <div class="stations-container">
-        <button class="play-button" onclick="toggleStationList()" style="width: auto; height: auto; border-radius: 8px; padding: 10px 20px;">Выбрать станцию</button>
+        <button class="station-button" onclick="toggleStationList()">Выбрать станцию</button>
         <div id="stationList" class="station-list">
             <div class="station" data-url="https://radiorecord.hostingradio.ru/chil96.aacp">Станция 1</div>
             <div class="station" data-url="https://radiorecord.hostingradio.ru/phonk96.aacp">Станция 2</div>
