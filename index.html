@@ -18,6 +18,8 @@
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: height 0.3s ease-in-out;
+            overflow: hidden;
         }
         .play-button {
             background: var(--tg-theme-button-color, #0088cc);
@@ -31,37 +33,58 @@
         .play-button:active {
             background: var(--tg-theme-button-color, #0077b3);
         }
-        select {
+        .station-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .station {
             padding: 10px;
-            margin: 10px;
-            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--tg-theme-button-color, #0088cc);
+            cursor: pointer;
+            text-align: center;
+            background: var(--tg-theme-bg-color, #ffffff);
+            transition: background 0.2s;
+        }
+        .station.active, .station:hover {
+            background: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+        }
+        .stations-container {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
     <h2>Онлайн Радио</h2>
     <div class="player-container">
-        <p>Выберите радиостанцию</p>
-        <select id="stationSelect" onchange="changeStation()">
-            <option value="https://radiorecord.hostingradio.ru/chil96.aacp">Станция 1</option>
-            <option value="https://radiorecord.hostingradio.ru/phonk96.aacp">Станция 2</option>
-            <option value="https://radiorecord.hostingradio.ru/techno96.aacp">Станция 3</option>
-        </select>
         <button class="play-button" onclick="toggleRadio()">▶️ Play</button>
         <audio id="radio" preload="auto" crossorigin="anonymous"></audio>
+        <div class="stations-container">
+            <button class="play-button" onclick="toggleStationList()">Выбрать станцию</button>
+            <div id="stationList" class="station-list">
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/chil96.aacp">Станция 1</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/phonk96.aacp">Станция 2</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/techno96.aacp">Станция 3</div>
+            </div>
+        </div>
     </div>
 
     <script>
         let isPlaying = false;
         const radio = document.getElementById('radio');
         const playButton = document.querySelector('.play-button');
-        const stationSelect = document.getElementById('stationSelect');
+        const stationList = document.getElementById('stationList');
+        const stations = document.querySelectorAll('.station');
         
         function toggleRadio() {
             if (!radio.src) {
-                radio.src = stationSelect.value;
+                radio.src = stations[0].dataset.url;
             }
-            
             if (isPlaying) {
                 radio.pause();
                 playButton.textContent = '▶️ Play';
@@ -76,15 +99,21 @@
             isPlaying = !isPlaying;
         }
 
-        function changeStation() {
-            const wasPlaying = isPlaying;
-            radio.pause();
-            radio.src = stationSelect.value;
-            radio.load();
-            if (wasPlaying) {
-                radio.play().catch(error => console.error('Ошибка воспроизведения:', error));
-            }
+        function toggleStationList() {
+            stationList.style.display = stationList.style.display === 'grid' ? 'none' : 'grid';
         }
+
+        stations.forEach(station => {
+            station.addEventListener('click', function () {
+                stations.forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+                radio.src = this.dataset.url;
+                radio.load();
+                if (isPlaying) {
+                    radio.play().catch(error => console.error('Ошибка воспроизведения:', error));
+                }
+            });
+        });
     </script>
 </body>
 </html>
