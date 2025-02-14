@@ -36,11 +36,6 @@
             margin: 10px;
             font-size: 16px;
         }
-        canvas {
-            width: 100%;
-            height: 100px;
-            background: var(--tg-theme-secondary-bg-color, #e0e0e0);
-        }
     </style>
 </head>
 <body>
@@ -53,8 +48,7 @@
             <option value="https://radiorecord.hostingradio.ru/techno96.aacp">Станция 3</option>
         </select>
         <button class="play-button" onclick="toggleRadio()">▶️ Play</button>
-        <audio id="radio" preload="none"></audio>
-        <canvas id="visualizer"></canvas>
+        <audio id="radio" preload="auto" crossorigin="anonymous"></audio>
     </div>
 
     <script>
@@ -62,59 +56,35 @@
         const radio = document.getElementById('radio');
         const playButton = document.querySelector('.play-button');
         const stationSelect = document.getElementById('stationSelect');
-        const canvas = document.getElementById('visualizer');
-        const ctx = canvas.getContext('2d');
         
         function toggleRadio() {
+            if (!radio.src) {
+                radio.src = stationSelect.value;
+            }
+            
             if (isPlaying) {
                 radio.pause();
                 playButton.textContent = '▶️ Play';
             } else {
-                radio.play().catch(error => console.error('Ошибка воспроизведения:', error));
-                playButton.textContent = '⏸ Pause';
+                radio.play().then(() => {
+                    playButton.textContent = '⏸ Pause';
+                }).catch(error => {
+                    console.error('Ошибка воспроизведения:', error);
+                    alert('Ошибка воспроизведения. Попробуйте другую станцию или проверьте подключение.');
+                });
             }
             isPlaying = !isPlaying;
         }
 
         function changeStation() {
+            const wasPlaying = isPlaying;
+            radio.pause();
             radio.src = stationSelect.value;
-            if (isPlaying) {
-                radio.play();
+            radio.load();
+            if (wasPlaying) {
+                radio.play().catch(error => console.error('Ошибка воспроизведения:', error));
             }
         }
-
-        function setupVisualizer() {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const analyser = audioCtx.createAnalyser();
-            const source = audioCtx.createMediaElementSource(radio);
-            source.connect(analyser);
-            analyser.connect(audioCtx.destination);
-            analyser.fftSize = 256;
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-            
-            function draw() {
-                requestAnimationFrame(draw);
-                analyser.getByteFrequencyData(dataArray);
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                const barWidth = (canvas.width / bufferLength) * 2.5;
-                let x = 0;
-                for (let i = 0; i < bufferLength; i++) {
-                    const barHeight = dataArray[i] / 2;
-                    ctx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
-                    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-                    x += barWidth + 1;
-                }
-            }
-            draw();
-        }
-
-        radio.onplay = () => {
-            if (radio.src) {
-                setupVisualizer();
-            }
-        };
     </script>
 </body>
 </html>
