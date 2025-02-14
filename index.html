@@ -25,7 +25,7 @@
             align-items: center;
             justify-content: flex-start;
             gap: 10px;
-            margin: 0 -25px;
+            margin-bottom: 15px;
         }
         .play-button {
             background: var(--tg-theme-button-color, #0088cc);
@@ -52,12 +52,11 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            margin: 10px -25px 0;
+            margin-top: 10px;
             opacity: 0;
             max-height: 0;
             transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
             overflow: hidden;
-            padding: 0 25px;
         }
         .station-list.active {
             opacity: 1;
@@ -77,9 +76,10 @@
             color: var(--tg-theme-button-text-color, #ffffff);
         }
         .stations-container {
-            width: 100%;
-            margin: 15px -25px 0;
-            padding: 0 25px;
+            background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .station-button {
             width: 100%;
