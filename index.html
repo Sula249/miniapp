@@ -249,21 +249,32 @@
         const stationsList = document.getElementById('stationsList');
         const stationName = document.getElementById('stationName');
 
-        // Проверяем, что stationsList существует
         if (stationsList) {
             stations.forEach(station => {
                 const button = document.createElement('button');
                 button.className = 'station-button';
                 button.textContent = station.name;
                 button.addEventListener('click', () => {
+                    // Остановка текущего воспроизведения
+                    audio.pause();
                     isPlaying = false;
+
+                    // Установка нового источника
                     audio.src = station.url;
                     stationName.textContent = station.name;
+
+                    // Удаление активного класса у всех кнопок
                     document.querySelectorAll('.station-button').forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
-                    audio.play();
-                    playButton.textContent = '⏸';
-                    isPlaying = true;
+
+                    // Воспроизведение нового потока
+                    audio.play().then(() => {
+                        playButton.textContent = '⏸';
+                        isPlaying = true;
+                    }).catch(error => {
+                        console.error('Ошибка воспроизведения:', error);
+                        trackInfo.textContent = 'Ошибка воспроизведения';
+                    });
                 });
                 stationsList.appendChild(button);
             });
