@@ -18,8 +18,9 @@
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: height 0.3s ease-in-out;
+            transition: max-height 0.3s ease-in-out;
             overflow: hidden;
+            max-height: 150px;
         }
         .play-button {
             background: var(--tg-theme-button-color, #0088cc);
@@ -38,6 +39,14 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin-top: 10px;
+            opacity: 0;
+            max-height: 0;
+            transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
+            overflow: hidden;
+        }
+        .station-list.active {
+            opacity: 1;
+            max-height: 200px;
         }
         .station {
             padding: 10px;
@@ -100,7 +109,7 @@
         }
 
         function toggleStationList() {
-            stationList.style.display = stationList.style.display === 'grid' ? 'none' : 'grid';
+            stationList.classList.toggle('active');
         }
 
         stations.forEach(station => {
