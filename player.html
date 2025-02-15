@@ -114,6 +114,11 @@
             overflow: hidden;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             height: 230px; /* Высота видео плеера */
+            transition: opacity 0.3s ease-in-out; /* Плавный переход для исчезновения */
+        }
+        .video-container.hidden {
+            opacity: 0; /* Скрыть контейнер */
+            pointer-events: none; /* Отключить взаимодействие */
         }
         .video-container iframe {
             width: 100%;
@@ -196,6 +201,8 @@
 
         function toggleStationList() {
             stationList.classList.toggle('active');
+            const videoContainer = document.querySelector('.video-container');
+            videoContainer.classList.toggle('hidden', stationList.classList.contains('active'));
         }
 
         stations.forEach(station => {
