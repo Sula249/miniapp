@@ -27,7 +27,7 @@
             max-height: 1000px;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: space-between;
             gap: 10px;
             margin-bottom: 15px;
         }
@@ -119,6 +119,23 @@
             width: 100%;
             height: 230px; /* Высота видео плеера */
             border: none;
+        }
+        .tg-button {
+            background: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 10px 20px; /* Увеличьте отступы для лучшего внешнего вида */
+            border-radius: 20px; /* Закругленные углы */
+            font-size: 16px; /* Размер шрифта */
+            cursor: pointer;
+            transition: background 0.3s ease; /* Плавный переход цвета фона */
+            display: inline-block; /* Чтобы кнопка не занимала всю ширину */
+        }
+        .tg-button:hover {
+            background: var(--tg-theme-button-color, #0077b3); /* Цвет при наведении */
+        }
+        .tg-button:active {
+            background: var(--tg-theme-button-color, #006699); /* Цвет при нажатии */
         }
     </style>
 </head>
