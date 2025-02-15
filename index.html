@@ -31,7 +31,7 @@
     <!-- Всплывающий блок для Поиска -->
     <div class="input-container" id="searchContainer">
         <form id="search-form">
-            <input type="text" id="searchInput" placeholder="Введите запрос..." autofocus>
+            <input type="text" id="searchInput" placeholder="Введите запрос...">
             <button type="submit" id="searchActionButton">Поиск</button>
         </form>
         <div class="gcse-searchresults-only" id="results"></div>
@@ -47,5 +47,10 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        window.onload = function() {
+            document.getElementById('searchInput').focus(); // Устанавливаем фокус на поле ввода поиска
+        };
+    </script>
 </body>
 </html>
