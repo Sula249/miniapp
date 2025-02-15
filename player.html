@@ -119,31 +119,55 @@
             height: 315px; /* Высота видео плеера */
             border: none;
         }
+        .media-container {
+            width: 100%; /* Задаем ширину контейнера */
+            max-width: 600px; /* Максимальная ширина, если нужно */
+            margin: 0 auto; /* Центрируем контейнер */
+        }
+        .player-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%; /* Задаем ширину для аудиоплеера */
+        }
+        .video-container {
+            margin: 15px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            width: 100%; /* Задаем ширину для видео плеера */
+        }
+        .video-container iframe {
+            width: 100%;
+            height: 315px; /* Высота видео плеера */
+            border: none;
+        }
     </style>
 </head>
 <body>
 
     <div class="radio-container">
-        <div class="player-container">
-            <button class="play-button" onclick="toggleRadio()">▶️</button>
-            <span class="now-playing" id="nowPlaying">Chill-Out</span>
-        </div>
-        <audio id="radio" preload="auto" crossorigin="anonymous"></audio>
-        <button class="station-button" onclick="toggleStationList()">Выбрать станцию</button>
-        <div id="stationList" class="station-list">
-            <div class="station" data-url="https://radiorecord.hostingradio.ru/chil96.aacp">Chill-Out</div>
-            <div class="station" data-url="https://radiorecord.hostingradio.ru/phonk96.aacp">Phonk</div>
-            <div class="station" data-url="https://radiorecord.hostingradio.ru/deep96.aacp">Deep</div>
-            <div class="station" data-url="https://radiorecord.hostingradio.ru/trap96.aacp">Trap</div>
-            <div class="station" data-url="https://radiorecord.hostingradio.ru/drumhits96.aacp">D'n'B Classics</div>
-            <div class="station" data-url="https://radiorecord.hostingradio.ru/dub96.aacp">Dubstep</div>
-            <div class="station" data-url="https://radiorecord.hostingradio.ru/sd9096.aacp">Disco-90s</div>
-            <div class="station" data-url="https://radiorecord.hostingradio.ru/198096.aacp">Disco-80s</div>
-            <div class="station" data-url="https://radiorecord.hostingradio.ru/feel96.aacp">Feel</div>
-            <div class="station" data-url="https://radiorecord.hostingradio.ru/liquidfunk96.aacp">Liquid Funk</div>
-            <div class="station" data-url="https://radiorecord.hostingradio.ru/jungle96.aacp">Jungle</div>
-            <div class="station" data-url="https://radiorecord.hostingradio.ru/hypno96.aacp">Hypnotic</div>
-                        
+        <div class="media-container">
+            <div class="player-container">
+                <button class="play-button" onclick="toggleRadio()">▶️</button>
+                <span class="now-playing" id="nowPlaying">Chill-Out</span>
+            </div>
+            <audio id="radio" preload="auto" crossorigin="anonymous"></audio>
+            <button class="station-button" onclick="toggleStationList()">Выбрать станцию</button>
+            <div id="stationList" class="station-list">
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/chil96.aacp">Chill-Out</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/phonk96.aacp">Phonk</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/deep96.aacp">Deep</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/trap96.aacp">Trap</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/drumhits96.aacp">D'n'B Classics</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/dub96.aacp">Dubstep</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/sd9096.aacp">Disco-90s</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/198096.aacp">Disco-80s</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/feel96.aacp">Feel</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/liquidfunk96.aacp">Liquid Funk</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/jungle96.aacp">Jungle</div>
+                <div class="station" data-url="https://radiorecord.hostingradio.ru/hypno96.aacp">Hypnotic</div>
+            </div>
         </div>
     </div>
 
