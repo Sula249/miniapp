@@ -189,7 +189,9 @@
         const stationList = document.getElementById('stationList');
         const stations = document.querySelectorAll('.station');
         const nowPlaying = document.getElementById('nowPlaying');
-        
+        const videoContainer = document.getElementById('videoContainer');
+        const youtubePlayer = document.getElementById('youtubePlayer');
+
         function toggleRadio() {
             if (!radio.src) {
                 radio.src = stations[0].dataset.url;
@@ -211,14 +213,10 @@
 
         function toggleStationList() {
             stationList.classList.toggle('active');
-            const videoContainer = document.querySelector('.video-container');
             videoContainer.classList.toggle('hidden', stationList.classList.contains('active'));
         }
 
         function playVideo() {
-            const videoContainer = document.getElementById('videoContainer');
-            const youtubePlayer = document.getElementById('youtubePlayer');
-
             // Разворачиваем видео на весь экран
             if (youtubePlayer.requestFullscreen) {
                 youtubePlayer.requestFullscreen();
