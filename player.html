@@ -142,6 +142,16 @@
         .tg-button:active {
             background: var(--tg-theme-button-color, #006699); /* Цвет при нажатии */
         }
+        .video-container.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            transform: rotate(-90deg); /* Поворот на левый бок */
+            transform-origin: left top; /* Установка точки поворота */
+        }
     </style>
 </head>
 <body>
@@ -179,6 +189,7 @@
         const stationList = document.getElementById('stationList');
         const stations = document.querySelectorAll('.station');
         const nowPlaying = document.getElementById('nowPlaying');
+        const youtubePlayer = document.getElementById('youtubePlayer');
         
         function toggleRadio() {
             if (!radio.src) {
@@ -205,6 +216,20 @@
             videoContainer.classList.toggle('hidden', stationList.classList.contains('active'));
         }
 
+        function toggleFullscreen() {
+            if (youtubePlayer.requestFullscreen) {
+                youtubePlayer.requestFullscreen();
+            } else if (youtubePlayer.mozRequestFullScreen) { // Firefox
+                youtubePlayer.mozRequestFullScreen();
+            } else if (youtubePlayer.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                youtubePlayer.webkitRequestFullscreen();
+            } else if (youtubePlayer.msRequestFullscreen) { // IE/Edge
+                youtubePlayer.msRequestFullscreen();
+            }
+            const videoContainer = document.querySelector('.video-container');
+            videoContainer.classList.toggle('fullscreen'); // Добавляем/убираем класс
+        }
+
         stations.forEach(station => {
             station.addEventListener('click', function () {
                 stations.forEach(s => s.classList.remove('active'));
@@ -218,6 +243,9 @@
             });
         });
 
+        // Добавляем обработчик события для кнопки запуска видео
+        youtubePlayer.addEventListener('click', toggleFullscreen);
+
 window.addEventListener("message", (event) => {
     const radio = document.getElementById("radio");
     if (event.data.action === "play") {
@@ -226,7 +254,6 @@ window.addEventListener("message", (event) => {
         radio.pause();
     }
 });
-
 
     </script>
 
