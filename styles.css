@@ -14,7 +14,7 @@ h1 {
     margin: 0;
     text-align: left;
     transform-style: preserve-3d;
-    animation: titleFloat 3s ease-in-out infinite;
+    animation: titleFloat 4s ease-in-out infinite;
 }
 
 /* Основная кнопка */
