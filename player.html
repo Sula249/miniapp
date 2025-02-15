@@ -58,13 +58,13 @@
             gap: 10px;
             margin-top: 10px;
             opacity: 0;
-            max-height: 230px; /* Установите высоту равной высоте видео плеера */
+            max-height: 0; /* Высота в закрытом состоянии */
             transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
             overflow: hidden;
         }
         .station-list.active {
             opacity: 1;
-            max-height: 500px;
+            max-height: 500px; /* Установите высоту при открытии */
         }
         .station {
             padding: 10px;
