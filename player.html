@@ -217,15 +217,20 @@
         }
 
         function playVideo() {
-            // Разворачиваем видео на весь экран
-            if (youtubePlayer.requestFullscreen) {
-                youtubePlayer.requestFullscreen();
-            } else if (youtubePlayer.mozRequestFullScreen) { // Firefox
-                youtubePlayer.mozRequestFullScreen();
-            } else if (youtubePlayer.webkitRequestFullscreen) { // Chrome, Safari и Opera
-                youtubePlayer.webkitRequestFullscreen();
-            } else if (youtubePlayer.msRequestFullscreen) { // IE/Edge
-                youtubePlayer.msRequestFullscreen();
+            // Проверяем, доступен ли API Telegram для полноэкранного режима
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.requestFullscreen();
+            } else {
+                // Разворачиваем видео на весь экран для браузеров
+                if (youtubePlayer.requestFullscreen) {
+                    youtubePlayer.requestFullscreen();
+                } else if (youtubePlayer.mozRequestFullScreen) { // Firefox
+                    youtubePlayer.mozRequestFullScreen();
+                } else if (youtubePlayer.webkitRequestFullscreen) { // Chrome, Safari и Opera
+                    youtubePlayer.webkitRequestFullscreen();
+                } else if (youtubePlayer.msRequestFullscreen) { // IE/Edge
+                    youtubePlayer.msRequestFullscreen();
+                }
             }
 
             // Поворачиваем контейнер на 90 градусов
