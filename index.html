@@ -85,6 +85,28 @@
         document.getElementById('questionInput').addEventListener('input', function() {
             toggleButtons('question'); // Вызываем функцию при вводе данных
         });
+
+        // Добавляем обработчик события для формы
+        document.getElementById('question-form').addEventListener('submit', function(event) {
+            console.log("Обработчик события submit сработал."); // Отладочное сообщение
+            startSearch(event);
+        });
+
+        function startSearch(event) {
+            event.preventDefault(); // Предотвращаем стандартное поведение формы
+            console.log("Функция startSearch вызвана."); // Отладочное сообщение
+            const question = document.getElementById('questionInput').value; // Получаем значение вопроса
+            console.log("Поиск по вопросу:", question); // Пример вывода в консоль
+            
+            if (question.trim() === '') {
+                console.log("Вопрос не может быть пустым."); // Проверка на пустой вопрос
+                return; // Прерываем выполнение, если вопрос пустой
+            }
+
+            // Здесь можно добавить логику для выполнения поиска с использованием вопроса
+
+            toggleButtons('search'); // Обновляем состояние кнопок после отправки
+        }
     </script>
 </body>
 </html>
