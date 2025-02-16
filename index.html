@@ -18,13 +18,13 @@
     </div>
 
     <div class="button-container">
-        <button id="searchButton">Начать поиск</button>
+        <button id="searchButton">Задать вопрос</button>
     </div>
 
     <!-- Всплывающий блок для Поиска -->
     <div class="input-container show" id="searchContainer">
         <form id="search-form">
-            <input type="text" id="searchInput" placeholder="Введите запрос..." autofocus>
+            <input type="text" id="searchInput" placeholder="Введите запрос..." autofocus onfocus="toggleButtons('search')">
             <button type="submit" id="searchActionButton">Поиск</button>
         </form>
         <div class="gcse-searchresults-only" id="results"></div>
@@ -33,7 +33,7 @@
     <!-- Всплывающий блок для Вопроса -->
     <div class="input-container" id="questionContainer">
         <form id="question-form">
-            <input type="text" id="questionInput" placeholder="Введите вопрос...">
+            <input type="text" id="questionInput" placeholder="Введите вопрос..." onfocus="toggleButtons('question')">
             <button type="submit" id="questionActionButton">Задать</button>
         </form>
         <div class="results-container" id="aiAnswer"></div>
@@ -45,7 +45,20 @@
     <script>
         window.onload = function() {
             document.getElementById('searchInput').focus(); // Устанавливаем фокус на поле ввода поиска
+            toggleButtons('search'); // Убедитесь, что кнопка "Начать поиск" активна при загрузке
         };
+
+        function toggleButtons(active) {
+            const searchButton = document.getElementById('searchButton');
+            const questionButton = document.getElementById('questionActionButton');
+            if (active === 'search') {
+                searchButton.disabled = false; // Изменено на false
+                questionButton.disabled = true; // Изменено на true
+            } else {
+                searchButton.disabled = true; // Изменено на true
+                questionButton.disabled = false; // Изменено на false
+            }
+        }
     </script>
 </body>
 </html>
