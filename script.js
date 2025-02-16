@@ -265,17 +265,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Включаем кнопку "Назад" в Telegram
     tg.BackButton.onClick(() => {
-        // Проверяем, какой контейнер сейчас отображается
-        if (searchContainer.classList.contains("show")) {
-            searchContainer.classList.remove("show");
-            questionContainer.classList.remove("show");
-            searchButton.innerText = "Начать поиск"; // Возвращаем текст кнопки
-            tg.BackButton.hide(); // Скрываем кнопку "Назад", если ничего не отображается
-        } else if (questionContainer.classList.contains("show")) {
-            questionContainer.classList.remove("show");
-            searchContainer.classList.add("show"); // Показываем строку поиска
-            searchButton.innerText = "Задать вопрос"; // Меняем текст кнопки
-            tg.BackButton.show(); // Показываем кнопку "Назад"
+        // Закрываем поисковую выдачу и ответы на вопросы
+        searchContainer.classList.remove("show");
+        questionContainer.classList.remove("show");
+
+        // Скрываем все элементы при возврате
+        const searchElements = document.querySelectorAll('.gsc-control-cse, .gsc-results-wrapper-visible');
+        const aiElements = document.querySelectorAll('#aiAnswer, #questionInput');
+        searchElements.forEach(el => {
+            if (el) el.style.display = 'none';
+        });
+        aiElements.forEach(el => {
+            if (el) el.style.display = 'none';
+        });
+
+        // Скрываем кнопку "Назад", если ничего не открыто
+        if (!searchContainer.classList.contains("show") && !questionContainer.classList.contains("show")) {
+            tg.BackButton.hide();
         }
     });
 });
