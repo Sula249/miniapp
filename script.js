@@ -261,23 +261,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 tg.openLink(url);
             }
         }
+    });
 
-        document.addEventListener("DOMContentLoaded", () => {
-    const playerFrame = document.getElementById("radioPlayer");
-
-    // Функция для запуска радио
-    function playRadio() {
-        playerFrame.contentWindow.postMessage({ action: "play" }, "*");
-    }
-
-    // Функция для остановки радио
-    function pauseRadio() {
-        playerFrame.contentWindow.postMessage({ action: "pause" }, "*");
-    }
-
-    // Привязываем кнопку поиска к включению радио (пример)
-    document.getElementById("searchButton").addEventListener("click", playRadio);
-});
-
+    // Включаем кнопку "Назад" в Telegram
+    tg.BackButton.onClick(() => {
+        // Проверяем, какой контейнер сейчас отображается
+        if (searchContainer.classList.contains("show")) {
+            searchContainer.classList.remove("show");
+            questionContainer.classList.remove("show");
+            searchButton.innerText = "Начать поиск"; // Возвращаем текст кнопки
+            tg.BackButton.hide(); // Скрываем кнопку "Назад", если ничего не отображается
+        } else if (questionContainer.classList.contains("show")) {
+            questionContainer.classList.remove("show");
+            searchContainer.classList.add("show"); // Показываем строку поиска
+            searchButton.innerText = "Задать вопрос"; // Меняем текст кнопки
+            tg.BackButton.show(); // Показываем кнопку "Назад"
+        }
     });
 });
