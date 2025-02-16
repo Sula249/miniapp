@@ -33,7 +33,7 @@
     <!-- Всплывающий блок для Вопроса -->
     <div class="input-container" id="questionContainer">
         <form id="question-form">
-            <input type="text" id="questionInput" placeholder="Введите вопрос..." onfocus="toggleButtons('question')">
+            <input type="text" id="questionInput" placeholder="Введите вопрос..." onfocus="toggleButtons('question'); toggleButtons('search')">
             <button type="submit" id="questionActionButton">Задать</button>
         </form>
         <div class="results-container" id="aiAnswer"></div>
