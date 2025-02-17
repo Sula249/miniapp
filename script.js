@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const results = document.querySelector('.gsc-results-wrapper-visible');
                 if (results) {
                     searchActionButton.disabled = false;
-                    searchActionButton.textContent = "Поиск";
+                    searchActionButton.textContent = "Искать";
                     obs.disconnect(); // Прекращаем наблюдение после восстановления кнопки
                 }
             });
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Таймаут на случай, если результаты не загрузятся
             setTimeout(() => {
                 searchActionButton.disabled = false;
-                searchActionButton.textContent = "Поиск";
+                searchActionButton.textContent = "Искать";
                 observer.disconnect();
             }, 5000); // 5 секунд таймаут
         }
