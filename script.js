@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
             if (searchButton.innerText === "🔎 Начать поиск") {
                 searchButton.innerText = "";
-                mainTitle.textContent = "Linkee iBot";
+                mainTitle.textContent = "Linkee Поиск";
                 searchContainer.classList.add("show");
                 questionContainer.classList.remove("show");
                 // Показываем элементы поиска Google и скрываем элементы AI
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             } else {
                 searchButton.innerText = "🔎 Начать поиск";
-                mainTitle.textContent = "Linkee iBot | Поиск";
+                mainTitle.textContent = "Linkee iBot";
                 questionContainer.classList.add("show");
                 searchContainer.classList.remove("show");
                 // Скрываем элементы поиска Google и показываем элементы AI
