@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Mini App</title>
+    <title>Linkee iBot | Поиск</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script async src="https://cse.google.com/cse.js?cx=e58c2408882ae476e"></script>
     <link rel="stylesheet" href="styles.css">
@@ -14,19 +14,19 @@
     <div class="header">
         <div class="user-info">
             <div class="user-photo" id="userPhoto"></div>
-            <h1 style="margin-left: 10px;">Mini App!</h1>
+            <h1 style="margin-left: 10px;">Linkee iBot | Поиск</h1>
         </div>
     </div>
 
     <div class="button-container">
-        <button id="searchButton">Начать поиск</button>
+        <button id="searchButton">🔎 Начать поиск</button>
     </div>
 
     <!-- Всплывающий блок для Поиска -->
     <div class="input-container show" id="searchContainer">
         <form id="search-form">
             <input type="text" id="searchInput" placeholder="Введите запрос..." autofocus>
-            <button type="submit" id="searchActionButton">Поиск</button>
+            <button type="submit" id="searchActionButton">🔎 Поиск</button>
         </form>
         <div class="gcse-searchresults-only" id="results"></div>
     </div>
@@ -35,7 +35,7 @@
     <div class="input-container" id="questionContainer">
         <form id="question-form">
             <input type="text" id="questionInput" placeholder="Введите вопрос...">
-            <button type="submit" id="questionActionButton">Задать</button>
+            <button type="submit" id="questionActionButton">❓ Задать</button>
         </form>
         <div class="results-container" id="aiAnswer"></div>
     </div>
