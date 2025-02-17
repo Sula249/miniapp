@@ -202,7 +202,8 @@ button.flipped {
     /* MANUAL: Настройте минимальную ширину поля ввода */
     min-width: 120px;
     flex: 1;
-    font-size: 16px;
+    font-size: 15px;
+    border-radius: 20px;
 }
 
 /* Результаты поиска */
