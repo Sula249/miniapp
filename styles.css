@@ -148,7 +148,7 @@ button.flipped {
 
 /* Кнопки внутри всплывающих строк */
 .input-container button {
-    padding: 7px 15px;
+    padding: 8px 15px;
     font-size: 15px;
     border-radius: 20px;
     font-weight: bold;
@@ -204,7 +204,7 @@ button.flipped {
     flex: 1;
     font-size: 15px;
     border-radius: 20px;
-    padding: 7px 20px;
+    padding: 8px 20px;
 }
 
 /* Результаты поиска */
