@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         setTimeout(() => {
             if (searchButton.innerText === "🔎 Начать поиск") {
-                searchButton.innerText = "";
+                searchButton.innerText = "❓ Задать вопрос";
                 mainTitle.textContent = "Linkee Поиск";
                 searchContainer.classList.add("show");
                 questionContainer.classList.remove("show");
