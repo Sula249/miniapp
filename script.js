@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const questionContainer = document.getElementById("questionContainer");
 
     // Устанавливаем начальное состояние
-    searchButton.innerText = "Задать вопрос";
+    searchButton.innerText = "❓ Задать вопрос";
     searchContainer.classList.add("show");
     questionContainer.classList.remove("show");
 
@@ -33,9 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
         mainTitle.classList.add("flipped");
 
         setTimeout(() => {
-            if (searchButton.innerText === "Начать поиск") {
-                searchButton.innerText = "Задать вопрос";
-                mainTitle.textContent = "Mini App!";
+            if (searchButton.innerText === "🔎 Начать поиск") {
+                searchButton.innerText = "";
+                mainTitle.textContent = "Linkee iBot | Поиск";
                 searchContainer.classList.add("show");
                 questionContainer.classList.remove("show");
                 // Показываем элементы поиска Google и скрываем элементы AI
@@ -48,8 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (el) el.style.display = 'none';
                 });
             } else {
-                searchButton.innerText = "Начать поиск";
-                mainTitle.textContent = "Mini App!";
+                searchButton.innerText = "🔎 Начать поиск";
+                mainTitle.textContent = "Linkee iBot | Поиск";
                 questionContainer.classList.add("show");
                 searchContainer.classList.remove("show");
                 // Скрываем элементы поиска Google и показываем элементы AI
