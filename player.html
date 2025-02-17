@@ -24,7 +24,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             transition: max-height 0.3s ease-in-out;
             overflow: hidden;
-            max-height: 500px;
+            max-height: 200px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -48,7 +48,7 @@
             background: var(--tg-theme-button-color, #0077b3);
         }
         .now-playing {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: bold;
             color: var(--tg-theme-text-color, #000000);
         }
@@ -61,10 +61,11 @@
             max-height: 0; /* Высота в закрытом состоянии */
             transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
             overflow: hidden;
+            font-size: 15px;
         }
         .station-list.active {
             opacity: 1;
-            max-height: 300px; /* Установите высоту при открытии */
+            max-height: 200px; /* Установите высоту при открытии */
         }
         .station {
             padding: 10px;
@@ -130,9 +131,10 @@
             background: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
             border: none;
-            padding: 10px 20px; /* Увеличьте отступы для лучшего внешнего вида */
+            padding: 5px 20px; /* Увеличьте отступы для лучшего внешнего вида */
             border-radius: 20px; /* Закругленные углы */
             font-size: 15px; /* Размер шрифта */
+            font-weight: bold;
             cursor: pointer;
             transition: background 0.3s ease; /* Плавный переход цвета фона */
             display: inline-block; /* Чтобы кнопка не занимала всю ширину */
