@@ -44,7 +44,7 @@ button {
     border: none;
     padding: 15px 20px;
     font-size: 18px;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     width: 100%;
     max-width: none;
@@ -103,11 +103,11 @@ button.flipped {
     display: flex;
     flex-direction: column;  /* Элементы располагаются вертикально */
     align-items: center;     /* Центрирование содержимого по горизонтали */
-    gap: 8px;               /* Отступ между элементами */
+    gap: 7px;               /* Отступ между элементами */
     
     /* Внешний вид */
     background: var(--tg-theme-secondary-bg-color, #f9f9f9);
-    padding: 9px;          /* Внутренние отступы */
+    padding: 7px;          /* Внутренние отступы */
     border-radius: 12px;    /* Скругление углов */
     
     /* Настройки появления/исчезновения */
@@ -136,7 +136,7 @@ button.flipped {
 .input-container input {
     padding: 12px;
     border: 1px solid var(--tg-theme-hint-color, #ccc);
-    border-radius: 8px;
+    border-radius: 20px;
     font-size: 16px;
     background: var(--tg-theme-bg-color, #ffffff);
     color: var(--tg-theme-text-color, #000000);
