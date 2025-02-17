@@ -204,6 +204,7 @@ button.flipped {
     flex: 1;
     font-size: 15px;
     border-radius: 20px;
+    padding: 7px 20px;
 }
 
 /* Результаты поиска */
