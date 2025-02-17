@@ -295,6 +295,7 @@ button.flipped {
     display: flex;
     flex-direction: column;
     gap: 7px;
+    border-radius: 40px;
 }
 
 /* Стили для контейнера ответа */
