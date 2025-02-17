@@ -156,7 +156,7 @@ button.flipped {
     color: var(--tg-theme-button-text-color, #ffffff);
     cursor: pointer;
     min-width: 60px;
-    max-width: 100px; /* Увеличиваем ограничение максимальной ширины */
+    max-width: 110px; /* Увеличиваем ограничение максимальной ширины */
 }
 
 /* Адаптация для маленьких экранов */
