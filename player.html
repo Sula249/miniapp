@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Radio Player</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 10px;
+        }
+        .radio-container {
+            margin: 0 -18px;
+            padding: 0 5px;
+        }
+        .player-container {
+            background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: max-height 0.3s ease-in-out;
+            overflow: hidden;
+            max-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+        }
+        .play-button {
+            background: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .play-button:active {
+            background: var(--tg-theme-button-color, #0077b3);
+        }
+        .now-playing {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--tg-theme-text-color, #000000);
+        }
+        .station-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+            opacity: 0;
+            max-height: 0; /* Высота в закрытом состоянии */
+            transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
+            overflow: hidden;
+            font-size: 15px;
+        }
+        .station-list.active {
+            opacity: 1;
+            max-height: 290px; /* Установите высоту при открытии */
+        }
+        .station {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--tg-theme-button-color, #0088cc);
+            cursor: pointer;
+            text-align: center;
+            background: var(--tg-theme-bg-color, #ffffff);
+            transition: background 0.2s;
+            box-sizing: border-box;
+        }
+        .station.active, .station:hover {
+            background: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+        }
+        .station-button {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+            color: var(--tg-theme-text-color, #000000);
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .station-button::after {
+            content: "▼";
+            font-size: 15px;
+            font-weight: bold;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .player-container {
+            animation: float 2s ease-in-out infinite;
+        }
+        .video-container {
+            margin: 15px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            height: 230px; /* Высота видео плеера */
+            transition: opacity 0.3s ease-in-out; /* Плавный переход для исчезновения */
+        }
+        .video-container.hidden {
+            opacity: 0; /* Скрыть контейнер */
+            pointer-events: none; /* Отключить взаимодействие */
+        }
+        .video-container iframe {
+            width: 100%;
+            height: 230px; /* Высота видео плеера */
+            border: none;
+        }
+        .tg-button {
+            background: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 7px 20px; /* Увеличьте отступы для лучшего внешнего вида */
+            border-radius: 20px; /* Закругленные углы */
+            font-size: 15px; /* Размер шрифта */
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease; /* Плавный переход цвета фона */
+            display: inline-block; /* Чтобы кнопка не занимала всю ширину */
+        }
+        .tg-button:hover {
+            background: var(--tg-theme-button-color, #0077b3); /* Цвет при наведении */
+        }
+        .tg-button:active {
+            background: var(--tg-theme-button-color, #006699); /* Цвет при нажатии */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="radio-container">
+        <div class="player-container">
+            <button class="play-button" onclick="toggleRadio()">▶️</button>
+            <span class="now-playing" id="nowPlaying">Chill-Out</span>
+            <button class="tg-button" onclick="toggleStationList()">Выбрать</button>
+        </div>
+        <audio id="radio" preload="auto" crossorigin="anonymous"></audio>
+        <div id="stationList" class="station-list">
+            <div class="station" data-url="https://radiorecord.hostingradio.ru/chil96.aacp">Chill-Out</div>
+            <div class="station" data-url="https://radiorecord.hostingradio.ru/phonk96.aacp">Phonk</div>
+            <div class="station" data-url="https://radiorecord.hostingradio.ru/deep96.aacp">Deep</div>
+            <div class="station" data-url="https://radiorecord.hostingradio.ru/trap96.aacp">Trap</div>
+            <div class="station" data-url="https://radiorecord.hostingradio.ru/drumhits96.aacp">D'n'B Classics</div>
+            <div class="station" data-url="https://radiorecord.hostingradio.ru/dub96.aacp">Dubstep</div>
+            <div class="station" data-url="https://radiorecord.hostingradio.ru/sd9096.aacp">Disco-90s</div>
+            <div class="station" data-url="https://radiorecord.hostingradio.ru/198096.aacp">Disco-80s</div>
+            <div class="station" data-url="https://radiorecord.hostingradio.ru/feel96.aacp">Feel</div>
+            <div class="station" data-url="https://radiorecord.hostingradio.ru/liquidfunk96.aacp">Liquid Funk</div>
+            <div class="station" data-url="https://radiorecord.hostingradio.ru/jungle96.aacp">Jungle</div>
+            <div class="station" data-url="https://radiorecord.hostingradio.ru/hypno96.aacp">Hypnotic</div>
+        </div>
+        <div class="video-container">
+            <iframe id="youtubePlayer" src="https://www.youtube.com/embed/videoseries?list=PLBX9idxUJJgRZNtYNeoiPTPFNBjXsZgPS&autoplay=0&controls=1" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        let isPlaying = false;
+        const radio = document.getElementById('radio');
+        const playButton = document.querySelector('.play-button');
+        const stationList = document.getElementById('stationList');
+        const stations = document.querySelectorAll('.station');
+        const nowPlaying = document.getElementById('nowPlaying');
+        
+        function toggleRadio() {
+            if (!radio.src) {
+                radio.src = stations[0].dataset.url;
+                radio.load();
+            }
+            if (isPlaying) {
+                radio.pause();
+                playButton.textContent = '▶️';
+            } else {
+                radio.play().then(() => {
+                    playButton.textContent = '⏸';
+                }).catch(error => {
+                    console.error('Ошибка воспроизведения:', error);
+                    alert('Ошибка воспроизведения. Попробуйте другую станцию или проверьте подключение.');
+                });
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function toggleStationList() {
+            stationList.classList.toggle('active');
+            const videoContainer = document.querySelector('.video-container');
+            videoContainer.classList.toggle('hidden', stationList.classList.contains('active'));
+        }
+
+        stations.forEach(station => {
+            station.addEventListener('click', function () {
+                stations.forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+                radio.src = this.dataset.url;
+                radio.load();
+                nowPlaying.textContent = this.textContent;
+                if (isPlaying) {
+                    radio.play().catch(error => console.error('Ошибка воспроизведения:', error));
+                }
+            });
+        });
+
+window.addEventListener("message", (event) => {
+    const radio = document.getElementById("radio");
+    if (event.data.action === "play") {
+        radio.play();
+    } else if (event.data.action === "pause") {
+        radio.pause();
+    }
+});
+
+
+    </script>
+
+</body>
+</html>
