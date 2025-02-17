@@ -108,7 +108,7 @@ button.flipped {
     /* Внешний вид */
     background: var(--tg-theme-secondary-bg-color, #f9f9f9);
     padding: 9px;          /* Внутренние отступы */
-    border-radius: 12px;    /* Скругление углов */
+    border-radius: 20px;    /* Скругление углов */
     
     /* Настройки появления/исчезновения */
     opacity: 0;             /* Начально невидим */
@@ -295,7 +295,7 @@ button.flipped {
     display: flex;
     flex-direction: column;
     gap: 7px;
-    border-radius: 40px;
+    
 }
 
 /* Стили для контейнера ответа */
