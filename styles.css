@@ -15,6 +15,14 @@ h1 {
     text-align: left;
     transform-style: preserve-3d;
     animation: titleFloat 4s ease-in-out infinite;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.now-playing {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--tg-theme-text-color, #000000);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Основная кнопка */
