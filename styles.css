@@ -148,9 +148,10 @@ button.flipped {
 
 /* Кнопки внутри всплывающих строк */
 .input-container button {
-    padding: 12px 15px;
-    font-size: 16px;
-    border-radius: 8px;
+    padding: 7px 15px;
+    font-size: 15px;
+    border-radius: 20px;
+    font-weight: bold;
     border: none;
     background-color: var(--tg-theme-button-color, #0088cc);
     color: var(--tg-theme-button-text-color, #ffffff);
